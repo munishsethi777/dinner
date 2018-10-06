@@ -1,6 +1,5 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Booking.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/BookingDetail.php");
 class BookingMgr{
@@ -13,9 +12,14 @@ class BookingMgr{
 		{
 			self::$bookingMgr = new BookingMgr();
 			self::$dataStore = new BeanDataStore(Booking::$className, Booking::$tableName);
-			self::$sessionUtil = SessionUtil::getInstance();
 		}
 		return self::$bookingMgr;
+	}
+	
+	public static function getAvailableSeats($date,$timeSlots){
+		$query = "SELECT sum(bookingdetails.members) as totalcount from bookings inner JOIN bookingdetails on bookings.seq = bookingdetails.bookingseq
+where bookedon = '$date' and timeslot = $timeSlots";
+		return self::$dataStore->executeCountQueryWithSql($query);
 	}
 	
 }

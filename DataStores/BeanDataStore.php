@@ -1,7 +1,6 @@
 <?php
 require_once ("MainDB.php5");
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
-require_once ($ConstantsArray ['dbServerUrl'] . "Managers/AdminMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/FilterUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 class BeanDataStore {
@@ -14,11 +13,11 @@ class BeanDataStore {
 	public function __construct($className_, $tableName) {
 		$this->className = $className_;
 		$this->tableName = $tableName;
-		$sessionUtil = SessionUtil::getInstance ();
-		$this->companySeq = $sessionUtil->getAdminLoggedInCompanySeq ();
-		$this->loggedInAdminSeq = $sessionUtil->getAdminLoggedInSeq();
-		$this->logger = Logger::getLogger ( "logger" );
-		$this->isManager = $sessionUtil->getLoggedInRole() == "manager";
+		//$sessionUtil = SessionUtil::getInstance ();
+		//$this->companySeq = $sessionUtil->getAdminLoggedInCompanySeq ();
+		//$this->loggedInAdminSeq = $sessionUtil->getAdminLoggedInSeq();
+		///$this->logger = Logger::getLogger ( "logger" );
+		//$this->isManager = $sessionUtil->getLoggedInRole() == "manager";
 	}
 	private function key_implode($array) {
 		$fields = array ();
@@ -46,9 +45,7 @@ class BeanDataStore {
 			}else{
 				$id = $object->getSeq ();
 			}
-			if($id == 0){
-				$this->checkAdminPackageLimit();
-			}
+			
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
 				if (! $this->startsWith ( $methodName, "set" )) {
@@ -117,9 +114,7 @@ class BeanDataStore {
 		$methods = $class->getMethods ( ReflectionMethod::IS_PUBLIC );
 		$id = $object->getSeq();
 		try {
-			if($id == 0){
-				//$this->checkAdminPackageLimit();
-			}
+			
 			foreach ( $methods as $method ) {
 				$methodName = $method->name;
 				if (! $this->startsWith ( $methodName, "set" )) {

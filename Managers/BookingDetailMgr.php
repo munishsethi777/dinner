@@ -2,7 +2,7 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/BookingDetail.php");
-class BookingMgr{
+class BookingDetailMgr{
 	private static  $bookingDetailMgr;
 	private static $dataStore;
 	private static $sessionUtil;
