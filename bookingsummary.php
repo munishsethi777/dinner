@@ -166,27 +166,27 @@
 		                       			<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Name</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" placeholder="FullName" class="form-control">
+		                                    	<input type="text" id="fullName" placeholder="FullName" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Email</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="email" placeholder="Email" class="form-control">
+		                                    	<input type="email" id="email" placeholder="Email" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Mobile</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="mobile" placeholder="mobile" class="form-control">
+		                                    	<input type="mobile" id="mobile" placeholder="mobile" class="form-control">
 		                                    </div>
 	                                	</div>
-	                                	
-	                                	
-	                                	<button class="btn btn-primary col-lg-12">
-	                                		Make Payment of Rs 10,750.00
-	                                	</button>
-	                                	
+	                                	<div class="form-group row">
+		                                		<button class="btn btn-primary col-lg-12" id="rzp-button">
+			                                		Make Payment of Rs 10,750.00
+			                                	</button>
+		                                	
+	                                	</div>
 	                       			</form>
 	                       			
 	                       			
@@ -214,29 +214,34 @@
 </html>
 <script src="scripts/FormValidators/FormValidators.js"></script>
 <script>
-var options = {
-    "key": "rzp_live_KpbxYUeCTzMhDO",
-    "amount": "100", // 2000 paise = INR 20
-    "name": "Flydining",
-    "description": "Purchase Description",
-    "image": "/your_logo.png",
-    "handler": function (response){
-        alert(response.razorpay_payment_id);
-    },
-    "prefill": {
-        "name": "Munish Sethi",
-        "email": "munishsethi777@gmail.com"
-    },
-    "notes": {
-        "address": "Hello World"
-    },
-    "theme": {
-        "color": "#1ab394"
-    }
-};
-var rzp1 = new Razorpay(options);
+
+
 
 document.getElementById('rzp-button').onclick = function(e){
+	var fullName = $("#fullName").val();
+	var email = $("#email").val();
+	var mobile = $("#mobile").val();
+	var options = {
+		    "key": "rzp_live_KpbxYUeCTzMhDO",
+		    "amount": "100", // 2000 paise = INR 20
+		    "name": "Flydining",
+		    "description": "Purchase Description",
+		    "image": "/your_logo.png",
+		    "handler": function (response){
+		        alert(response.razorpay_payment_id);
+		    },
+		    "prefill": {
+		        "name": fullName,
+		        "email": email
+		    },
+		    "notes": {
+		        "address": "Hello World"
+		    },
+		    "theme": {
+		        "color": "#1ab394"
+		    }
+		};
+	var rzp1 = new Razorpay(options);
     rzp1.open();
     e.preventDefault();
 }
