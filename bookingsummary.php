@@ -9,6 +9,9 @@
 		width:33%;
 	}
 </style>
+
+<meta name="viewport" content="width=device-width">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
  <div id="wrapper">
@@ -158,18 +161,46 @@
 	                       				<div class="col-lg-4 text-right">Rs 10,750.00</div>
 	                       			</div>
 	                       			
-	                       			<div class="row bg-primary m-t-lg p-h-sm font-bold">	
-	                       				<div class="col-lg-8">
-	                       					TOTAL Rs 10,750.00
-	                       				</div>
-	                       				<div class="col-lg-4 text-right">Proceed</div>
-	                       			</div>
+	                       			
+	                       			<form class="m-t-lg">
+		                       			<div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">Name</label>
+		                                    <div class="col-lg-10">
+		                                    	<input type="text" placeholder="FullName" class="form-control">
+		                                    </div>
+	                                	</div>
+	                                	<div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">Email</label>
+		                                    <div class="col-lg-10">
+		                                    	<input type="email" placeholder="Email" class="form-control">
+		                                    </div>
+	                                	</div>
+	                                	<div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">Mobile</label>
+		                                    <div class="col-lg-10">
+		                                    	<input type="mobile" placeholder="mobile" class="form-control">
+		                                    </div>
+	                                	</div>
+	                                	
+	                                	
+	                                	<button class="btn btn-primary col-lg-12">
+	                                		Make Payment of Rs 10,750.00
+	                                	</button>
+	                                	
+	                       			</form>
+	                       			
+	                       			
+	                       			
 	                       			<div class="row m-t-sm text-center">	
 	                       				<small class="text-muted">
 		                       				You can cancel the tickets upto 4 hours before the show. <br>
 		                       				Refunds will be done according to <a href="#">Cancellation Policy</a>
 	                       				</small>
 	                       			</div>
+	                       			
+	                       		
+	                       		
+	                       		
 	                       	</div>
                        	</div>
                     </div>
@@ -182,12 +213,31 @@
 </body>
 </html>
 <script src="scripts/FormValidators/FormValidators.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-	
-});
+<script>
+var options = {
+    "key": "rzp_live_KpbxYUeCTzMhDO",
+    "amount": "100", // 2000 paise = INR 20
+    "name": "Flydining",
+    "description": "Purchase Description",
+    "image": "/your_logo.png",
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+    },
+    "prefill": {
+        "name": "Munish Sethi",
+        "email": "munishsethi777@gmail.com"
+    },
+    "notes": {
+        "address": "Hello World"
+    },
+    "theme": {
+        "color": "#1ab394"
+    }
+};
+var rzp1 = new Razorpay(options);
 
-
-
-
+document.getElementById('rzp-button').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
 </script> 
