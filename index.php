@@ -125,7 +125,7 @@ function loadData(selectedDate){
 			html += '<div class="col-lg-3"><div class="progress progress-mini">';
 			html += '<div style="width: '+val.availableInPercent+'%" class="progress-bar"></div></div>';
 			html += '<small class="text-muted">'+ val.seatsAvailable  +' Seats</small></div>';
-			html += '<div class="col-lg-2"><button class="btn btn-primary">BOOK NOW</button></div>';
+			html += '<div class="col-lg-2"><button class="btn btn-primary btn-xs">Book Now</button></div>';
 			html += '</div>';
 		});
 	 	$("#dataDiv").html(html);
