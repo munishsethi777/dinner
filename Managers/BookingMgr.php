@@ -16,10 +16,15 @@ class BookingMgr{
 		return self::$bookingMgr;
 	}
 	
-	public static function getAvailableSeats($date,$timeSlots){
+	public function getAvailableSeats($date,$timeSlots){
 		$query = "SELECT sum(bookingdetails.members) as totalcount from bookings inner JOIN bookingdetails on bookings.seq = bookingdetails.bookingseq
 where bookedon = '$date' and timeslot = $timeSlots";
 		return self::$dataStore->executeCountQueryWithSql($query);
 	}
 	
+	
+	public function saveBooking($bookingObj){
+		$id = self::$dataStore->save($object);	
+		return $id;
+	}
 }

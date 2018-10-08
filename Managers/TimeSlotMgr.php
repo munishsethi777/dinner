@@ -20,7 +20,7 @@ class TimeSlotMgr{
 	public function getTimeSlotsJson(){
 		$selectedDate = $_GET["selectedDate"];
 		$selectedDate .= " 00:00:00";
-		$query = "select timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
+		$query = "select timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
 inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq";
 		$timeSlots = self::$dataStore->executeQuery($query);
 		$slotArr = array();
@@ -51,12 +51,18 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$menu = array();
 			$menu["menutitle"] = $timeSlot["menutitle"];
 			$menu["rate"] = $timeSlot["rate"];
+			$menu["menuseq"] = $timeSlot["menuseq"];
 			array_push($mainMenuArr, $menu);
 			$arr["menu"] = $mainMenuArr;
 			$slotArr[$timeSlotSeq] = $arr;
 		}
 		$json = json_encode($slotArr);
 		return $json;
+	}
+	
+	public function findBySeq($seq){
+		$timeSlot = self::$dataStore->findBySeq($seq);
+		return $timeSlot;
 	}
 	
 	

@@ -20,8 +20,8 @@ class Booking{
 		return $this->bookedon;
 	}
 	
-	public function setFullName($fullName){
-		$this->fullname = $fullName;
+	public function setFullName($fullName_){
+		$this->fullname = $fullName_;
 	}
 	public function getFullName(){
 		return $this->fullname;

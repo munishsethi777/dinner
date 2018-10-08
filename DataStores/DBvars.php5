@@ -1,6 +1,6 @@
 <?php
 	 class DBvars{
-		public $database = "ezae16";
+		public $database = "skydining";
 		public $username = "root";
         public $password = "";
         public $hostname = "localhost";

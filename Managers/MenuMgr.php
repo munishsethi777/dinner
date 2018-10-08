@@ -1,6 +1,5 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Menu.php");
 class MenuMgr{
 	private static $menuMgr;
@@ -10,11 +9,15 @@ class MenuMgr{
 	{
 		if (!self::$menuMgr)
 		{
-			self::$menuMgr = new BookingPaymentMgr();
+			self::$menuMgr = new MenuMgr();
 			self::$dataStore = new BeanDataStore(Menu::$className, Menu::$tableName);
-			self::$sessionUtil = SessionUtil::getInstance();
 		}
 		return self::$menuMgr;
+	}
+	
+	public function findBySeq($seq){
+		$menu = self::$dataStore->findBySeq($seq);
+		return $menu;
 	}
 
 }
