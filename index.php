@@ -1,8 +1,17 @@
-<?php?>
+<?php ?>
+
 <html>
 <head>
 <title>Booking</title>
-<?include "ScriptsInclude.php"?>
+	<?include "ScriptsInclude.php"?>
+	<style>
+		.xdsoft_datetimepicker{
+			width: 100%;
+		}
+		.xdsoft_datetimepicker .active{
+			width:97%;
+		}
+	</style>
 </head>
 <body>
  <div id="wrapper">
@@ -12,11 +21,11 @@
 				<div class="ibox float-e-margins ">
 					<div class="ibox-title">
 						<h5>
-							SKY DINING<small> select your bookings</small>
+							FLY DINING<small> select your bookings</small>
 						</h5>
 					</div>
 					<div style="margin-top:10px">
-                    	<div class="col-lg-8" id="dataDiv">
+                    	<div class="col-lg-9" id="dataDiv">
                        		<div class="row ibox-content" style="font-weight: bold">
 	                       		<div class="col-lg-2">
 	                       			Date
@@ -36,56 +45,12 @@
 	                       	</div>
                        		
                        		
-                       		<div class="row ibox-content">
-	                       		<div class="col-lg-2">
-	                       			17-09-2018<br>
-	                       			<small class="text-muted">Monday</small>
-	                       		</div>
-	                       		<div class="col-lg-2">
-	                       			7:30 PM<br>
-	                       			<small class="text-muted">Session1</small>
-	                       		</div>
-	                       		<div class="col-lg-3">
-	                       			Rs. 2000 (Veg) <br>
-	                       			Rs. 2800 (N.Veg)
-	                       		</div>
-	                       		<div class="col-lg-3">
-	                       			<div class="progress progress-mini">
-                                    	<div style="width: 100%;" class="progress-bar"></div>
-                                    </div>
-	                       			<small class="text-muted">8 Seats</small>
-	                       		</div>
-	                       		<div class="col-lg-2">
-	                       			<button class="btn btn-primary">BOOK NOW</button>
-	                       		</div>
-                       		</div>
-                       		<div class="row ibox-content">
-	                       		<div class="col-lg-2">
-	                       			17-09-2018<br>
-	                       			<small class="text-muted">Monday</small>
-	                       		</div>
-	                       		<div class="col-lg-2">
-	                       			7:30 PM<br>
-	                       			<small class="text-muted">Session1</small>
-	                       		</div>
-	                       		<div class="col-lg-3">
-	                       			Rs. 2000 (Veg) <br>
-	                       			Rs. 2800 (N.Veg)
-	                       		</div>
-	                       		<div class="col-lg-3">
-	                       			<div class="progress progress-mini">
-                                    	<div style="width: 50%;" class="progress-bar"></div>
-                                    </div>
-	                       			<small class="text-muted">4 Seats</small>
-	                       		</div>
-	                       		<div class="col-lg-2">
-	                       			<button class="btn btn-primary" >BOOK NOW</button>
-	                       		</div>
-                       		</div>
+                       		
                        		
                     	</div>
-                    	<div class="col-lg-4">
-                       		<input type="text" onchange="javascript:loadData(this.value)" name="bookingDate" id="bookingDate" class="form-control"> 	
+                    	<div class="col-lg-3">
+                       		<input type="text" onchange="javascript:loadData(this.value)" 
+                       		name="bookingDate" id="bookingDate" class="form-control" style="width:100%"> 	
                     	</div>
                     </div>
                     
@@ -101,21 +66,16 @@
 							<div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog"  aria-hidden="true">
 							    <div class="modal-dialog">
                                     <div class="modal-content animated fadeIn">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                            <h4 class="modal-title">How Many Persons?</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                        	
-                           					<div id="personCounts" class="row i-checks">
-											</div>
-											<div class="hr-line-dashed"></div>
-												<div id="menuDiv">
-												</div>	
-									    </div>
-                                        <div id = "footerDiv" class="modal-footer">
-                                           
-	                                     </div>
+	                                        <div class="modal-header">
+	                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	                                            <h4 class="modal-title">How Many Persons?</h4>
+	                                        </div>
+	                                        <div class="modal-body">
+	                                        	<div id="personCounts" class="row i-checks"></div>
+												<div class="hr-line-dashed"></div>
+												<div id="menuDiv"></div>	
+										    </div>
+	                                        <div id = "footerDiv" class="modal-footer"></div>
 	                                    </div>
 	                                </div>
 	                            </div>
@@ -129,28 +89,33 @@ $(document).ready(function(){
         timepicker:false,
         inline: true,
         sideBySide: true,
-        format:'m-d-Y'
+        format:'d-m-Y',
+        //minDate:new Date()
     });
-    currDate = getCurrentDate();
+	currDate = getCurrentDate();
 	loadData(currDate);
-// 	$("#saveBtn").click(function(e){
-// 	    var btn = this;
-// 	    var validationResult = function (isValid) {
-// 	        if (isValid) {
-// 	        	submitBookingForm(e,btn);
-// 	        }
-// 	    }
-// 	    $('#bookingForm').jqxValidator('validate', validationResult);   
-// 	})
 });
 function loadData(selectedDate){
-	$.get("Actions/TimeSlotAction.php?call=getTimeSlots&selectedDate="+selectedDate, function(jsonString){
-		 var data = $.parseJSON(jsonString)
-		 var html = getHeaders();
-	 	 $.each( data, function( key, val ) {
-		 	html += '<div class="row ibox-content">';
-			html += '<div class="col-lg-2">'+selectedDate+'</div>';
-			html += '<div class="col-lg-2">'+val.timeslot+'</div>';
+	var from = selectedDate.split("-")
+	var d = new Date(from[2], from[1] - 1, from[0])
+	
+	var weekday=new Array(7);
+	weekday[0]="Sunday";
+	weekday[1]="Monday";
+	weekday[2]="Tuesday";
+	weekday[3]="Wednesday";
+	weekday[4]="Thursday";
+	weekday[5]="Friday";
+	weekday[6]="Saturday";
+	var n = weekday[d.getDay()];
+	
+	$.getJSON("Actions/TimeSlotAction.php?call=getTimeSlots&selectedDate="+selectedDate, function(data){
+		  //var data = $.parseJSON(jsonString)
+			var html = getHeaders();
+		 $.each( data, function( key, val ) {
+	 		html += '<div class="row ibox-content">';
+			html += '<div class="col-lg-2">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
+			html += '<div class="col-lg-3">'+val.timeslot+ '</div>';
 			var fair = "";
 			var menuList = val.menu; 
 			var menuArr = [];
@@ -161,7 +126,7 @@ function loadData(selectedDate){
 				menuSeqs[k] = menu.menuseq
 	 		});
 			html += '<div class="col-lg-3">' + fair + '</div>';
-			html += '<div class="col-lg-3"><div class="progress progress-mini">';
+			html += '<div class="col-lg-2"><div class="progress progress-mini">';
 			html += '<div style="width: '+val.availableInPercent+'%" class="progress-bar"></div></div>';
 			html += '<small class="text-muted">'+ val.seatsAvailable  +' Seats</small></div>';
 			html += '<div class="col-lg-2"><button class="btn btn-primary btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button></div>';
@@ -180,7 +145,7 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	$("#footerDiv").html("");
 	var html = "";
 	for(var i = 1; i <= seats; i++) {
-		    html += '<div class="col-sm-1 ">';
+		    html += '<div class="col-sm-1">';
 		 	html += '<label class="checkbox-inline">';
 			html += '<input value="'+i+'" type="radio" onchange="setValue()" name="personCount" id="personCount">'+i;
 			html += '</label></div>';
@@ -192,10 +157,19 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 		var menuTitle = menuTitleArr[key];
 		str += '<div class="col-sm-3">';
 		str += '<label class="checkbox-inline">';
-		str += '<input value="'+seq+'" type="radio" onchange="setValue()" checked="checked" name="menu" id="menuTitleRadio"> All '+ menuTitle;
+		str += '<input value="'+seq+'" type="radio" onchange="setValue()" name="menu" id="menuTitleRadio"><small> All '+ menuTitle+'</small>';
 		str += '</label></div>';
-		str += '<input type="text" class="menuCount" placeholder="'+menuTitle+' Person Count" id="'+seq+'_menuCountText" name="menuCountText">';			
+		//str += '<div class="col-sm-2"><input type="text" class="menuCount" placeholder="'+menuTitle+' Person Count" id="'+seq+'_menuCountText" name="menuCountText"></div>';			
 	});
+
+	$.each( menuSeqArr, function( key, seq ) {
+		var menuTitle = menuTitleArr[key];
+		str += '<div class="col-sm-3">';
+		str += '<input style="width:100%;font-size:10px" type="text" class="menuCount text-muted" placeholder="'+menuTitle+' Count" id="'+seq+'_menuCountText" name="menuCountText">';			
+		str += '</div>';
+	});
+
+	
 	var footerButtons = '<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>';
     	footerButtons += '<button type="button" id="saveBtn" onClick="javascript:submitBookingForm('+seats+ ',\'' +  menuSeqs + '\')" class="btn btn-primary">Continue</button>';
     $("#footerDiv").html(footerButtons);
@@ -250,24 +224,21 @@ function getCurrentDate(){
 	var dd = today.getDate();
 	var mm = today.getMonth()+1; //January is 0!
 	var yyyy = today.getFullYear();
-
 	if(dd<10) {
 	    dd = '0'+dd
 	} 
-
 	if(mm<10) {
 	    mm = '0'+mm
 	} 
-
-	today = mm + '-' + dd + '-' + yyyy;
+	today = dd + '-' + mm + '-' + yyyy;
 	return today;
 }
 function getHeaders(){
 	var html = '<div class="row ibox-content">'
 		html += '<div class="col-lg-2">Date</div>';
-		html += '<div class="col-lg-2">Slot Time</div>';
+		html += '<div class="col-lg-3">Slot Time</div>';
 		html += '<div class="col-lg-3">Fare</div>';
-		html += '<div class="col-lg-3">Seats Available</div>'
+		html += '<div class="col-lg-2">Seats Available</div>'
 		html += '<div class="col-lg-2">Action</div>'
 		html += '</div>';
 		return html;

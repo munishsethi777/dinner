@@ -57,99 +57,12 @@ if(!empty($amount)){
 	                       			<h1 style="padding-bottom:10px">
 											MENU
 									</h1>
-									<button class="btn btn-primary btn-rounded">VEG</button>
-									<button class="btn btn-primary btn-rounded">NON VEG</button>
+									<button class="btn btn-primary btn-rounded vegbtn">VEG</button>
+									<button class="btn btn-primary btn-rounded nvegbtn">NON VEG</button>
 	                       		</div>
 		                       		<div class="row">
-		                       			<div class="file-box">
-			                                <div class="file">
-		                                        <div class="icon">
-		                                            <i class="fa fa-file"></i>
-		                                        </div>
-		                                        <div class="file-name">
-		                                            <p class="text-success">ITEM NAME</p>
-		                                            <small>Lorem ipsum dolor sit amet, 
-		                                            consectetur adipiscing elit, sed do eiusmod tempor 
-		                                            incididunt ut labore et 
-		                                            dolore magna aliqua.</small>
-		                                        </div>
-			                                </div>
-		                            	</div>
-		                            	
-		                            	<div class="file-box">
-			                                <div class="file">
-		                                        <div class="icon">
-		                                            <i class="fa fa-file"></i>
-		                                        </div>
-		                                        <div class="file-name">
-		                                            <p class="text-success">ITEM NAME</p>
-		                                            <small>Lorem ipsum dolor sit amet, 
-		                                            consectetur adipiscing elit, sed do eiusmod tempor 
-		                                            incididunt ut labore et 
-		                                            dolore magna aliqua.</small>
-		                                        </div>
-			                                </div>
-		                            	</div>
-		                            	
-		                            	<div class="file-box">
-			                                <div class="file">
-		                                        <div class="icon">
-		                                            <i class="fa fa-file"></i>
-		                                        </div>
-		                                        <div class="file-name">
-		                                            <p class="text-success">ITEM NAME</p>
-		                                            <small>Lorem ipsum dolor sit amet, 
-		                                            consectetur adipiscing elit, sed do eiusmod tempor 
-		                                            incididunt ut labore et 
-		                                            dolore magna aliqua.</small>
-		                                        </div>
-			                                </div>
-		                            	</div>
-		                            	
-		                            	<div class="file-box">
-			                                <div class="file">
-		                                        <div class="icon">
-		                                            <i class="fa fa-file"></i>
-		                                        </div>
-		                                        <div class="file-name">
-		                                            <p class="text-success">ITEM NAME</p>
-		                                            <small>Lorem ipsum dolor sit amet, 
-		                                            consectetur adipiscing elit, sed do eiusmod tempor 
-		                                            incididunt ut labore et 
-		                                            dolore magna aliqua.</small>
-		                                        </div>
-			                                </div>
-		                            	</div>
-		                            	
-		                            	<div class="file-box">
-			                                <div class="file">
-		                                        <div class="icon">
-		                                            <i class="fa fa-file"></i>
-		                                        </div>
-		                                        <div class="file-name">
-		                                            <p class="text-success">ITEM NAME</p>
-		                                            <small>Lorem ipsum dolor sit amet, 
-		                                            consectetur adipiscing elit, sed do eiusmod tempor 
-		                                            incididunt ut labore et 
-		                                            dolore magna aliqua.</small>
-		                                        </div>
-			                                </div>
-		                            	</div>
-		                            	
-		                            	<div class="file-box">
-		                                <div class="file">
-	                                        <div class="icon">
-	                                            <i class="fa fa-file"></i>
-	                                        </div>
-	                                        <div class="file-name">
-	                                            <p class="text-success">ITEM NAME</p>	
-	                                            <small>Lorem ipsum dolor sit amet, 
-	                                            consectetur adipiscing elit, sed do eiusmod tempor 
-	                                            incididunt ut labore et 
-	                                            dolore magna aliqua.</small>
-	                                        </div>
-		                                </div>
-	                            	</div>
+		                       			<img class="vegimg" style="height:auto;width:100%" src="images/veg.jpeg">
+		                       			<img class="nvegimg" style="height:auto;width:100%;display:none" src="images/nveg.jpeg">
 	                       			</div>
                        			</div>
                     	</div>
@@ -225,10 +138,6 @@ if(!empty($amount)){
 		                       				Refunds will be done according to <a href="#">Cancellation Policy</a>
 	                       				</small>
 	                       			</div>
-	                       			
-	                       		
-	                       		
-	                       		
 	                       	</div>
                        	</div>
                     </div>
@@ -242,7 +151,16 @@ if(!empty($amount)){
 </html>
 <script src="scripts/FormValidators/FormValidators.js"></script>
 <script>
-
+$( document ).ready(function() {
+	$( ".vegbtn" ).click(function() {
+		$(".nvegimg").hide();
+		$(".vegimg").show();
+	});
+	$( ".nvegbtn" ).click(function() {
+		$(".nvegimg").show();
+		$(".vegimg").hide();
+	});
+});
 
 
 document.getElementById('rzp-button').onclick = function(e){
