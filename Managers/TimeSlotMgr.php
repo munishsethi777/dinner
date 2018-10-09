@@ -28,7 +28,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 		foreach ($timeSlots as $timeSlot){
 			$timeSlotSeq = $timeSlot["timeslotseq"];
 			$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
-			$date = $date->format("Y-d-m H:i:s");
+			$date = $date->format("Y-m-d H:i:s");
 			$bookedSeats = $bookingMgr->getAvailableSeats($date, $timeSlotSeq);
 			$arr = array();
 			$arr["seq"] = $timeSlotSeq;
