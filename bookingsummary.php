@@ -68,9 +68,12 @@ if(!empty($amount)){
                     	</div>
                     	<div class="col-lg-4">
                     		<div class="ibox-content">
-	                       			<h3>BOOKING SUMMARY</h3>
+                    				<div class="row" style="margin-bottom:5px">
+	                       				<div class="col-md-8"><h3>BOOKING SUMMARY</h3></div>
+	                       				<div class="col-md-4 text-right"><button type="button" onclick="javascript:back()" class="btn btn-outline btn-info btn-xs">Change</button></div>
+	                       			</div>
 	                       			<div class="row" style="margin-bottom:5px">
-	                       				<div class="col-md-8">SLOT <?php echo $timeSlot->getTitle()?></div>
+	                       				<div class="col-md-8">SLOT <?php echo $timeSlot->getTitle() . " (".$selectedDate.")"?></div>
 	                       				<div class="col-md-4 text-right"><?php echo "Rs " . $amount?></div>
 	                       			</div>
 	                       			<div class="row">	
@@ -200,6 +203,9 @@ document.getElementById('rzp-button').onclick = function(e){
         $("#userInfoForm")[0].reportValidity(); 
     }
 	
+}
+function back(){
+	location.href = "index.php";
 }
 function saveBooking(){
     $('#userInfoForm').ajaxSubmit(function( data ){
