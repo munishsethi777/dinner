@@ -108,6 +108,8 @@ if(!empty($amount)){
 	                       			</div>
 	                       			<form id="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
 	                       				<input type="hidden" id ="call" name="call" value="saveBooking"/>
+	                       				<input type="hidden" id ="transactionId" name="transactionId"/>
+	                       				<input type="hidden" id ="amount" name="amount"/>
 	                       				<input type="hidden" id ="timeslotseq" name="timeslotSeq" value="<?php echo $timeSlotSeq?>" />
 	                       				<input type="hidden" id ="selectedDate" name="selectedDate" value="<?php echo $selectedDate?>" />
 	                       				<input type="hidden" id ="menupersons" name="menuPersons" value='<?php echo $menus?>' />
@@ -183,7 +185,10 @@ document.getElementById('rzp-button').onclick = function(e){
 			    "description": "Purchase Description",
 			    "image": "/your_logo.png",
 			    "handler": function (response){
-			        alert(response.razorpay_payment_id);
+				    $("#transactionId").val(response.razorpay_payment_id);
+				    $("#amount").val("<?php echo $totalAmountInPaise?>");
+			        //alert(response.razorpay_payment_id);
+			        saveBooking();
 			    },
 			    "prefill": {
 				    "contact" : mobile,
