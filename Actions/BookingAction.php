@@ -4,6 +4,8 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
 
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
+
 $call = "";
 if(isset($_GET["call"])){
 	$call = $_GET["call"];
@@ -25,25 +27,29 @@ if($call == "saveBooking"){
 		$menuPersonsStr = $_POST["menuPersons"];
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$booking = new Booking();
-		$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
-		$bookedOn = $bookedOn->setTime(0, 0);
+
+		$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
+		$bookingDate = $bookingDate->setTime(0, 0);
 		
-		$booking->setBookedOn($bookedOn);
+		$booking->setBookedOn(new DateTime());
+		$booking->setBookingDate($bookingDate);
 		$booking->setEmailId($emailId);
 		$booking->setFullName($fullName);
 		$booking->setMobileNumber($mobile);
 		$booking->setTimeSlot($timSlotSeq);
 		$bookingId = $bookingMgr->saveBooking($booking);
+		$booking->setSeq($bookingId);
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
+		MailUtil::sendOrderEmailClient($booking,$menuPersonsObj);
 		$message = "Booking Saved Successfully";
-	}catch(Exception $e){
-		$success = 0;
-		$message  = $e->getMessage();
-	}
-	$response = new ArrayObject();
-	$response["success"]  = $success;
-	$response["message"]  = $message;
-	echo json_encode($response);
+		}catch(Exception $e){
+			$success = 0;
+			$message  = $e->getMessage();
+		}
+		$response = new ArrayObject();
+		$response["success"]  = $success;
+		$response["message"]  = $message;
+		echo json_encode($response);
 	return;
 }
 
@@ -52,4 +58,3 @@ if($call == "getBookings"){
 	$bookingJson = $bookingMgr->getBookingJsonForGrid();
 	echo $bookingJson;
 }
-

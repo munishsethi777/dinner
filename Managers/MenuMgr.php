@@ -19,5 +19,10 @@ class MenuMgr{
 		$menu = self::$dataStore->findBySeq($seq);
 		return $menu;
 	}
+	
+	public function findAll(){
+		$menus = self::$dataStore->findAll();
+		return $menus;
+	}
 
 }

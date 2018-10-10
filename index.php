@@ -1,6 +1,6 @@
 <?php 
-require_once('IConstants.inc');
-require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
+//require_once('IConstants.inc');
+//require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 //MailUtil::sendOrderEmailClient("munishsethi777@gmail.com");
 
 ?>
@@ -29,33 +29,31 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 						</h5>
 					</div>
 					<div style="margin-top:10px">
-                    	<div class="col-lg-9" id="dataDiv">
+                    	<div class="col-sm-9" id="dataDiv">
                        		<div class="row ibox-content" style="font-weight: bold">
-	                       		<div class="col-lg-2">
+	                       		<div class="col-sm-2">
 	                       			Date
 	                       		</div>
-	                       		<div class="col-lg-2">
+	                       		<div class="col-sm-2">
 	                       			Slot Time
 	                       		</div>
-	                       		<div class="col-lg-3">
+	                       		<div class="col-sm-3">
 	                       			Fare
 	                       		</div>
-	                       		<div class="col-lg-3">
+	                       		<div class="col-sm-3">
 	                       			Seats Available
 	                       		</div>
-	                       		<div class="col-lg-2">
+	                       		<div class="col-sm-2">
 	                       			Action
 	                       		</div>
 	                       	</div>
-                       		
-                       		
-                       		
-                       		
                     	</div>
-                    	<div class="col-lg-3">
+
+                    	<div class="col-sm-3" >
                        		<input type="text" onchange="javascript:loadData(this.value)" 
                        		name="bookingDate" id="bookingDate" class="form-control" style="width:100%"> 	
                     	</div>
+
                     </div>
                     
 				</div>
@@ -64,70 +62,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
    	</div>
  </div>	
 
-	<div style="background-color:grey;width:100%">
-		<div style="background-color:white;margin:auto;max-width:600px;padding:0px 15px 0px 15px">
-		<div style="padding:15px;background-color:#1ab394;color:white;margin:0px -15px 0px -15px;">
-		<h1 style="margin-top: 20px;margin-bottom: 10px;">Fly Dining</h1>
-		</div>
-		
-		<div style="font-size:16px;padding:15px;margin:0px -15px 0px -15px;">
-		<p>Dear Kishan,</p>
-		<p>Thank you for choosing Sky Lounge. We will do our best to make this experience phenomenal for you. We look forward to see you.
-		Bon Appétit.</p>
-		<div style="text-align:center">
-		<img src="https://ci4.googleusercontent.com/proxy/oZJFixdJqatJ4bPRlelACrUAiS7mmSp4OJja5qmREUBJVu47cIun1ciQ0hg1No-a2urGigmBjTwz7vi08Cs9arEdNLy3VuY916U=s0-d-e1-ft#http://www.skylounge.in/media/hero-image-receipt.png"
-				width="125" height="120" style=";border:0px">
-				<h1>Thank You For Your Order!</h1>
-				<h2>Order ID :125C4E</h2>
-				<h3>Venue</h3>
-		
-				<p>Oct. 2, 2018 (01:00PM - 02:00PM)</p>
-				<p>Sky Lounge<br>
-				Kempapura Main Road, Nr. Nagavara Lake,<br>
-				Nagavara, Hebbal, Bengaluru,<br>
-				Karnataka - 560024, India.</p>
-				</div>
-				</div>
-		
-				<div style="margin:30px;padding:10px;background-color:#f3f3f4">
-				<h3>Order Confirmation</h3>
-				</div>
-				<div style="margin:30px;padding:10px">
-					
-					<div style="padding:0px 30px;margin:0px -15px 10px -15px">
-						<div style="width:75%;float:left;position:relative;text-align:left">Vegetarian Menu</div>
-						<div style="width:25%;float:left;position:relative;text-align:left">2</div>
-					</div>
-					
-					<div style="padding:20px 30px;margin:0px -15px 0px -15px">
-						<div style="width:75%;float:left;position:relative;text-align:left">Non Vegetarian Menu</div>
-						<div style="width:25%;float:left;position:relative;text-align:left">1</div>
-					</div>
-					
-					<div style="padding:20px 30px 40px 30px;margin:10px -15px 0px -15px;background-color:#f3f3f4;font-weight:bold;font-size:14px;">
-						<div style="width:75%;float:left;text-align:left">Total</div>
-						<div style="width:25%;float:left;text-align:left">3</div>
-					</div>
-				
-					
-				</div>
-				<div style="padding:10px;margin:30px;text-align:center;">
-					<h3>Munish Sethi</h3>
-					<h3>munishsethi777@gmail.com</h3>
-					<h3>9814600356</h3>
-				</div>
-				<div style="padding:15px;margin:30px;text-align:center;background-color:#1ab394;color:white;margin:0px -15px 0px -15px;">
-				<h1>Fly Dining</h1>
-				<br>
-				<h2>+91 99889 99919</h2>
-				<h2>info@flydining.com</h2>
-				</div>
-		
-		
-				</div>
-				</div>
- 
- 
+	
 						<form role="form" id="bookingForm" method="post" action="bookingsummary.php" class="form-inline">
 							<input type="hidden" id ="timeslotseq" name="timeslotseq" />
 							<input type="hidden" id ="selectedDate" name="selectedDate" />
@@ -183,25 +118,31 @@ function loadData(selectedDate){
 			var html = getHeaders();
 		 $.each( data, function( key, val ) {
 	 		html += '<div class="row ibox-content">';
-			html += '<div class="col-lg-2">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
-			html += '<div class="col-lg-3">'+val.timeslot+ '</div>';
+			html += '<div class="col-xs-2">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
+			html += '<div class="col-xs-3">'+val.timeslot+ '</div>';
 			var fair = "";
 			var menuList = val.menu; 
 			var menuArr = [];
 			var menuSeqs = [];
 			$.each( menuList, function( k, menu ) {
-				fair += "Rs. " + menu.rate +"("+menu.menutitle+")<br>";	
+				fair += "Rs. " + menu.rate +"<small class='text-muted'> ("+menu.menutitle+")</small><br>";	
 				menuArr[k] = menu.menutitle;
 				menuSeqs[k] = menu.menuseq
 	 		});
-			html += '<div class="col-lg-3">' + fair + '</div>';
-			html += '<div class="col-lg-2"><div class="progress progress-mini">';
-			html += '<div style="width: '+val.availableInPercent+'%" class="progress-bar"></div></div>';
+			html += '<div class="col-xs-3">' + fair + '</div>';
+			html += '<div class="col-xs-2 text-center"><div class="progress progress-mini">';
+			progressBarClass = "bg-primary";
+			if(val.availableInPercent > 0 && val.availableInPercent <=25){
+				progressBarClass = "bg-danger";
+			}else if(val.availableInPercent > 25 && val.availableInPercent <=75){
+				progressBarClass = "bg-warning";
+			}
+			html += '<div style="width: '+val.availableInPercent+'%" class="'+progressBarClass+' progress-bar"></div></div>';
 			html += '<small class="text-muted">'+ val.seatsAvailable  +' Seats</small></div>';
 			if(val.seatsAvailable == 0){
-				html += '<div class="col-lg-2"><button class="btn btn-danger btn-xs">Sold out</button></div>';	
+				html += '<div class="col-xs-2"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
 			}else{
-				html += '<div class="col-lg-2"><button class="btn btn-primary btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button></div>';
+				html += '<div class="col-xs-2"><button class="btn btn-primary btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button></div>';
 			}
 			html += '</div>';
 		});
@@ -310,11 +251,11 @@ function getCurrentDate(){
 }
 function getHeaders(){
 	var html = '<div class="row ibox-content">'
-		html += '<div class="col-lg-2">Date</div>';
-		html += '<div class="col-lg-3">Slot Time</div>';
-		html += '<div class="col-lg-3">Fare</div>';
-		html += '<div class="col-lg-2">Seats Available</div>'
-		html += '<div class="col-lg-2">Action</div>'
+		html += '<div class="col-xs-2">Date</div>';
+		html += '<div class="col-xs-3">Slot Time</div>';
+		html += '<div class="col-xs-3">Fare</div>';
+		html += '<div class="col-xs-2 text-center">Seats Available</div>'
+		html += '<div class="col-xs-2">Action</div>'
 		html += '</div>';
 		return html;
 }

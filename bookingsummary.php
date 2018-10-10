@@ -69,42 +69,42 @@ if(!empty($amount)){
                     	<div class="col-lg-4">
                     		<div class="ibox-content">
                     				<div class="row" style="margin-bottom:5px">
-	                       				<div class="col-md-8"><h3>BOOKING SUMMARY</h3></div>
-	                       				<div class="col-md-4 text-right"><button type="button" onclick="javascript:back()" class="btn btn-outline btn-info btn-xs">Change</button></div>
+	                       				<div class="col-xs-8"><h3>BOOKING SUMMARY</h3></div>
+	                       				<div class="col-xs-4 text-right"><button type="button" onclick="javascript:back()" class="btn btn-outline btn-info btn-xs">Change</button></div>
 	                       			</div>
 	                       			<div class="row" style="margin-bottom:5px">
-	                       				<div class="col-md-8">SLOT <?php echo $timeSlot->getTitle() . " (".$selectedDate.")"?></div>
-	                       				<div class="col-md-4 text-right"><?php echo "Rs " . $amount?></div>
+	                       				<div class="col-xs-8">SLOT <?php echo $timeSlot->getTitle() . "<br>(".$selectedDate.")"?></div>
+	                       				<div class="col-xs-4 text-right"><?php echo "Rs " . $amount?></div>
 	                       			</div>
 	                       			<div class="row">	
-	                       				<div class="col-lg-8">
+	                       				<div class="col-xs-8">
 	                       					<small class="text-muted">
 	                       						<?php echo $menuHml?>
 	                       					</small>
 	                       				</div>
-	                       				<div class="col-lg-4 text-right"></div>
+	                       				<div class="col-xs-4 text-right"></div>
 	                       			</div>
 	                       			
 	                       			<div class="row m-b-sm">	
-	                       				<div class="col-lg-8">
+	                       				<div class="col-xs-8">
 	                       					<small class="text-muted">
 	                       						Internet Handling Fees
 	                       					</small>
 	                       				</div>
-	                       				<div class="col-lg-4 text-right">Rs 750.00</div>
+	                       				<div class="col-xs-4 text-right">Rs 750.00</div>
 	                       			</div>
 	                       			<div class="row bg-muted p-h-sm">	
-	                       				<div class="col-lg-8">
+	                       				<div class="col-xs-8">
 	                       					Sub Total
 	                       				</div>
-	                       				<div class="col-lg-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
+	                       				<div class="col-xs-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
 	                       			</div>
 	                       			
 	                       			<div class="row bg-success p-h-sm text-uppercase font-bold">	
-	                       				<div class="col-lg-8">
+	                       				<div class="col-xs-8">
 	                       					AMOUNT PAYABLE
 	                       				</div>
-	                       				<div class="col-lg-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
+	                       				<div class="col-xs-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
 	                       			</div>
 	                       			<form id="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
 	                       				<input type="hidden" id ="call" name="call" value="saveBooking"/>
@@ -114,13 +114,13 @@ if(!empty($amount)){
 		                       			<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Name</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="fullName" name="fullName" required placeholder="FullName" class="form-control">
+		                                    	<input type="text" id="fullName" name="fullName" required placeholder="fullname" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Email</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="email" id="email" name="email" required email placeholder="Email" class="form-control">
+		                                    	<input type="email" id="email" name="email" required email placeholder="email" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
@@ -130,9 +130,11 @@ if(!empty($amount)){
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
-		                                		<button class="btn btn-primary col-lg-12" id="rzp-button">
+	                                		<div class="col-lg-12">
+		                                		<button class="btn btn-primary" id="rzp-button" style="width:100%">
 			                                		Make Payment of Rs <?php echo $formatedTotalAmount?>
 			                                	</button>
+		                                	</div>
 		                                	
 	                                	</div>
 	                       			</form>
