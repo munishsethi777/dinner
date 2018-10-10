@@ -48,22 +48,16 @@
         
         
         function loadGrid(){
-			$("#productsGrid").bind('bindingcomplete', function (event) {
-        		
-        	});
-        	var actions = function (row, columnfield, value, defaulthtml, columnproperties) {
-                data = $('#productsGrid').jqxGrid('getrowdata', row);
-                var html = "<div style='text-align: center; margin-top:1px;font-size:18px'><a href='javascript:viewDetail("+ data['seq'] + ")' ><i class='fa fa-server' title='View Detail'></i></a>";
-                    html += "</div>";
-                
-                return html;
-            }
-            var columns = [
-              { text: 'id', datafield: 'seq' , hidden:true},
-              { text: 'Code', datafield: 'code', width:"16%"},
-              { text: 'Title', datafield: 'title', width:"50%"},
-              { text: 'Modified', datafield: 'lastmodifiedon',cellsformat: 'd-M-yyyy hh:mm tt',width:"15%"},
-              { text: 'Created', datafield: 'createdon',cellsformat: 'd-M-yyyy hh:mm tt',width:"15%"}              
+			var columns = [
+			  { text: 'Payment ID', datafield: 'transactionid', width:"10%"}, 			
+			  { text: 'id', datafield: 'seq' , hidden:true},
+              { text: 'Booked On', datafield: 'bookedon',cellsformat: 'd-M-yyyy hh:mm tt',width:"15%"},
+              { text: 'Booking Date', datafield: 'bookingdate',cellsformat: 'd-M-yyyy',width:"10%"},
+              { text: 'Slot', datafield: 'timeslot',width:"15%"},
+              { text: 'Menu', datafield: 'menu', width:"15%" ,sortable:false},
+              { text: 'Customer Name', datafield: 'fullname',width:"12%"},
+              { text: 'Email', datafield: 'email',width:"20%"},
+              { text: 'Mobile', datafield: 'mobile',width:"10%"}
             ]
            
             var source =
@@ -71,16 +65,19 @@
                 datatype: "json",
                 id: 'id',
                 pagesize: 20,
-                sortcolumn: 'lastmodifiedon',
+                sortcolumn: 'bookedon',
                 sortdirection: 'desc',
-                datafields: [{ name: 'seq', type: 'integer' }, 
-                            { name: 'code', type: 'string' }, 
-                            { name: 'title', type: 'string' },
-                            { name: 'lastmodifiedon', type: 'date'},
-                            { name: 'createdon', type: 'date'},
-                            { name: 'action', type: 'string' } 
+                datafields: [{ name: 'seq', type: 'integer' },
+                            { name: 'bookedon', type: 'date' },
+                            { name: 'bookingdate', type: 'date' },
+                            { name: 'transactionid', type: 'string'},
+                            { name: 'timeslot', type: 'string'},
+                            { name: 'email', type: 'string'},
+                            { name: 'fullname', type: 'string'},
+                            { name: 'mobile', type: 'string'},
+                            { name: 'menu', type: 'string' }
                             ],                          
-                url: 'Actions/ProductAction.php?call=getProducts',
+                url: 'Actions/BookingAction.php?call=getBookings',
                 root: 'Rows',
                 cache: false,
                 beforeprocessing: function(data)
@@ -90,27 +87,18 @@
                 filter: function()
                 {
                     // update the grid and send a request to the server.
-                    $("#productsGrid").jqxGrid('updatebounddata', 'filter');
+                    $("#bookingsgrid").jqxGrid('updatebounddata', 'filter');
                 },
                 sort: function()
                 {
                     // update the grid and send a request to the server.
-                    $("#productsGrid").jqxGrid('updatebounddata', 'sort');
-                },
-                addrow: function (rowid, rowdata, position, commit) {
-                    commit(true);
-                },
-                deleterow: function (rowid, commit) {
-                    commit(true);
-                },
-                updaterow: function (rowid, newdata, commit) {
-                    commit(true);
+                    $("#bookingsgrid").jqxGrid('updatebounddata', 'sort');
                 }
             };
             
             var dataAdapter = new $.jqx.dataAdapter(source);
             // initialize jqxGrid
-            $("#productsGrid").jqxGrid(
+            $("#bookingsgrid").jqxGrid(
             {
             	width: '100%',
     			height: '75%',
@@ -124,7 +112,6 @@
     			enabletooltips: true,
     			columnsresize: true,
     			columnsreorder: true,
-    			selectionmode: 'checkbox',
     			showstatusbar: true,
     			virtualmode: true,
     			rendergridrows: function (toolbar) {
@@ -133,62 +120,13 @@
                 renderstatusbar: function (statusbar) {
                     // appends buttons to the status bar.
                     var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
-                    var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>Add</span></div>");
-                    var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
-                    var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
                     var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
-
-                    container.append(addButton);
-                    container.append(editButton);
-                    container.append(deleteButton);
+                    
                     container.append(reloadButton);
                     statusbar.append(container);
-                    addButton.jqxButton({  width: 65, height: 18 });
-                    deleteButton.jqxButton({  width: 65, height: 18 });
-                    editButton.jqxButton({  width: 65, height: 18 });
                     reloadButton.jqxButton({  width: 70, height: 18 });
-                    // create new row.
-                    addButton.click(function (event) {
-                        location.href = ("createProduct.php");
-                    });
-                    editButton.click(function (event){
-                        var selectedrowindex = $("#productsGrid").jqxGrid('selectedrowindexes');
-                        var value = -1;
-                        indexes = selectedrowindex.filter(function(item) { 
-                            return item !== value
-                        })
-                        if(indexes.length != 1){
-                            bootbox.alert("Please Select single row for edit.", function() {});
-                            return;    
-                        }
-                        var row = $('#productsGrid').jqxGrid('getrowdata', indexes);
-                        $("#id").val(row.seq);                        
-                        $("#form1").submit();                   
-                        });
-                     deleteButton.click(function (event) {
-                    	 deleteRows("productsGrid","Actions/ProductAction.php?call=deleteProduct");
-                     });
-                     $("#productsGrid").bind('rowselect', function (event) {
-                         var selectedRowIndex = event.args.rowindex;
-                          var pageSize = event.args.owner.rows.records.length - 1;                       
-                         if($.isArray(selectedRowIndex)){           
-                             if(isSelectAll){
-                                 isSelectAll = false;    
-                             } else{
-                                 isSelectAll = true;
-                             }                                                                     
-                             $('#productsGrid').jqxGrid('clearselection');
-                             if(isSelectAll){
-                                 for (i = 0; i <= pageSize; i++) {
-                                     var index = $('#productsGrid').jqxGrid('getrowboundindex', i);
-                                     $('#productsGrid').jqxGrid('selectrow', index);
-                                 }    
-                             }
-                         }                        
-                    });
-                    // reload grid data.
                     reloadButton.click(function (event) {
-                        $("#productsGrid").jqxGrid({ source: dataAdapter });
+                        $("#bookingsgrid").jqxGrid({ source: dataAdapter });
                     });
                 }
             });
