@@ -4099,9 +4099,9 @@ table.table-mail tr td {
   border-color: #ed5565;
   color: #ffffff;
 }
-.progress-bar {
+/**.progress-bar {
   background-color: #1ab394;
-}
+}**/
 .progress-small,
 .progress-small .progress-bar {
   height: 10px;

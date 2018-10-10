@@ -3,7 +3,7 @@ class Booking{
 	public static $tableName = "bookings";
 	public static $className = "Booking";
 	
-	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot;
+	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot,$bookingdate;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -55,6 +55,12 @@ class Booking{
 	public function getTimeSlot(){
 		return $this->timeslot;
 	}
+	public function setBookingDate($bookingDate){
+		$this->bookingdate = $bookingDate;
+	}
 	
+	public function getBookingDate(){
+		return $this->bookingdate;
+	}
 	
 }
