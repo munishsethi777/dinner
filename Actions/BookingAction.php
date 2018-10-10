@@ -1,6 +1,9 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
+
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 $call = "";
 if(isset($_GET["call"])){
 	$call = $_GET["call"];
@@ -12,19 +15,26 @@ $message = "";
 if($call == "saveBooking"){
 	try{
 	$bookingMgr = BookingMgr::getInstance();
-	$timSlotSeq = $_POST["timeSlotSeq"];
-	$mobile = $_POS["mobile"];
+	$bookingDetailMgr = BookingDetailMgr::getInstance();
+	
+	$timSlotSeq = $_POST["timeslotSeq"];
+	$mobile = $_POST["mobile"];
 	$emailId = $_POST["email"];
 	$fullName = $_POST["fullName"];
 	$selectedDate = $_POST["selectedDate"];
+	$menuPersonsStr = $_POST["menuPersons"];
+	$menuPersonsObj = json_decode($menuPersonsStr);
 	$booking = new Booking();
 	$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
+	$bookedOn = $bookedOn->setTime(0, 0);
+	
 	$booking->setBookedOn($bookedOn);
 	$booking->setEmailId($emailId);
 	$booking->setFullName($fullName);
 	$booking->setMobileNumber($mobile);
 	$booking->setTimeSlot($timSlotSeq);
-	$bookingMgr->saveBooking($booking);
+	$bookingId = $bookingMgr->saveBooking($booking);
+	$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
 	$message = "Booking Saved Successfully";
 	}catch(Exception $e){
 		$success = 0;

@@ -24,7 +24,7 @@ where bookedon = '$date' and timeslot = $timeSlots";
 	
 	
 	public function saveBooking($bookingObj){
-		$id = self::$dataStore->save($object);	
+		$id = self::$dataStore->save($bookingObj);	
 		return $id;
 	}
 }

@@ -16,5 +16,19 @@ class BookingDetailMgr{
 		}
 		return self::$bookingDetailMgr;
 	}
+	
+	public function saveBookingDetails($bookingId, $menuDetails){
+		foreach($menuDetails as $key=>$value){
+			if($value == null || $value == 0){
+				continue;
+			}
+			$bookingDetail = new BookingDetail();
+			$bookingDetail->setBookingSeq($bookingId);
+			$bookingDetail->setMenuSeq($key);
+			$bookingDetail->setMembers($value);
+			self::$dataStore->save($bookingDetail);
+		}
+		
+	}
 
 }

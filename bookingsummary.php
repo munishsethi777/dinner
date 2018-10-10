@@ -105,24 +105,25 @@ if(!empty($amount)){
 	                       			</div>
 	                       			<form id="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
 	                       				<input type="hidden" id ="call" name="call" value="saveBooking"/>
-	                       				<input type="hidden" id ="timeslotseq" name="timeslotseq" value="<?php echo $timeSlotSeq?>" />
+	                       				<input type="hidden" id ="timeslotseq" name="timeslotSeq" value="<?php echo $timeSlotSeq?>" />
 	                       				<input type="hidden" id ="selectedDate" name="selectedDate" value="<?php echo $selectedDate?>" />
+	                       				<input type="hidden" id ="menupersons" name="menuPersons" value='<?php echo $menus?>' />
 		                       			<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Name</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="fullName" required placeholder="FullName" class="form-control">
+		                                    	<input type="text" id="fullName" name="fullName" required placeholder="FullName" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Email</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="email" id="email" required email placeholder="Email" class="form-control">
+		                                    	<input type="email" id="email" name="email" required email placeholder="Email" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Mobile</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="mobile" required placeholder="mobile" class="form-control">
+		                                    	<input type="text" id="mobile" name="mobile" required placeholder="mobile" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
@@ -164,6 +165,8 @@ $( document ).ready(function() {
 
 
 document.getElementById('rzp-button').onclick = function(e){
+	saveBooking();
+	return;
 	if($("#userInfoForm")[0].checkValidity()) {
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();

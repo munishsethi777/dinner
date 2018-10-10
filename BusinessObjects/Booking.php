@@ -3,7 +3,7 @@ class Booking{
 	public static $tableName = "bookings";
 	public static $className = "Booking";
 	
-	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$menu,$timeslot;
+	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -47,13 +47,6 @@ class Booking{
 	
 	public function getGSTNumber(){
 		return $this->gstnumber;
-	}
-	
-	public function setMenu($menu_){
-		$this->menu = $menu_;
-	}
-	public function getMenu(){
-		return $this->menu;
 	}
 	
 	public function setTimeSlot($timeSlot_){
