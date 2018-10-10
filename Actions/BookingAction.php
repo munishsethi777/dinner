@@ -14,28 +14,28 @@ $success = 1;
 $message = "";
 if($call == "saveBooking"){
 	try{
-	$bookingMgr = BookingMgr::getInstance();
-	$bookingDetailMgr = BookingDetailMgr::getInstance();
-	
-	$timSlotSeq = $_POST["timeslotSeq"];
-	$mobile = $_POST["mobile"];
-	$emailId = $_POST["email"];
-	$fullName = $_POST["fullName"];
-	$selectedDate = $_POST["selectedDate"];
-	$menuPersonsStr = $_POST["menuPersons"];
-	$menuPersonsObj = json_decode($menuPersonsStr);
-	$booking = new Booking();
-	$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
-	$bookedOn = $bookedOn->setTime(0, 0);
-	
-	$booking->setBookedOn($bookedOn);
-	$booking->setEmailId($emailId);
-	$booking->setFullName($fullName);
-	$booking->setMobileNumber($mobile);
-	$booking->setTimeSlot($timSlotSeq);
-	$bookingId = $bookingMgr->saveBooking($booking);
-	$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
-	$message = "Booking Saved Successfully";
+		$bookingMgr = BookingMgr::getInstance();
+		$bookingDetailMgr = BookingDetailMgr::getInstance();
+		
+		$timSlotSeq = $_POST["timeslotSeq"];
+		$mobile = $_POST["mobile"];
+		$emailId = $_POST["email"];
+		$fullName = $_POST["fullName"];
+		$selectedDate = $_POST["selectedDate"];
+		$menuPersonsStr = $_POST["menuPersons"];
+		$menuPersonsObj = json_decode($menuPersonsStr);
+		$booking = new Booking();
+		$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
+		$bookedOn = $bookedOn->setTime(0, 0);
+		
+		$booking->setBookedOn($bookedOn);
+		$booking->setEmailId($emailId);
+		$booking->setFullName($fullName);
+		$booking->setMobileNumber($mobile);
+		$booking->setTimeSlot($timSlotSeq);
+		$bookingId = $bookingMgr->saveBooking($booking);
+		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
+		$message = "Booking Saved Successfully";
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
@@ -44,5 +44,12 @@ if($call == "saveBooking"){
 	$response["success"]  = $success;
 	$response["message"]  = $message;
 	echo json_encode($response);
-	}
+	return;
+}
+
+if($call == "getBookings"){
+	$bookingMgr = BookingMgr::getInstance();
+	$bookingJson = $bookingMgr->getBookingJsonForGrid();
+	echo $bookingJson;
+}
 
