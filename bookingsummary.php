@@ -191,7 +191,10 @@ document.getElementById('rzp-button').onclick = function(e){
 			        "email": email
 			    },
 			    "notes": {
-			        "address": "Hello World"
+			    	"BookingDate": <?php echo $selectedDate; ?>,
+			    	"BookingSlot": <?php echo $timeSlot->getTitle()?>,
+			    	"BookingDetails": <?php echo $menuHml?>,
+			        
 			    },
 			    "theme": {
 			        "color": "#1ab394"
