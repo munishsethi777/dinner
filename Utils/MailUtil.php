@@ -107,6 +107,7 @@ class MailUtil{
 		$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 		$mail->MsgHTML($body);
 		$mail->AddAddress($toEmail);
+		$mail->AddBCC("munishsethi777@gmail.com");
 		//$mail->AddAttachment("images/phpmailer.gif");      // attachment
 		//$mail->AddAttachment("images/phpmailer_mini.gif"); // attachment
 		
