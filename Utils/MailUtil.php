@@ -101,12 +101,13 @@ class MailUtil{
 		$mail->Username   = "info@virsacouture.com";  // GMAIL username
 		$mail->Password   = "Munish#314";            // GMAIL password
 		
-		$mail->SetFrom('bookings@flydining.com', 'First Last');
-		$mail->AddReplyTo("bookings@flydining.com","First Last");
+		$mail->SetFrom('bookings@flydining.com', 'FlyDining');
+		$mail->AddReplyTo("bookings@flydining.com","FlyDining");
 		$mail->Subject = $subject;
 		$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 		$mail->MsgHTML($body);
 		$mail->AddAddress($toEmail);
+		$mail->AddBCC("munishsethi777@gmail.com");
 		//$mail->AddAttachment("images/phpmailer.gif");      // attachment
 		//$mail->AddAttachment("images/phpmailer_mini.gif"); // attachment
 		

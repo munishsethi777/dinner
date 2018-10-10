@@ -15,6 +15,9 @@
 		.xdsoft_datetimepicker .active{
 			width:97%;
 		}
+		.xdsoft_datetimepicker .xdsoft_label{
+			z-index:0 !important;
+		}
 	</style>
 </head>
 <body>
