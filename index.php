@@ -278,8 +278,10 @@ function submitBookingForm(seats,menuSeqs){
     var totalPersons = 0;
 	$.each( menuSeqArr, function( key, seq ) {
 		personMenuCount = $("#"+seq+"_menuCountText").val();
-		personCounts[seq]= personMenuCount;
-		totalPersons += parseInt(personMenuCount);
+		if(personMenuCount != ""){
+			personCounts[seq]= personMenuCount;
+			totalPersons += parseInt(personMenuCount);
+		}
 	}) 
 	if(totalPersons > seats){
         alert("Total Seats available for this slot are "+seats+" only.");
