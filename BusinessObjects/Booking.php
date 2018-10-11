@@ -3,7 +3,7 @@ class Booking{
 	public static $tableName = "bookings";
 	public static $className = "Booking";
 	
-	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot,$bookingdate;
+	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot,$bookingdate,$transactionid,$amount;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -63,4 +63,17 @@ class Booking{
 		return $this->bookingdate;
 	}
 	
+	public function setTransactionId($transactionId_){
+		$this->transactionid = $transactionId_;
+	}
+	public function getTransactionId(){
+		return $this->transactionid;
+	}
+	
+	public function setAmount($amount_){
+		$this->amount = $amount_;
+	}
+	public function getAmount(){
+		return $this->amount;
+	}
 }

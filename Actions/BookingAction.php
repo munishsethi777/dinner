@@ -25,6 +25,8 @@ if($call == "saveBooking"){
 		$fullName = $_POST["fullName"];
 		$selectedDate = $_POST["selectedDate"];
 		$menuPersonsStr = $_POST["menuPersons"];
+		$tansactionId = "222";//$_POST["transactionId"];
+		$amount = "23";//$_POST["amount"];
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$booking = new Booking();
 
@@ -37,6 +39,8 @@ if($call == "saveBooking"){
 		$booking->setFullName($fullName);
 		$booking->setMobileNumber($mobile);
 		$booking->setTimeSlot($timSlotSeq);
+		$booking->setAmount($amount);
+		$booking->setTransactionId($tansactionId);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);

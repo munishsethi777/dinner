@@ -1,6 +1,6 @@
 <?php
 class TimeSlot{
-	public static $tableName = "timeSlots";
+	public static $tableName = "timeslots";
 	public static $className = "TimeSlot";
 	private $seq,$title,$seats,$time;
 	

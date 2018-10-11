@@ -1,6 +1,6 @@
 <?php
 class BookingDetail{
-	public static $tableName = "bookingDetails";
+	public static $tableName = "bookingdetails";
 	public static $className = "BookingDetail";
 	private $seq,$bookingseq,$menuseq,$members;
 	public function setSeq($seq_){

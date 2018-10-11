@@ -84,21 +84,23 @@ class SessionUtil{
 
 
     public function destroySession(){
-        $boolAdmin = self::isSessionAdmin();
-        $boolUser = self::isSessionUser();
+        //$boolAdmin = self::isSessionAdmin();
+        //$boolUser = self::isSessionUser();
         $_SESSION = array();
         session_destroy();
-        if($boolAdmin == true){
-            header("Location:adminLogin.php");
-            die;
-        }
+//         if($boolAdmin == true){
+//             header("Location:adminLogin.php");
+//             die;
+//         }
 
-        if($boolUser == true){
-            header("Location:userLogin.php");
-            die;
+//         if($boolUser == true){
+//             header("Location:userLogin.php");
+//             die;
 
-        }
-        AuthUtil::destroy();
+//         }
+//         AuthUtil::destroy();
+        header("Location:adminlogin.php");
+        die;
     }
     public function sessionCheck($loginType){
         $bool = self::isSessionAdmin();

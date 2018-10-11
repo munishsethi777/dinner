@@ -18,7 +18,7 @@ class BookingMgr{
 	
 	public function getAvailableSeats($date,$timeSlots){
 		$query = "SELECT sum(bookingdetails.members) as totalcount from bookings inner JOIN bookingdetails on bookings.seq = bookingdetails.bookingseq
-where bookedon = '$date' and timeslot = $timeSlots";
+where bookingdate = '$date' and timeslot = $timeSlots";
 		return self::$dataStore->executeCountQueryWithSql($query);
 	}
 	
@@ -67,12 +67,20 @@ inner join timeslots on bookings.timeslot = timeslots.seq inner join menus on bo
 				$arr["menu"] = $members . " - " . $menuTitle;
 			}
 			$bookingArr[$bookingSeq] = $arr;
-			array_push($bookingMainArr, $arr);
 		}
+		$bookingMainArr = $this->getArrayForGrid($bookingArr);
 		$mainArray["Rows"] = $bookingMainArr;
 		$mainArray["TotalRows"] = $this->getBookingCount();
 		$json = json_encode($mainArray);
 		return $json;
+	}
+	
+	public function getArrayForGrid($bookingArr){
+		$mainBookingArr = array();
+		foreach ($bookingArr as $booking){
+			array_push($mainBookingArr, $booking);
+		}
+		return $mainBookingArr;
 	}
 	
 	public function getBookingCount(){

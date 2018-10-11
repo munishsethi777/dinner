@@ -172,8 +172,8 @@ $( document ).ready(function() {
 
 
 document.getElementById('rzp-button').onclick = function(e){
-	saveBooking();
-	return;
+	//saveBooking();
+	//return;
 	if($("#userInfoForm")[0].checkValidity()) {
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
