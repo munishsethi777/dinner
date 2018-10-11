@@ -20,7 +20,7 @@ class TimeSlotMgr{
 	public function getTimeSlotsJson(){
 		$selectedDate = $_GET["selectedDate"];
 		$selectedDate .= " 00:00:00";
-		$query = "select timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
+		$query = "select timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
 inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq";
 		$timeSlots = self::$dataStore->executeQuery($query);
 		$slotArr = array();
@@ -36,6 +36,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$arr["time"] = $timeSlot["time"];
 			$totalSeats = $timeSlot["seats"];
 			$arr["seats"] = $totalSeats;
+			$arr["description"] = $timeSlot["description"];
 			$availableInPercent = 100;
 			if($bookedSeats > 0){
 				$percent = ($bookedSeats*100)/$totalSeats;

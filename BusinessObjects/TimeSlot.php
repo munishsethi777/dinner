@@ -2,7 +2,7 @@
 class TimeSlot{
 	public static $tableName = "timeslots";
 	public static $className = "TimeSlot";
-	private $seq,$title,$seats,$time;
+	private $seq,$title,$seats,$time,$description;
 	
 	public function setSeq($seq_){
 			$this->seq = $seq_;
@@ -31,5 +31,11 @@ class TimeSlot{
 	public function getTime(){
 		return $this->time;
 	}
-		
+	
+	public function setDescription($description_){
+		$this->description = $description_;
+	}
+	public function getDescription(){
+		return $this->description;
+	}	
 }

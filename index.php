@@ -19,6 +19,7 @@
 			z-index:0 !important;
 		}
 	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
  <div id="wrapper">
@@ -122,7 +123,8 @@ function loadData(selectedDate){
 		 $.each( data, function( key, val ) {
 	 		html += '<div class="row ibox-content">';
 			html += '<div class="col-xs-2">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
-			html += '<div class="col-xs-3">'+val.timeslot+ '</div>';
+			html += '<div class="col-xs-3">'+val.timeslot;
+			html += '<br/><small class="text-muted">'+ val.description  +'</small></div>';
 			var fair = "";
 			var menuList = val.menu; 
 			var menuArr = [];
