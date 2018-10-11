@@ -132,6 +132,12 @@ if(!empty($amount)){
 		                                    	<input type="text" id="mobile" name="mobile" required placeholder="mobile" class="form-control">
 		                                    </div>
 	                                	</div>
+	                                	
+	                                	<div class="form-group row">
+	                                		<div class="col-lg-10 i-checks" id="termDiv">
+	                                        	<label> <input type="checkbox" name="termsAndConditions" id="termsAndConditions" > I agree to accept the terms & condition </label>
+	                                        </div>
+	                                    </div>
 	                                	<div class="form-group row">
 	                                		<div class="col-lg-12">
 		                                		<button class="btn btn-primary" id="rzp-button" style="width:100%">
@@ -156,6 +162,28 @@ if(!empty($amount)){
 		</div>
    	</div>
  </div>
+ 	<div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog">
+        	<div class="modal-content animated fadeIn">
+	        	<div class="modal-header">
+	            	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	                <h4 class="modal-title">Terms & Conditions</h4>
+	            </div>
+	            <div class="modal-body">
+	            	<ul>
+	             	   <li>Outside Food and beverages is not allowed inside our premises.</li>
+					   <li>Photography and videography is not allowed.</li>
+					   <li>Ticket once purchased cannot be exchanged or adjusted/transferred for any other slot.</li>
+					   <li>Handbags, Laptops/Tabs , Cameras and all other electronic itens are not allowed on Flydining.</li>
+					   <li>Smoking is strictly not permitted on Flyydining.</li> 
+					   <li>People under Influence of Alcohal/Drugs will not be allowed in Flydining.</li> 
+					   <li>We reserve the Right of Admission.</li>
+					 </ul>
+			    </div>
+	            <div id = "footerDiv" class="modal-footer"></div>
+	        </div>
+	    </div>
+	  </div>
 </body>
 </html>
 <script src="scripts/FormValidators/FormValidators.js"></script>
@@ -168,6 +196,16 @@ $( document ).ready(function() {
 	$( ".nvegbtn" ).click(function() {
 		$(".nvegimg").show();
 		$(".vegimg").hide();
+	});
+	$('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+	$('#termDiv').on('ifChanged', function(event){
+		var flag  = $("#termsAndConditions").is(':checked');
+		if(flag){
+			$('#myModal4').modal('show');
+		}
 	});
 });
 
@@ -197,9 +235,9 @@ document.getElementById('rzp-button').onclick = function(e){
 			        "email": email
 			    },
 			    "notes": {
-			    	"BookingDate": <?php echo $selectedDate; ?>,
-			    	"BookingSlot": <?php echo $timeSlot->getTitle()?>,
-			    	"BookingDetails": <?php echo $menuHml?>,
+			    	"BookingDate": "<?php echo $selectedDate; ?>",
+			    	"BookingSlot": "<?php echo $timeSlot->getTitle()?>",
+			    	"BookingDetails": "<?php echo $menuHml?>",
 			        
 			    },
 			    "theme": {
