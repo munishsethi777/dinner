@@ -134,8 +134,8 @@ if(!empty($amount)){
 	                                	</div>
 	                                	
 	                                	<div class="form-group row">
-	                                		<div class="col-lg-10 i-checks" id="termDiv">
-	                                        	<label> <input type="checkbox" name="termsAndConditions" id="termsAndConditions" > I agree to accept the terms & condition </label>
+	                                		<div class="col-lg-10" id="termDiv">
+	                                        	<label> <input required class="i-checks" type="checkbox" name="termsAndConditions" id="termsAndConditions" ><a data-toggle="modal" data-target="#myModal4" href="#" >   I agree to accept the terms & condition</a></label>
 	                                        </div>
 	                                    </div>
 	                                	<div class="form-group row">
