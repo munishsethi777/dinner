@@ -80,7 +80,7 @@
 	                                        <div class="modal-body">
 	                                        	<div id="personCounts" class="row i-checks"></div>
 												<div class="hr-line-dashed"></div>
-												<div id="menuDiv"></div>	
+												<div id="menuDiv" class="row"></div>	
 										    </div>
 	                                        <div id = "footerDiv" class="modal-footer"></div>
 	                                    </div>
@@ -162,7 +162,7 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	$("#footerDiv").html("");
 	var html = "";
 	for(var i = 1; i <= seats; i++) {
-		    html += '<div class="col-sm-1">';
+		    html += '<div class="col-xs-1">';
 		 	html += '<label class="checkbox-inline">';
 			html += '<input value="'+i+'" type="radio" onchange="setValue()" name="personCount" id="personCount">'+i;
 			html += '</label></div>';
