@@ -164,6 +164,7 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	$("#footerDiv").html("");
 	var html = "";
 	for(var i = 1; i <= seats; i++) {
+			
 		    html += '<div class="col-xs-1">';
 		 	html += '<label class="checkbox-inline">';
 			html += '<input value="'+i+'" type="radio" onchange="setValue()" name="personCount" id="personCount">'+i;
@@ -173,8 +174,12 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	var str = "";
 	$("#menuDiv").html("");
 	$.each( menuSeqArr, function( key, seq ) {
+		className = "col-sm-3";
+		if(menuSeqArr.length == 1){
+			className = "col-sm-6";
+		}
 		var menuTitle = menuTitleArr[key];
-		str += '<div class="col-sm-3">';
+		str += '<div class="'+className+'">';
 		str += '<label class="checkbox-inline">';
 		str += '<input value="'+seq+'" type="radio" onchange="setValue()" name="menu" id="menuTitleRadio"><small> All '+ menuTitle+'</small>';
 		str += '</label></div>';
@@ -182,8 +187,12 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	});
 
 	$.each( menuSeqArr, function( key, seq ) {
+		className = "col-sm-3";
+		if(menuSeqArr.length == 1){
+			className = "col-sm-6";
+		}
 		var menuTitle = menuTitleArr[key];
-		str += '<div class="col-sm-3">';
+		str += '<div class="'+className+'">';
 		str += '<input style="width:100%;font-size:10px" type="text" class="menuCount text-muted" placeholder="'+menuTitle+' Count" id="'+seq+'_menuCountText" name="menuCountText">';			
 		str += '</div>';
 	});
