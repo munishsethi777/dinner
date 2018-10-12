@@ -25,8 +25,8 @@ if($call == "saveBooking"){
 		$fullName = $_POST["fullName"];
 		$selectedDate = $_POST["selectedDate"];
 		$menuPersonsStr = $_POST["menuPersons"];
-		$tansactionId = "222";//$_POST["transactionId"];
-		$amount = "23";//$_POST["amount"];
+		$tansactionId = $_POST["transactionId"];
+		$amount = $_POST["amount"];
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$booking = new Booking();
 

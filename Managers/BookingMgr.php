@@ -29,9 +29,8 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 	}
 	
 	public function getBookingJsonForGrid(){
-		$query = "select bookings.emailid as email,bookings.mobilenumber as mobile,bookings.seq as bookingseq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookingpayments.transactionid as transactionid, bookings.fullname as fullname,bookingdetails.members as members,timeslots.title as timeslot,menus.title as menutitle from bookings
-inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join bookingpayments on bookings.seq = bookingpayments.bookingseq
-inner join timeslots on bookings.timeslot = timeslots.seq inner join menus on bookingdetails.menuseq = menus.seq";
+		$query = "select bookings.emailid as email,bookings.mobilenumber as mobile,bookings.seq as bookingseq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,bookingdetails.members as members,timeslots.title as timeslot,menus.title as menutitle from bookings
+inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join timeslots on bookings.timeslot = timeslots.seq inner join menus on bookingdetails.menuseq = menus.seq";
 		$bookingDetails =  self::$dataStore->executeQuery($query,true);
 		$bookingArr = array();
 		$bookingMainArr = array();
