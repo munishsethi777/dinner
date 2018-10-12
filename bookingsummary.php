@@ -12,7 +12,7 @@ $menuArr = json_decode($menus);
 $menuHml = "";
 $amount = 0;
 $totalAmount = 0;
-$handlingCharges = 750;
+$handlingCharges = 0;
 $formatedTotalAmount = 0;
 $totalAmountInPaise = 0;
 foreach ($menuArr as $key=>$value){
@@ -31,6 +31,7 @@ if(!empty($amount)){
 	$formatedTotalAmount = number_format($totalAmount,2);
 	$totalAmountInPaise = $totalAmount * 100;
 }
+//$totalAmountInPaise = 100;
 ?>
 <html>
 <head>
@@ -92,7 +93,7 @@ if(!empty($amount)){
 	                       						Internet Handling Fees
 	                       					</small>
 	                       				</div>
-	                       				<div class="col-xs-4 text-right">Rs 750.00</div>
+	                       				<div class="col-xs-4 text-right">Rs 0.00</div>
 	                       			</div>
 	                       			<div class="row bg-muted p-h-sm">	
 	                       				<div class="col-xs-8">
@@ -211,8 +212,10 @@ $( document ).ready(function() {
 
 
 document.getElementById('rzp-button').onclick = function(e){
-	//saveBooking();
-	//return;
+//    $("#transactionId").val("testid");
+//    $("#amount").val("100");
+//    saveBooking();
+//    return;
 	if($("#userInfoForm")[0].checkValidity()) {
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
@@ -222,7 +225,7 @@ document.getElementById('rzp-button').onclick = function(e){
 			    "amount": "<?php echo $totalAmountInPaise?>", // 2000 paise = INR 20
 			    "name": "Flydining",
 			    "description": "Purchase Description",
-			    "image": "/your_logo.png",
+			    "image": "https://www.flydining.com/booking/images/logo.png",
 			    "handler": function (response){
 				    $("#transactionId").val(response.razorpay_payment_id);
 				    $("#amount").val("<?php echo $totalAmountInPaise?>");
@@ -258,7 +261,7 @@ function back(){
 }
 function saveBooking(){
     $('#userInfoForm').ajaxSubmit(function( data ){
-        alert("success");
+        alert("Transaction completed successfuly");
     })
 } 
 </script> 

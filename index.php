@@ -1,7 +1,7 @@
 <?php 
-//require_once('IConstants.inc');
+require_once('IConstants.inc');
 //require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
-//MailUtil::sendOrderEmailClient("munishsethi777@gmail.com");
+//MailUtil::sendSmtpMail("test subject","body","munishsethi777@gmail.com");
 
 ?>
 <html>
@@ -98,7 +98,7 @@ $(document).ready(function(){
         inline: true,
         sideBySide: true,
         format:'d-m-Y',
-        //minDate:new Date()
+        minDate:new Date()
     });
 	currDate = getCurrentDate();
 	loadData(currDate);

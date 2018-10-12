@@ -1,13 +1,9 @@
 <?php
-  $ConstantsArray = array('dbServerUrl' => '/Applications/XAMPP/xamppfiles/htdocs/dinner/'
-    ,'imagefolderpath' => '/Applications/XAMPP/xamppfiles/htdocs/dinner/images/'
-    ,'docspath' => '/Applications/XAMPP/xamppfiles/htdocs/dinner/docs/'
-    ,'ImagePath' => '/Applications/XAMPP/xamppfiles/htdocs/dinner/Images/AdminImages/'
-  	,'BadgeImagePath' => '/Applications/XAMPP/xamppfiles/htdocs/dinner/images/AdminImages/BadgeImages/'	
-    ,'UserImagePath' => '/Applications/XAMPP/xamppfiles/htdocs/dinner/Images/UserImages/'
-  	,'CompanyImagePath' => '/Applications/XAMPP/xamppfiles/htdocs/dinner/Images/CompanyImages/'
-  	,'CompanyImageURL' => 'http://localhost/dinner/Images/CompanyImages/'
-    ,'UserCertificatePath' => '/Applications/XAMPP/xamppfiles/htdocs/dinner/Images/UserCertificates/')
+ $docroot = $_SERVER["DOCUMENT_ROOT"];
+  $ConstantsArray = array('dbServerUrl' => $docroot .'/dinner/'
+    ,'imagefolderpath' => $docroot .'/dinner/images/'
+    ,'docspath' => $docroot .'/dinner/docs/'
+    ,'ImagePath' => $docroot .'/dinner/Images/AdminImages/')
   ;
   $ConstantsArray['ApplicationURL'] = "http://localhost/dinner/";
 

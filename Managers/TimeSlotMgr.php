@@ -35,7 +35,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$arr["timeslot"] = $timeSlot["timeslot"];
 			$arr["time"] = $timeSlot["time"];
 			$totalSeats = $timeSlot["seats"];
-			$arr["seats"] = $totalSeats;
+            $arr["seats"] = $totalSeats;
 			$arr["description"] = $timeSlot["description"];
 			$availableInPercent = 100;
 			if($bookedSeats > 0){
@@ -44,7 +44,10 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			}
 			$arr["availableInPercent"] = $availableInPercent;
 			$arr["seatsAvailable"] = $totalSeats - $bookedSeats;
-			$mainMenuArr = array();
+            if($arr["seatsAvailable"] <=0){
+                $arr["seatsAvailable"] = 0;
+            }
+            $mainMenuArr = array();
 			if(array_key_exists($timeSlotSeq, $slotArr)){
 				$arr = $slotArr[$timeSlotSeq];
 				$mainMenuArr = $arr["menu"];
