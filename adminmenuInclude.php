@@ -4,7 +4,7 @@ $isProduct = "";
 $isProductGroup = "";
 $isReport = "";
 $isChangePassword="";
-
+$isBookings="";
 $parts = Explode('/', $_SERVER["PHP_SELF"]);
 $file =  $parts[count($parts) - 1];
 
