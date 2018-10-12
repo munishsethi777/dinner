@@ -118,22 +118,27 @@ if(!empty($amount)){
 		                       			<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Name</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="fullName" name="fullName" required placeholder="fullname" class="form-control">
+		                                    	<input type="text" id="fullName" name="fullName" required placeholder="FullName" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Email</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="email" id="email" name="email" required email placeholder="email" class="form-control">
+		                                    	<input type="email" id="email" name="email" required email placeholder="Email" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Mobile</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="mobile" name="mobile" required placeholder="mobile" class="form-control">
+		                                    	<input type="text" id="mobile" name="mobile" required placeholder="Mobile" class="form-control">
 		                                    </div>
 	                                	</div>
-	                                	
+	                                	<div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">GST NO.</label>
+		                                    <div class="col-lg-10">
+		                                    	<input type="text" id="gst" name="gst" required placeholder="GST No." class="form-control">
+		                                    </div>
+	                                	</div>
 	                                	<div class="form-group row">
 	                                		<div class="col-lg-10" id="termDiv">
 	                                        	<label> <input required class="i-checks" type="checkbox" name="termsAndConditions" id="termsAndConditions" ><a data-toggle="modal" data-target="#myModal4" href="#" >   I agree to accept the terms & condition</a></label>
@@ -212,10 +217,10 @@ $( document ).ready(function() {
 
 
 document.getElementById('rzp-button').onclick = function(e){
-//    $("#transactionId").val("testid");
-//    $("#amount").val("100");
-//    saveBooking();
-//    return;
+    //$("#transactionId").val("testid");
+    //$("#amount").val("100");
+   // saveBooking();
+   // return;
 	if($("#userInfoForm")[0].checkValidity()) {
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();

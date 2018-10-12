@@ -28,6 +28,7 @@ if($call == "saveBooking"){
 		$menuPersonsStr = $_POST["menuPersons"];
 		$tansactionId = $_POST["transactionId"];
 		$amount = $_POST["amount"];
+		$gst = $_POST["gst"];
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$booking = new Booking();
         
@@ -42,6 +43,7 @@ if($call == "saveBooking"){
 		$booking->setTimeSlot($timSlotSeq);
 		$booking->setAmount($amount);
 		$booking->setTransactionId($tansactionId);
+		$booking->setGSTNumber($gst);
 		$bookingId = $bookingMgr->saveBooking($booking);
        
 		$booking->setSeq($bookingId);
