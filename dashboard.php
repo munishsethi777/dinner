@@ -36,6 +36,7 @@
 </html>
 
 	<script type="text/javascript">
+	
 	 isSelectAll = false;
         $(document).ready(function(){
            loadGrid()
@@ -46,7 +47,55 @@
            
         });
         
-        
+        function deleteBooking(gridId,deleteURL){
+            var selectedRowIndexes = $("#" + gridId).jqxGrid('selectedrowindexes');
+            if(selectedRowIndexes.length > 0){
+                bootbox.confirm("Are you sure you want to delete selected row(s)?", function(result) {
+                    if(result){
+                        var ids = [];
+                        var imagenames = [];
+                        var flag = true;
+                        $.each(selectedRowIndexes, function(index , value){
+                            if(value != -1){
+                                var dataRow = $("#" + gridId).jqxGrid('getrowdata', value);
+                                var paymentid = dataRow.transactionid;
+                                if(paymentid != null && paymentid != ""){
+                                	 alert("Processed bookings cannot be deleted");
+                                	 flag = false;
+                                	 return;
+                                }
+                                ids.push(dataRow.seq);
+                            }
+                        });
+                        if(!flag){
+                           return;
+                        }
+                        $.get(deleteURL + "&ids=" + ids,function( data ){
+                            if(data != ""){
+                                var obj = $.parseJSON(data);
+                                var message = obj.message;
+                                if(obj.success == 1){
+
+                                    toastr.success(message,'Success');
+                                   //$.each(selectedRowIndexes, function(index , value){
+                                      //  var id = $("#"  + gridId).jqxGrid('getrowid', value);
+                                        var commit = $("#"  + gridId).jqxGrid('deleterow', ids);
+                                        $("#"+gridId).jqxGrid('updatebounddata');
+                                        $("#"+gridId).jqxGrid('clearselection');
+                                    //});
+                                }else{
+                                    toastr.error(message,'Failed');
+                                }
+                            }
+
+                        });
+
+                    }
+                });
+            }else{
+                 bootbox.alert("No row selected.Please select row to delete!", function() {});
+            }
+        }    
         function loadGrid(){
 			var columns = [
 			  { text: 'Payment ID', datafield: 'transactionid', width:"10%"}, 			
@@ -113,6 +162,7 @@
     			columnsresize: true,
     			columnsreorder: true,
     			showstatusbar: true,
+    			selectionmode: 'checkbox',
     			virtualmode: true,
     			rendergridrows: function (toolbar) {
                   return dataAdapter.records;     
@@ -128,7 +178,7 @@
 
                     container.append(addButton);
                     //container.append(editButton);
-                    //container.append(deleteButton);
+                    container.append(deleteButton);
 
                     statusbar.append(container);
                     addButton.jqxButton({  width: 65, height: 18 });
@@ -157,8 +207,8 @@
                     // delete row.
                     deleteButton.click(function (event) {
                         gridId = "bookingsgrid";
-                        deleteUrl = "Actions/TimeSlotAction.php?call=deleteTimeSlots";
-                        deleteTimeSlot(gridId,deleteUrl);
+                        deleteUrl = "Actions/BookingAction.php?call=deleteBooking";
+                        deleteBooking(gridId,deleteUrl);
                     });
                     reloadButton.jqxButton({  width: 70, height: 18 });
                     reloadButton.click(function (event) {

@@ -87,4 +87,13 @@ inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join
 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}
+	
+	public function deleteBySeqs($bookingSeqs){
+		$flag = self::$dataStore->deleteInList($bookingSeqs);
+		if($flag){
+			$bookingDetailMgr = BookingDetailMgr::getInstance();
+			$bookingDetailMgr->deleteBookingDetailInList($bookingSeqs);
+		}
+		return $flag;
+	}
 }

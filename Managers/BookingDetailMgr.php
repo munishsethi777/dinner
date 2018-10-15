@@ -43,5 +43,10 @@ class BookingDetailMgr{
 		}
 		return $id;
 	}
+	
+	public function deleteBookingDetailInList($bookingSeqs){
+		$query = "delete from bookingdetails where bookingseq in ($bookingSeqs)";
+		self::$dataStore->executeQuery($query);
+	}
 
 }

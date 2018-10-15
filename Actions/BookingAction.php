@@ -110,5 +110,20 @@ if($call == "getBookings"){
 	$bookingJson = $bookingMgr->getBookingJsonForGrid();
 	echo $bookingJson;
 }
+if($call == "deleteBooking"){
+	$ids = $_GET["ids"];
+	try{
+		$bookingMgr = BookingMgr::getInstance();
+		$flag = $bookingMgr->deleteBySeqs($ids);
+		$message = "Booking(s) Deleted successfully";
+	}catch(Exception $e){
+		$success = 0;
+		$message = ErrorUtil::checkReferenceError(LearningPlan::$className,$e);
+	}
+	$response = new ArrayObject();
+	$response["message"] = $message;
+	$response["success"] =  $success;
+	echo json_encode($response);
+}
 
 
