@@ -151,7 +151,7 @@ if(!empty($amount)){
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">GST NO.</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="gst" name="gst" required placeholder="GST No." class="form-control">
+		                                    	<input type="text" id="gst" name="gst" placeholder="GST No." class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
@@ -239,16 +239,17 @@ $( document ).ready(function() {
 
 
 document.getElementById('rzp-button').onclick = function(e){
-    $("#transactionId").val("testid");
-    $("#amount").val("100");
-    saveBooking();
-    return;
+    //$("#transactionId").val("testid");
+    //$("#amount").val("100");
+    //saveBooking();
+    //return;
 	if($("#userInfoForm")[0].checkValidity()) {
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
 		var mobile = $("#mobile").val();
 		var options = {
-			    "key": "rzp_live_KpbxYUeCTzMhDO",
+			    //"key": "rzp_live_KpbxYUeCTzMhDO",
+			    "key":"rzp_live_zZ6x7CvsASE4M3",
 			    "amount": "<?php echo $totalAmountInPaise?>", // 2000 paise = INR 20
 			    "name": "Flydining",
 			    "description": "Purchase Description",
