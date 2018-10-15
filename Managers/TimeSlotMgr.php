@@ -26,7 +26,7 @@ class TimeSlotMgr{
 		$selectedDate = $_GET["selectedDate"];
 		$selectedDate .= " 00:00:00";
 		$query = "select timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
-inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq";
+inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotseq inner join menus on menutimeslots.menuseq = menus.seq";
 		$timeSlots = self::$dataStore->executeQuery($query);
 		$slotArr = array();
 		$bookingMgr = BookingMgr::getInstance();
