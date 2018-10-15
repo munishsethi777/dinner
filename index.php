@@ -113,7 +113,7 @@ require_once('IConstants.inc');
 $(document).ready(function(){ 
 	currDate = new Date();
 	minDate = new Date();
-	if(currDate.getHours() >= 16){
+	if(currDate.getHours() >= 13){
 		currDate.setDate(currDate.getDate() + 1);
 		minDate.setDate(minDate.getDate() + 1);
 	}
@@ -220,32 +220,8 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	$("#personCounts").html(html);
 	var str = "";
 	$("#menuDiv").html("");
-// 	$.each( menuSeqArr, function( key, seq ) {
-// 		className = "col-sm-3";
-// 		if(menuSeqArr.length == 1){
-// 			className = "col-sm-6";
-// 		}
-// 		var menuTitle = menuTitleArr[key];
-// 		str += '<div class="'+className+'">';
-// 		str += '<label class="checkbox-inline">';
-// 		str += '<input value="'+seq+'" type="radio" onchange="setValue()" name="menu" id="menuTitleRadio"><small> All '+ menuTitle+'</small>';
-// 		str += '</label></div>';
-// 	});
-
-// 	$.each( menuSeqArr, function( key, seq ) {
-// 		className = "col-sm-3";
-// 		if(menuSeqArr.length == 1){
-// 			className = "col-sm-6";
-// 		}
-// 		var menuTitle = menuTitleArr[key];
-// 		str += '<div class="'+className+'">';
-// 		str += '<input style="width:100%;font-size:10px" type="text" class="menuCount text-muted" placeholder="'+menuTitle+' Count" id="'+seq+'_menuCountText" name="menuCountText">';			
-// 		str += '</div>';
-// 	});
-
-	
 	var footerButtons = '<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>';
-    	footerButtons += '<button type="button" id="saveBtn" onClick="javascript:submitBookingForm('+seats+ ',\'' +  menuSeqs + '\')" class="btn btn-primary">Continue</button>';
+   	footerButtons += '<button type="button" id="saveBtn" onClick="javascript:submitBookingForm('+seats+ ',\'' +  menuSeqs + '\')" class="btn btn-primary">Continue</button>';
     $("#footerDiv").html(footerButtons);
 	$("#menuDiv").html(str);
 	$('#myModal4').modal('show');
@@ -260,20 +236,6 @@ function setValue(){
 
 function submitBookingForm(seats,menuSeqs){
 	var text = "";
-// 	$('#menuDiv input[type=text]').each(function (){
-// 		var val = $(this).val();
-// 		if(val != null && val != "" ){
-// 			if(!$.isNumeric(val)){
-// 				text = "";
-// 				return false;
-// 			}
-// 		}
-// 		text += $(this).val();
-//     });
-//     if(text == ""){
-//         alert("Invalid person count");
-//         return;
-//     }	
     var personCounts = {};
     var menuSeqArr = menuSeqs.split(",");
     var totalPersons = 0;
