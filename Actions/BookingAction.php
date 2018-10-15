@@ -66,7 +66,7 @@ if($call == "saveBookingsFromAdmins"){
 		$bookingDetailMgr = BookingDetailMgr::getInstance();
 		$timSlotSeqs = $_POST["timeslotseq"];
 		$selectedDate = $_POST["bookingDate"];
-		$tansactionId = "cash";
+		$tansactionId = "";
 		foreach ($timSlotSeqs as $timeSlotSeq){
 			$mobile = $_POST[$timeSlotSeq."_mobile"];
 			$emailId = $_POST[$timeSlotSeq."_email"];
