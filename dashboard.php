@@ -121,9 +121,45 @@
                     // appends buttons to the status bar.
                     var container = $("<div style='overflow: hidden; position: relative; margin: 5px;height:30px'></div>");
                     var reloadButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-refresh'></i><span style='margin-left: 4px; position: relative;'>Reload</span></div>");
-                    
-                    container.append(reloadButton);
+                    var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>    Add</span></div>");
+                    var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
+                    var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
+
+
+                    container.append(addButton);
+                    //container.append(editButton);
+                    //container.append(deleteButton);
+
                     statusbar.append(container);
+                    addButton.jqxButton({  width: 65, height: 18 });
+                    deleteButton.jqxButton({  width: 70, height: 18 });
+                    editButton.jqxButton({  width: 65, height: 18 });
+
+                    // create new row.
+                    addButton.click(function (event) {
+                        location.href = ("adminAddBooking.php");
+                    });
+                    // update row.
+                    editButton.click(function (event){
+                    	var selectedrowindex = $("#bookingsgrid").jqxGrid('selectedrowindexes');
+                        var value = -1;
+                        indexes = selectedrowindex.filter(function(item) { 
+                            return item !== value
+                        })
+                        if(indexes.length != 1){
+                            bootbox.alert("Please Select single row for edit.", function() {});
+                            return;    
+                        }
+                        var row = $('#bookingsgrid').jqxGrid('getrowdata', indexes);
+                        $("#seq").val(row.seq);                        
+                        $("#form1").submit();    
+                    });
+                    // delete row.
+                    deleteButton.click(function (event) {
+                        gridId = "bookingsgrid";
+                        deleteUrl = "Actions/TimeSlotAction.php?call=deleteTimeSlots";
+                        deleteTimeSlot(gridId,deleteUrl);
+                    });
                     reloadButton.jqxButton({  width: 70, height: 18 });
                     reloadButton.click(function (event) {
                         $("#bookingsgrid").jqxGrid({ source: dataAdapter });
