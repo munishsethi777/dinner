@@ -15,6 +15,9 @@ $totalAmount = 0;
 $handlingCharges = 0;
 $formatedTotalAmount = 0;
 $totalAmountInPaise = 0;
+$menuBtnVisible = array(1=>"none",2=>"none",3=>"none");
+$menuImgVisible = array(1=>"none",2=>"none",3=>"none");
+
 foreach ($menuArr as $key=>$value){
 	if(empty($value)){
 		continue;
@@ -24,7 +27,15 @@ foreach ($menuArr as $key=>$value){
 	$menuHml .= $value . " " . $menu->getTitle() . " - " . $value . " X " . $rate . "<br/>";
 	$amount += $value * $rate;
 	$totalAmount += $value * $rate;
+	$menuBtnVisible[$key] = "inline-table";
+	if(!in_array("inline-table", $menuImgVisible)){
+		$menuImgVisible[$key] = "inline-table";
+	}
 }
+// if($menuBtnVisible[2] == "inline-table" && $menuBtnVisible[3] == "inline-table"){
+// 	$menuImgVisible[3] = "none";
+// }
+	
 if(!empty($amount)){
 	$amount = number_format($amount,2);
 	$totalAmount +=  $handlingCharges;
@@ -59,12 +70,16 @@ if(!empty($amount)){
 	                       			<h1 style="padding-bottom:10px">
 											MENU
 									</h1>
-									<button class="btn btn-primary btn-rounded vegbtn">VEG</button>
-									<button class="btn btn-primary btn-rounded nvegbtn">NON VEG</button>
+									<button class="btn btn-primary btn-rounded mockbtn" style="display:<?php echo $menuBtnVisible[1]?>">MOCKTAIL</button>
+									<button class="btn btn-primary btn-rounded vegbtn" style="display:<?php echo $menuBtnVisible[2]?>">VEG</button>
+									<button class="btn btn-primary btn-rounded nvegbtn" style="display:<?php echo $menuBtnVisible[3]?>">NON VEG</button>
+									
+									
 	                       		</div>
 		                       		<div class="row">
-		                       			<img class="vegimg" style="height:auto;width:100%" src="images/veg.jpeg">
-		                       			<img class="nvegimg" style="height:auto;width:100%;display:none" src="images/nveg.jpeg">
+		                       			<img class="mockimg" style="display:<?php echo $menuImgVisible[1]?>;height:auto;width:100%" src="images/mocktails.jpeg">
+		                       			<img class="vegimg" style="display:<?php echo $menuImgVisible[2]?>;height:auto;width:100%" src="images/veg.jpeg">
+		                       			<img class="nvegimg" style="display:<?php echo $menuImgVisible[3]?>;height:auto;width:100%" src="images/nveg.jpeg">
 	                       			</div>
                        			</div>
                     	</div>
@@ -181,7 +196,7 @@ if(!empty($amount)){
 					   <li>Photography and videography is not allowed.</li>
 					   <li>Ticket once purchased cannot be exchanged or adjusted/transferred for any other slot.</li>
 					   <li>Handbags, Laptops/Tabs , Cameras and all other electronic itens are not allowed on Flydining.</li>
-					   <li>Smoking is strictly not permitted on Flyydining.</li> 
+					   <li>Smoking is strictly not permitted on Flydining.</li> 
 					   <li>People under Influence of Alcohal/Drugs will not be allowed in Flydining.</li> 
 					   <li>We reserve the Right of Admission.</li>
 					 </ul>
@@ -197,11 +212,18 @@ if(!empty($amount)){
 $( document ).ready(function() {
 	$( ".vegbtn" ).click(function() {
 		$(".nvegimg").hide();
+		$(".mockimg").hide();
 		$(".vegimg").show();
 	});
 	$( ".nvegbtn" ).click(function() {
 		$(".nvegimg").show();
 		$(".vegimg").hide();
+		$(".mockimg").hide();
+	});
+	$( ".mockbtn" ).click(function() {
+		$(".nvegimg").hide();
+		$(".vegimg").hide();
+		$(".mockimg").show();
 	});
 	$('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
@@ -217,10 +239,10 @@ $( document ).ready(function() {
 
 
 document.getElementById('rzp-button').onclick = function(e){
-    //$("#transactionId").val("testid");
-    //$("#amount").val("100");
-   // saveBooking();
-   // return;
+    $("#transactionId").val("testid");
+    $("#amount").val("100");
+    saveBooking();
+    return;
 	if($("#userInfoForm")[0].checkValidity()) {
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();

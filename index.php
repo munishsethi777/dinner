@@ -18,6 +18,36 @@ require_once('IConstants.inc');
 		.xdsoft_datetimepicker .xdsoft_label{
 			z-index:0 !important;
 		}
+		.datediv1{
+			display:none;
+		}
+		.progressCol{
+			width: 16.66%;
+		}
+		
+		
+		@media all  
+			and (max-width: 768px) {
+		  	.datediv2, .tableHeaders, .dateCol{
+			    display: none;
+			 }
+		  	.datediv1 {
+		    	display: block;
+		  	}
+		  	.progressCol{
+		  		width: 30%;
+		  	}
+		  	.inmodal .modal-header {
+				padding: 20px 15px;
+				text-align: center;
+			}
+			.modal-body {
+				padding: 10px 30px 10px 20px;
+			}
+			.inmodal .modal-title {
+				font-size: 20px;
+			}
+		}
 	</style>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -33,29 +63,18 @@ require_once('IConstants.inc');
 						</h5>
 					</div>
 					<div style="margin-top:10px">
+						<div class="col-sm-3 datediv1">
+                       		<input type="text" onchange="javascript:loadData(this.value)" 
+                       		name="bookingDate" id="bookingDate" class="form-control bookingDate" style="width:100%"> 	
+                    	</div>
+						
                     	<div class="col-sm-9" id="dataDiv">
-                       		<div class="row ibox-content" style="font-weight: bold">
-	                       		<div class="col-sm-2">
-	                       			Date
-	                       		</div>
-	                       		<div class="col-sm-2">
-	                       			Slot Time
-	                       		</div>
-	                       		<div class="col-sm-3">
-	                       			Fare
-	                       		</div>
-	                       		<div class="col-sm-3">
-	                       			Seats Available
-	                       		</div>
-	                       		<div class="col-sm-2">
-	                       			Action
-	                       		</div>
-	                       	</div>
+                       		
                     	</div>
 
-                    	<div class="col-sm-3" >
+                    	<div class="col-sm-3 datediv2" >
                        		<input type="text" onchange="javascript:loadData(this.value)" 
-                       		name="bookingDate" id="bookingDate" class="form-control" style="width:100%"> 	
+                       		name="bookingDate" id="bookingDate" class="form-control bookingDate" style="width:100%"> 	
                     	</div>
 
                     </div>
@@ -79,9 +98,8 @@ require_once('IConstants.inc');
 	                                            <h4 class="modal-title">How Many Persons?</h4>
 	                                        </div>
 	                                        <div class="modal-body">
-	                                        	<div id="personCounts" class="row i-checks"></div>
-												<div class="hr-line-dashed"></div>
-												<div id="menuDiv" class="row"></div>	
+	                                        	<div id="personCounts" class="row i-checks text-center"></div>
+	                                        		
 										    </div>
 	                                        <div id = "footerDiv" class="modal-footer"></div>
 	                                    </div>
@@ -93,14 +111,24 @@ require_once('IConstants.inc');
  <script src="scripts/FormValidators/BookingFormValidations.js"></script> 
 <script type="text/javascript">
 $(document).ready(function(){ 
-	$('#bookingDate').datetimepicker({
+	currDate = new Date();
+	minDate = new Date();
+	if(currDate.getHours() >= 16){
+		currDate.setDate(currDate.getDate() + 1);
+		minDate.setDate(minDate.getDate() + 1);
+	}
+	
+	$('.bookingDate').datetimepicker({
         timepicker:false,
         inline: true,
         sideBySide: true,
         format:'d-m-Y',
-        minDate:new Date()
+        useCurrent:false,
+        defaultDate:currDate,
+        minDate:minDate,
+        maxDate:new Date("11/1/2018")
     });
-	currDate = getCurrentDate();
+	currDate = getCurrentDate(currDate);
 	loadData(currDate);
 });
 function loadData(selectedDate){
@@ -122,8 +150,8 @@ function loadData(selectedDate){
 			var html = getHeaders();
 		 $.each( data, function( key, val ) {
 	 		html += '<div class="row ibox-content">';
-			html += '<div class="col-xs-2">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
-			html += '<div class="col-xs-3">'+val.timeslot;
+			html += '<div class="col-xs-2 dateCol">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
+			html += '<div class="col-xs-3 timeslotCol">'+val.timeslot;
 			html += '<br/><small class="text-muted">'+ val.description  +'</small></div>';
 			var fair = "";
 			var menuList = val.menu; 
@@ -134,8 +162,8 @@ function loadData(selectedDate){
 				menuArr[k] = menu.menutitle;
 				menuSeqs[k] = menu.menuseq
 	 		});
-			html += '<div class="col-xs-3">' + fair + '</div>';
-			html += '<div class="col-xs-2 text-center"><div class="progress progress-mini">';
+			html += '<div class="col-xs-3 fairCol">' + fair + '</div>';
+			html += '<div class="col-xs-2 text-center progressCol"><div class="progress progress-mini">';
 			progressBarClass = "bg-primary";
 			if(val.availableInPercent > 0 && val.availableInPercent <=25){
 				progressBarClass = "bg-danger";
@@ -143,7 +171,7 @@ function loadData(selectedDate){
 				progressBarClass = "bg-warning";
 			}
 			html += '<div style="width: '+val.availableInPercent+'%" class="'+progressBarClass+' progress-bar"></div></div>';
-			html += '<small class="text-muted">'+ val.seatsAvailable  +' Seats</small></div>';
+			html += '<small class="text-muted buttonCol">'+ val.seatsAvailable  +' Seats</small></div>';
 			if(val.seatsAvailable == 0){
 				html += '<div class="col-xs-2"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
 			}else{
@@ -154,7 +182,17 @@ function loadData(selectedDate){
 	 	$("#dataDiv").html(html);
 	});	 	
 }
-
+function setPersonCount(menuSeq,count){
+	$("."+menuSeq+"personButton").removeClass("btn-primary");
+	if($(".hiddenMenuSeq"+ menuSeq).val() != count){
+		buttonClassName = "#personCount"+ menuSeq +"-"+count;
+		$(buttonClassName).addClass("btn-primary");//set colored button
+		$(".hiddenMenuSeq"+ menuSeq).val(count);//set hidden prop count
+	}else{
+		$(".hiddenMenuSeq"+ menuSeq).val(0);
+	}
+	
+}
 function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	$("#timeslotseq").val(timeSlotSeq);
 	$("#selectedDate").val(selectedDate);
@@ -163,39 +201,47 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	$("#personCounts").html("");
 	$("#footerDiv").html("");
 	var html = "";
-	for(var i = 1; i <= seats; i++) {
-			
-		    html += '<div class="col-xs-1">';
-		 	html += '<label class="checkbox-inline">';
-			html += '<input value="'+i+'" type="radio" onchange="setValue()" name="personCount" id="personCount">'+i;
-			html += '</label></div>';
-	}
+
+	$.each( menuSeqArr, function( key, seq ) {
+		html += '<input type="hidden" name="hiddenMenuSeq'+seq+'" class="hiddenMenuSeq'+seq+'" value="0"/>';
+		html += '<div class="row m-sm">';
+			html += '<div class="row p-xs text-muted"><h3>'+menuTitleArr[key]+'</h3></div>';
+			html += '<div class="row">';
+			for(var i = 1; i <= seats; i++) {
+				html += '<div class="col-xs-1" style="margin-bottom:16px;">';
+			 	html += '<button class="btn btn-xs btn-muted '+seq+'personButton" id="personCount'+ seq +'-'+i+'" onClick="setPersonCount('+ seq +','+i+')">';
+			 	html += i;
+				html += '</button></div>';
+			}
+			html += '</div>';
+		html += '</div>';
+	});
+
 	$("#personCounts").html(html);
 	var str = "";
 	$("#menuDiv").html("");
-	$.each( menuSeqArr, function( key, seq ) {
-		className = "col-sm-3";
-		if(menuSeqArr.length == 1){
-			className = "col-sm-6";
-		}
-		var menuTitle = menuTitleArr[key];
-		str += '<div class="'+className+'">';
-		str += '<label class="checkbox-inline">';
-		str += '<input value="'+seq+'" type="radio" onchange="setValue()" name="menu" id="menuTitleRadio"><small> All '+ menuTitle+'</small>';
-		str += '</label></div>';
-		//str += '<div class="col-sm-2"><input type="text" class="menuCount" placeholder="'+menuTitle+' Person Count" id="'+seq+'_menuCountText" name="menuCountText"></div>';			
-	});
+// 	$.each( menuSeqArr, function( key, seq ) {
+// 		className = "col-sm-3";
+// 		if(menuSeqArr.length == 1){
+// 			className = "col-sm-6";
+// 		}
+// 		var menuTitle = menuTitleArr[key];
+// 		str += '<div class="'+className+'">';
+// 		str += '<label class="checkbox-inline">';
+// 		str += '<input value="'+seq+'" type="radio" onchange="setValue()" name="menu" id="menuTitleRadio"><small> All '+ menuTitle+'</small>';
+// 		str += '</label></div>';
+// 	});
 
-	$.each( menuSeqArr, function( key, seq ) {
-		className = "col-sm-3";
-		if(menuSeqArr.length == 1){
-			className = "col-sm-6";
-		}
-		var menuTitle = menuTitleArr[key];
-		str += '<div class="'+className+'">';
-		str += '<input style="width:100%;font-size:10px" type="text" class="menuCount text-muted" placeholder="'+menuTitle+' Count" id="'+seq+'_menuCountText" name="menuCountText">';			
-		str += '</div>';
-	});
+// 	$.each( menuSeqArr, function( key, seq ) {
+// 		className = "col-sm-3";
+// 		if(menuSeqArr.length == 1){
+// 			className = "col-sm-6";
+// 		}
+// 		var menuTitle = menuTitleArr[key];
+// 		str += '<div class="'+className+'">';
+// 		str += '<input style="width:100%;font-size:10px" type="text" class="menuCount text-muted" placeholder="'+menuTitle+' Count" id="'+seq+'_menuCountText" name="menuCountText">';			
+// 		str += '</div>';
+// 	});
 
 	
 	var footerButtons = '<button type="button" class="btn btn-white" data-dismiss="modal">Close</button>';
@@ -214,30 +260,35 @@ function setValue(){
 
 function submitBookingForm(seats,menuSeqs){
 	var text = "";
-	$('#menuDiv input[type=text]').each(function (){
-		var val = $(this).val();
-		if(val != null && val != "" ){
-			if(!$.isNumeric(val)){
-				text = "";
-				return false;
-			}
-		}
-		text += $(this).val();
-    });
-    if(text == ""){
-        alert("Invalid person count");
-        return;
-    }	
+// 	$('#menuDiv input[type=text]').each(function (){
+// 		var val = $(this).val();
+// 		if(val != null && val != "" ){
+// 			if(!$.isNumeric(val)){
+// 				text = "";
+// 				return false;
+// 			}
+// 		}
+// 		text += $(this).val();
+//     });
+//     if(text == ""){
+//         alert("Invalid person count");
+//         return;
+//     }	
     var personCounts = {};
     var menuSeqArr = menuSeqs.split(",");
     var totalPersons = 0;
 	$.each( menuSeqArr, function( key, seq ) {
-		personMenuCount = $("#"+seq+"_menuCountText").val();
+		personMenuCount = $(".hiddenMenuSeq"+seq).val();
+		//personMenuCount = $("#"+seq+"_menuCountText").val();
 		if(personMenuCount != ""){
 			personCounts[seq]= personMenuCount;
 			totalPersons += parseInt(personMenuCount);
 		}
 	}) 
+	if(totalPersons == 0){
+		alert("Select some seats");
+		return;
+	}
 	if(totalPersons > seats){
         alert("Total Seats available for this slot are "+seats+" only.");
         return;
@@ -249,11 +300,11 @@ function submitBookingForm(seats,menuSeqs){
 function IsNumeric(val) {
     return Number(parseFloat(val)) === val;
 }
-function getCurrentDate(){
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; //January is 0!
-	var yyyy = today.getFullYear();
+function getCurrentDate(dateObj){
+	//var dateObj = new Date();
+	var dd = dateObj.getDate();
+	var mm = dateObj.getMonth()+1; //January is 0!
+	var yyyy = dateObj.getFullYear();
 	if(dd<10) {
 	    dd = '0'+dd
 	} 
@@ -264,14 +315,14 @@ function getCurrentDate(){
 	return today;
 }
 function getHeaders(){
-	var html = '<div class="row ibox-content">'
-		html += '<div class="col-xs-2">Date</div>';
-		html += '<div class="col-xs-3">Slot Time</div>';
-		html += '<div class="col-xs-3">Fare</div>';
-		html += '<div class="col-xs-2 text-center">Seats Available</div>'
-		html += '<div class="col-xs-2">Action</div>'
-		html += '</div>';
-		return html;
+	var html = '<div class="row ibox-content tableheaders">'
+	html += '<div class="col-xs-2">Date</div>';
+	html += '<div class="col-xs-3">Slot Time</div>';
+	html += '<div class="col-xs-3">Fare</div>';
+	html += '<div class="col-xs-2 text-center">Seats Available</div>'
+	html += '<div class="col-xs-2">Action</div>'
+	html += '</div>';
+	return html;
 }
 
 </script> 

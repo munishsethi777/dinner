@@ -28,8 +28,8 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 		foreach ($timeSlots as $timeSlot){
 			$timeSlotSeq = $timeSlot["timeslotseq"];
 			$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
-			$date = $date->format("Y-m-d H:i:s");
-			$bookedSeats = $bookingMgr->getAvailableSeats($date, $timeSlotSeq);
+			$dateStr = $date->format("Y-m-d H:i:s");
+			$bookedSeats = $bookingMgr->getAvailableSeats($dateStr, $timeSlotSeq);
 			$arr = array();
 			$arr["seq"] = $timeSlotSeq;
 			$arr["timeslot"] = $timeSlot["timeslot"];
@@ -54,6 +54,12 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			}
 			$menu = array();
 			$menu["menutitle"] = $timeSlot["menutitle"];
+			
+			$dayName =  $date->format('D');
+			if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
+				$timeSlot["rate"] += 1000;
+			}
+			
 			$menu["rate"] = $timeSlot["rate"];
 			$menu["menuseq"] = $timeSlot["menuseq"];
 			array_push($mainMenuArr, $menu);
