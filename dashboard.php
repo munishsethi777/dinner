@@ -56,8 +56,8 @@
               { text: 'Slot', datafield: 'timeslot',width:"15%"},
               { text: 'Menu', datafield: 'menu', width:"15%" ,sortable:false},
               { text: 'Customer Name', datafield: 'fullname',width:"12%"},
-              { text: 'Email', datafield: 'email',width:"20%"},
-              { text: 'Mobile', datafield: 'mobile',width:"10%"}
+              { text: 'Email', datafield: 'emailid',width:"20%"},
+              { text: 'Mobile', datafield: 'mobilenumber',width:"10%"}
             ]
            
             var source =
@@ -72,9 +72,9 @@
                             { name: 'bookingdate', type: 'date' },
                             { name: 'transactionid', type: 'string'},
                             { name: 'timeslot', type: 'string'},
-                            { name: 'email', type: 'string'},
+                            { name: 'emailid', type: 'string'},
                             { name: 'fullname', type: 'string'},
-                            { name: 'mobile', type: 'string'},
+                            { name: 'mobilenumber', type: 'string'},
                             { name: 'menu', type: 'string' }
                             ],                          
                 url: 'Actions/BookingAction.php?call=getBookings',

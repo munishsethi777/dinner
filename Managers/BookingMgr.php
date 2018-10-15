@@ -29,7 +29,7 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 	}
 	
 	public function getBookingJsonForGrid(){
-		$query = "select bookings.emailid as email,bookings.mobilenumber as mobile,bookings.seq as bookingseq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,bookingdetails.members as members,timeslots.title as timeslot,menus.title as menutitle from bookings
+		$query = "select bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq as bookingseq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,bookingdetails.members as members,timeslots.title as timeslot,menus.title as menutitle from bookings
 inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join timeslots on bookings.timeslot = timeslots.seq inner join menus on bookingdetails.menuseq = menus.seq";
 		$bookingDetails =  self::$dataStore->executeQuery($query,true);
 		$bookingArr = array();
@@ -49,8 +49,8 @@ inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join
 			$arr["bookingdate"] = $bookedDate;
 			$arr["fullname"] = $booking["fullname"];
 			$arr["transactionid"] = $booking["transactionid"];
-			$arr["mobile"] = $booking["mobile"];
-			$arr["email"] = $booking["email"];
+			$arr["mobilenumber"] = $booking["mobilenumber"];
+			$arr["emailid"] = $booking["emailid"];
  			$mainMenuArr = array();
 			$menuStrArr = "";
 			if(array_key_exists($bookingSeq, $bookingArr)){
