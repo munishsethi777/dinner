@@ -158,6 +158,9 @@
 <script src="scripts/plugins/fullcalendar/fullcalendar.min.js"></script>
 
 
+ <!-- TouchSpin -->
+ <script src="scripts/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+ <link href="styles/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
 <script>
 $(document).ready(function() {
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
@@ -475,5 +478,19 @@ $(document).ready(function() {
                 }
             }
             return true;
+        }
+        function getCurrentDate(){
+        	var today = new Date();
+        	var dd = today.getDate();
+        	var mm = today.getMonth()+1; //January is 0!
+        	var yyyy = today.getFullYear();
+        	if(dd<10) {
+        	    dd = '0'+dd
+        	} 
+        	if(mm<10) {
+        	    mm = '0'+mm
+        	} 
+        	today = dd + '-' + mm + '-' + yyyy;
+        	return today;
         }
 </script>

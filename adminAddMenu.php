@@ -1,5 +1,20 @@
 <?php
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
+$menu = new Menu();
+if(isset($_POST["seq"])){
+	$seq = $_POST["seq"];
+	$menuMgr = MenuMgr::getInstance();
+	$menu = $menuMgr->findBySeq($seq);
+}
 $imagePath = "images/dummy.jpg";
+$isEnabledChecked = "checked";
+if(!empty($menu->getImageName())){
+	$imagePath = "images/menuImages/".$menu->getSeq() . ".". $menu->getImageName();
+}
+if(empty($menu->getIsEnabled())){
+	$isEnabledChecked = "";
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,49 +42,47 @@ $imagePath = "images/dummy.jpg";
 	                    </div>
 	                </div>
 	                <div class="ibox-content">
-	                	<form id="menuForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
-                        		<input type="hidden" id ="call" name="call"  value="saveBookingsFromAdmins"/>
+	                	<form id="menuForm" method="post" enctype="multipart/form-data" action="Actions/MenuAction.php" class="m-t-lg">
+                        		<input type="hidden" id ="call" name="call"  value="saveMenu"/>
+                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $menu->getSeq()?>"/>
+                        		<input type="hidden" id ="call" name="imageName"  value="<?php echo $menu->getImageName()?>"/>
                        			<div class="form-group row">
                        				<label class="col-lg-2 col-form-label">Title</label>
                                     <div class="col-lg-4">
-                                    	<input type="text"  id="menuTitle" name=""menuTitle"" required placeholder="Title" class="form-control">
+                                    	<input type="text" value="<?php echo $menu->getTitle()?>"  id="title" name="title" required placeholder="Title" class="form-control">
                                     </div>
                                </div>
                                <div class="form-group row">
                        				<label class="col-lg-2 col-form-label">Description</label>
                                     <div class="col-lg-4">
-                                    	<input type="text" id="description" name="description" required placeholder="Description" class="form-control">
+                                    	<input type="text" value="<?php echo $menu->getDescription()?>" id="description" name="description" required placeholder="Description" class="form-control">
                                     </div>
                                </div>
                                <div class="form-group row">
                        				<label class="col-lg-2 col-form-label">Rate</label>
                                     <div class="col-lg-4">
-                                    	<input type="text"  id="rate" name="rate" required placeholder="Rate" class="form-control">
+                                    	<input type="text" value="<?php echo $menu->getRate()?>"  id="rate" name="rate" required placeholder="Rate" class="form-control">
                                     </div>
                                </div>
                                <div class="form-group row">
 									<label class="col-sm-2 control-label">Image</label>
 									<div class="col-sm-5">
-										<input type="file" id="badgeImage" name="badgeImage"
-											class="form-control hidden" /> <label for="badgeImage"><a><img
+										<input type="file" id="menuImage" name="menuImage"
+											class="form-control hidden" /> <label for="menuImage"><a><img
 												alt="image" id="badgeImg" class="img" width="92px;"
-												src="<?echo $imagePath."?".time() ?>"></a></label> <label
+												src="<?echo $imagePath. "?".time() ?>"></a></label> <label
 											class="jqx-validator-error-label" id="imageError"></label>
-										<button class="btn btn-default btn-xs ladda-button"
-											data-style="expand-right" id="choseImage" type="button">
-											<span class="ladda-label">Choose Image</span>
-										</button>
 									</div>
 							   </div>
 							   <div class="form-group row i-checks">
                        				<label class="col-lg-2 col-form-label">Enable</label>
                                     <div class="col-lg-4">
-                                    	<input type="checkbox"  id="isenable" name="isenable" required>
+                                    	<input type="checkbox" <?php echo $isEnabledChecked?>  id="isenable" name="isenable" required>
                                     </div>
                                </div>
                                <div class="form-group row">
                                		<div class="col-lg-6">
-	                               		<button class="btn btn-primary" onclick="javascript:submitMenuForm()" id="rzp-button" style="float:right">
+	                               		<button class="btn btn-primary" type="button" onclick="javascript:submitMenuForm()" id="rzp-button" style="float:right">
 	                               			Save Menu
 		                               	</button>
 	                              	</div>
@@ -90,7 +103,7 @@ $imagePath = "images/dummy.jpg";
 		   	radioClass: 'iradio_square-green',
 		});
     });
-    function submitBookingForm(){
+    function submitMenuForm(){
     	 $('#menuForm').ajaxSubmit(function( data ){
     		 var obj = $.parseJSON(data);
     		 if(obj.success == 1){
@@ -98,6 +111,20 @@ $imagePath = "images/dummy.jpg";
     		 }else{
         		 alert("Error" + obj.message);
     		 }	 
-    	 }
+    	 });
     } 
+    $("#menuImage").change(function(){
+    	readIMG(this);
+    });
+    function readIMG(input){
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#badgeImg').attr('src', e.target.result);
+                $("#imageError").text("");
+                $("#badgeImg").removeClass("hilight");
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
  </script>	
