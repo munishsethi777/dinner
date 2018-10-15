@@ -2,7 +2,7 @@
 class Menu{
 	public static $tableName = "menus";
 	public static $className = "Menu";
-	private $seq,$title,$description,$rate;
+	private $seq,$title,$description,$rate,$imagename,$isenabled;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -31,5 +31,19 @@ class Menu{
 	
 	public function getRate(){
 		return  $this->rate;
+	}
+	
+	public function setImageName($imageName_){
+		$this->imagename = $imageName_;
+	}
+	public function getImageName(){
+		return $this->imagename;
+	}
+	
+	public function setIsEnabled($isEnabled_){
+		$this->isenabled = $isEnabled_;
+	}
+	public function getIsEnabled(){
+		return $this->isenabled;
 	}
 }
