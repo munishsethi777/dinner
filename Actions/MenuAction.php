@@ -72,7 +72,7 @@ if($call == "deleteMenus"){
 	    try{
 	       	$menuMgr = MenuMgr::getInstance();
 	        $flag = $menuMgr->deleteBySeqs($ids,$imageNames);
-	        $message = "Badge(s) Deleted successfully";
+	        $message = "Menu(s) Deleted successfully";
 	    }catch(Exception $e){
 	        $success = 0;
 	        $message = ErrorUtil::checkReferenceError(LearningPlan::$className,$e);

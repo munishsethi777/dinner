@@ -1,4 +1,5 @@
 <?php
+require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/TimeSlotMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
 $timeSlot = new TimeSlot();
@@ -109,13 +110,17 @@ if(isset($_POST["seq"])){
          if($('#menuDD').val() == ""){
          	alert("Select menu option");
          }
-    	 $('#timeSlotForm').ajaxSubmit(function( data ){
-    		 var obj = $.parseJSON(data);
-    		 if(obj.success == 1){
-        		 location.href = "adminShowMenus.php";
-    		 }else{
-        		 alert("Error" + obj.message);
-    		 }	 
-    	 });
+         if($("#timeSlotForm")[0].checkValidity()) {
+	    	 $('#timeSlotForm').ajaxSubmit(function( data ){
+	    		 var obj = $.parseJSON(data);
+	    		 if(obj.success == 1){
+	        		 location.href = "adminShowMenus.php";
+	    		 }else{
+	        		 alert("Error" + obj.message);
+	    		 }	 
+	    	 });
+         }else{
+        	 $("#timeSlotForm")[0].reportValidity();
+         }
     } 
  </script>	

@@ -1,4 +1,5 @@
 <?php
+require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
 $menu = new Menu();
 if(isset($_POST["seq"])){
@@ -77,7 +78,7 @@ if(empty($menu->getIsEnabled())){
 							   <div class="form-group row i-checks">
                        				<label class="col-lg-2 col-form-label">Enable</label>
                                     <div class="col-lg-4">
-                                    	<input type="checkbox" <?php echo $isEnabledChecked?>  id="isenable" name="isenable" required>
+                                    	<input type="checkbox" <?php echo $isEnabledChecked?>  id="isenable" name="isenable">
                                     </div>
                                </div>
                                <div class="form-group row">
@@ -104,14 +105,18 @@ if(empty($menu->getIsEnabled())){
 		});
     });
     function submitMenuForm(){
-    	 $('#menuForm').ajaxSubmit(function( data ){
-    		 var obj = $.parseJSON(data);
-    		 if(obj.success == 1){
-        		 location.href = "adminShowMenus.php";
-    		 }else{
-        		 alert("Error" + obj.message);
-    		 }	 
-    	 });
+    	if($("#menuForm")[0].checkValidity()) {
+    		 $('#menuForm').ajaxSubmit(function( data ){
+	    		 var obj = $.parseJSON(data);
+	    		 if(obj.success == 1){
+	        		 location.href = "adminShowMenus.php";
+	    		 }else{
+	        		 alert("Error" + obj.message);
+	    		 }	 
+	    	 });
+    	}else{
+    		$("#menuForm")[0].reportValidity();
+    	}
     } 
     $("#menuImage").change(function(){
     	readIMG(this);
