@@ -32,14 +32,16 @@ class BookingDetailMgr{
 	
 	public function saveBookingDetail($bookingId,$menuAndMembers){
 		foreach ($menuAndMembers as $selectedSeat){
-			$selectedSeatArr = explode("_", $selectedSeat);
-			$menuSeq = $selectedSeatArr[0];
-			$members = $selectedSeatArr[1];
-			$bookingDetail = new BookingDetail();
-			$bookingDetail->setBookingSeq($bookingId);
-			$bookingDetail->setMembers($members);
-			$bookingDetail->setMenuSeq($menuSeq);
-			$id = self::$dataStore->save($bookingDetail);
+			if($selectedSeat > 0){
+				$selectedSeatArr = explode("_", $selectedSeat);
+				$menuSeq = $selectedSeatArr[0];
+				$members = $selectedSeatArr[1];
+				$bookingDetail = new BookingDetail();
+				$bookingDetail->setBookingSeq($bookingId);
+				$bookingDetail->setMembers($members);
+				$bookingDetail->setMenuSeq($menuSeq);
+				$id = self::$dataStore->save($bookingDetail);
+			}
 		}
 		return $id;
 	}

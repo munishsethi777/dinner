@@ -33,68 +33,60 @@
 	                                    <div class="col-lg-2">
 	                                    	<input type="text" onchange="javascript:loadData(this.value)" id="bookingDate" name="bookingDate" required placeholder="Select Date" class="form-control">
 	                                    </div>
-	                                    
-	                                    
-                                	</div>
-                                	<div>
+	                               </div>
+	                               		<div class="form-group row">
+	                               			<label class="col-lg-2 col-form-label">FullName</label>
+	                                		<div class="col-lg-4">
+	                               				<input type="text" id="fullName" name="fullName" required 
+			                                    placeholder="FullName" class="form-control">
+		                                    </div>
+		                                </div>
+		                                <div class="form-group row">
+		                                	<label class="col-lg-2 col-form-label">Mobile</label>
+		                                    <div class="col-lg-4">
+			                       				<input type="text" id="mobile" name="mobile" required 
+			                                    placeholder="Mobile" class="form-control">
+		                                    </div>
+		                                </div>
+		                                 <div class="form-group row">    
+		                                 	<label class="col-lg-2 col-form-label">Email</label>
+		                                    <div class="col-lg-4">
+			                       				<input type="text" id="email" name="email" required 
+			                                    placeholder="Email" class="form-control">
+		                                    </div>
+	                                	</div>
 	                                	<div class="form-group row">
-	                                		<div class="col-lg-2">
+		                                	<label class="col-lg-2 col-form-label">Payment Id</label>
+		                                    <div class="col-lg-4">
+			                       				<input type="text" id="paymentid" name="paymentid"
+			                                    placeholder="Payment Id" class="form-control">
+		                                    </div>
+		                                </div>
+		                                <div class="form-group row">
+		                                	<label class="col-lg-2 col-form-label">GST No.</label>
+		                                    <div class="col-lg-4">
+			                       				<input type="text" id="gstno" name="gstno" 
+			                                    placeholder="GST No." class="form-control">
+		                                    </div>
+		                                </div>
+	                               		<div class="form-group row">
+	                                		<div class="col-lg-3">
 			                       				<label class="col-form-label">Time Slot</label>
 			                                </div>
-		                                    <div class="col-lg-2">
+		                                    <div class="col-lg-3">
 			                       				<label class="col-form-label">Menu</label>
 			                       	        </div>
 		                                    <div class="col-lg-1">
 			                       				<label class="col-form-label">Seats</label>
 			                                </div>
 		                                    <div class="col-lg-2">
-			                       				<label class="col-form-label">FullName</label>
-			                                </div>
-		                                    <div class="col-lg-2">
-			                       				<label class="col-form-label">Mobile</label>
-			                                </div>
-		                                    <div class="col-lg-2">
-			                       				<label class="col-form-label">Email</label>
-			                                </div>
-			                                <div class="col-lg-1">
 			                       				<label class="col-form-label">Amount</label>
 			                                </div>
 	                                	</div>
-                                	</div>
+                                	
+                                		
                                 	<div id="dataDiv">
-	                                	<div class="form-group row">
-	                                		<div class="col-lg-2">
-			                       				<input type="text" id="fullName" name="fullName" 
-			                                    value="1PM to 2PM" class="form-control" disabled>
-		                                    </div>
-		                                    <div class="col-lg-2">
-			                       				<select id="fullName" name="fullName" required 
-			                                    	placeholder="fullname" class="form-control">
-			                                    		<option>Veg</option>
-			                                    		<option>Non Veg</option>
-			                                    	</select>
-			                                </div>
-		                                    <div class="col-lg-1">
-			                       				<select id="fullName" name="fullName" required 
-			                                    	placeholder="fullname" class="form-control">
-			                                    		<option>0</option>
-			                                    	</select>
-		                                    </div>
-		                                    <div class="col-lg-2">
-			                       				<input type="text" id="fullName" name="fullName" required 
-			                                    placeholder="FullName" class="form-control">
-		                                    </div>
-		                                    <div class="col-lg-2">
-			                       				<input type="text" id="fullName" name="fullName" required 
-			                                    placeholder="Mobile" class="form-control">
-		                                    </div>
-		                                    <div class="col-lg-2">
-			                       				<input type="text" id="fullName" name="fullName" required 
-			                                    placeholder="Email" class="form-control">
-		                                    </div>
-	                                	</div>
-	                                	
-                                	</div>
+	                              	</div>
                                 	<hr>
                                  	<div class="form-group row">
                                 		<div class="col-lg-12">
@@ -148,10 +140,10 @@
           		var timeSlotSeq = val.seq;
           		html += '<input type="hidden" value="'+val.seq+'" id ="timeslotseq" name="timeslotseq[]" />'; 
       	 		html += '<div class="form-group row">';
-      			html += '<div class="col-lg-2">';
+      			html += '<div class="col-lg-3">';
        			html +=  '<input type="text" id="fullName" name="timeSlot" value="'+val.timeslot+'" class="form-control" disabled>';
                 html += '</div>';
-                html += '<div class="col-lg-2">';
+                html += '<div class="col-lg-3">';
            		var menuList = val.menu
            		$.each( menuList, function( k, menu ) {
            			html +=  '<input type="text" id="menutitle" name="menuTitle" value="'+menu.menutitle+ ' Rs.' + menu.rate + '" class="form-control" disabled><br>';
@@ -170,14 +162,6 @@
                 });
                 html += '</div>';
 				html += '<div class="col-lg-2">';
-				html += '<input type="text" id="'+timeSlotSeq+'_fullName" name="'+timeSlotSeq+'_fullName" required placeholder="FullName" class="form-control">';
-				html += '</div>';
-                html += '<div class="col-lg-2">';
-           	 	html += '<input type="text" id="'+timeSlotSeq+'_mobile" name="'+timeSlotSeq+'_mobile" required placeholder="Mobile" class="form-control">';
-                html += '</div><div class="col-lg-2">';
-           		html += '<input type="text" id="'+timeSlotSeq+'_email" name="'+timeSlotSeq+'_email" required placeholder="Email" class="form-control">';
-                html += '</div>'
-                html += '<div class="col-lg-1">';
                 $.each( menuList, function( k, menu ) {
                 	html += '<input type="text" id="'+menu.menuseq+'_amount" value="0" name="'+timeSlotSeq+'_amount[]" required  class="form-control">';
                 	html += '<br>';
@@ -208,49 +192,37 @@
         }
 
         function submitBookingForm(){
-            i = 1;
-            var flag = false;
-        	$('input[name="timeslotseq[]"]').each(function() {
-            	var timeSlotSeq = this.value;
-            	var hasSeatSelected = false;
-        		$('select[name="'+timeSlotSeq+'_selectedSeats[]"]').each(function() {
-            		var selectedSeats = this.value;
-            		if(selectedSeats != "0"){
-            			hasSeatSelected = true;	
-            			flag = true;				
-            		}	
-        		});
-        		if(hasSeatSelected){
-            		var fullName = $("#"+ timeSlotSeq + "_fullName").val();
-            		var email = $("#"+ timeSlotSeq + "_email").val();
-            		var mobile = $("#"+ timeSlotSeq + "_mobile").val();
-            		if(fullName == null || fullName == ""){
-                		alert("Full Name is required for row no " + i);
-                		return;
-            		}
-            		if(email == null || email == ""){
-                		alert("Email is required for row no " + i);
-                		return
-            		}
-            		if(mobile == null || mobile == ""){
-                		alert("Mobile is required for row no " + i);
-                		return;
-            		}
-        		}
-        		i++;
-            });  
-            if(!flag){
-            	alert("No value selected to save booking");
-            	return;    
-            }
-        	$('#bookingForm').ajaxSubmit(function( data ){
-	       		 var obj = $.parseJSON(data);
-	       		 if(obj.success == 1){
-	           		 location.href = "dashboard.php";
-	       		 }else{
-	           		 alert("Error" + obj.message);
-	       		 }	 
-       	 	});
+        	if($("#bookingForm")[0].checkValidity()) {
+	            i = 1;
+	            var flag = false;
+	        	$('input[name="timeslotseq[]"]').each(function() {
+	            	var timeSlotSeq = this.value;
+	            	var hasSeatSelected = false;
+	        		$('select[name="'+timeSlotSeq+'_selectedSeats[]"]').each(function() {
+	            		var selectedSeats = this.value;
+	            		if(selectedSeats != "0"){
+	            			hasSeatSelected = true;	
+	            			flag = true;				
+	            		}	
+	        		});
+	        		i++;
+	            });  
+	            if(!flag){
+	            	alert("No seat selected to save booking");
+	            	return;    
+	            }
+	            $('#bookingForm').ajaxSubmit(function( data ){
+		       		 var obj = $.parseJSON(data);
+		       		 if(obj.success == 1){
+		           		 location.href = "dashboard.php";
+		       		 }else{
+		           		 alert("Error" + obj.message);
+		       		 }	 
+	       	 	});
+	       	 	
+        	}else{
+        		$("#bookingForm")[0].reportValidity();
+        	}
         } 
         function requiredFullName(input,timeSlotSeq){
             $id = "";
