@@ -1,4 +1,4 @@
-<?php
+<?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/TimeSlotMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
@@ -107,10 +107,10 @@ if(isset($_POST["seq"])){
         });
     });
     function submitMenuForm(){
-         if($('#menuDD').val() == ""){
-         	alert("Select menu option");
-         }
          if($("#timeSlotForm")[0].checkValidity()) {
+        	 if($('#menuDD').val() == ""){
+              	alert("Select menu option");
+             }
 	    	 $('#timeSlotForm').ajaxSubmit(function( data ){
 	    		 var obj = $.parseJSON(data);
 	    		 if(obj.success == 1){

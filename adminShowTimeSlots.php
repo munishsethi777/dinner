@@ -1,4 +1,6 @@
-<?include("SessionCheck.php");?>
+<?php 
+	include("SessionCheck.php");
+?>
 <!DOCTYPE html>
 <html>
 <head>
