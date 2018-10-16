@@ -66,11 +66,13 @@ if($call == "saveBookingsFromAdmins"){
 		$bookingDetailMgr = BookingDetailMgr::getInstance();
 		$timSlotSeqs = $_POST["timeslotseq"];
 		$selectedDate = $_POST["bookingDate"];
-		$tansactionId = "";
+		$mobile = $_POST["mobile"];
+		$emailId = $_POST["email"];
+		$fullName = $_POST["fullName"];
+		
+		$tansactionId = $_POST["paymentid"];
+		$gstNo = $_POST["gstno"];
 		foreach ($timSlotSeqs as $timeSlotSeq){
-			$mobile = $_POST[$timeSlotSeq."_mobile"];
-			$emailId = $_POST[$timeSlotSeq."_email"];
-			$fullName = $_POST[$timeSlotSeq."_fullName"];
 			$amount = $_POST[$timeSlotSeq."_amount"];
 			$totalAmount = 0;
 			foreach ($amount as $amt){
@@ -87,7 +89,7 @@ if($call == "saveBookingsFromAdmins"){
 			$booking->setTimeSlot($timeSlotSeq);
 			$booking->setAmount($totalAmount);
 			$booking->setTransactionId($tansactionId);
-			$booking->setGSTNumber("");
+			$booking->setGSTNumber($gstNo);
 			$bookingId = $bookingMgr->saveBooking($booking);
 			$booking->setSeq($bookingId);
 			$menuPerson = $_POST[$timeSlotSeq."_selectedSeats"];
