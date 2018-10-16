@@ -83,54 +83,30 @@ class SessionUtil{
     }
 
 
-    public function destroySession(){
-        //$boolAdmin = self::isSessionAdmin();
-        //$boolUser = self::isSessionUser();
-        $_SESSION = array();
-        session_destroy();
-//         if($boolAdmin == true){
-//             header("Location:adminLogin.php");
-//             die;
-//         }
-
-//         if($boolUser == true){
-//             header("Location:userLogin.php");
-//             die;
-
-//         }
-//         AuthUtil::destroy();
-        header("Location:adminlogin.php");
-        die;
-    }
-    public function sessionCheck($loginType){
-        $bool = self::isSessionAdmin();
-        if($loginType == LoginType::USER){
-            $bool = self::isSessionUser();
-            if($bool == false){
-                header("location: userLogin.php");
-                die;
-            }
-        }else{      	
-            if($bool == false){
-                header("location: adminLogin.php");
-                die;
-            }else{
-            	$isPaymentDue = $this->isAdminPaymentDue();
-            	if($isPaymentDue){
-            		header("location: paymentForm.php");
-            		die;
-            	}else{
-            		$page = basename ( $_SERVER ['PHP_SELF'] );
-	            	if($page != 'adminPackage.php'){
-		            	if(!AuthUtil::isAuthenticate($page)){
-		            		header("location: logout.php");
-		            		die;
-		            	}
-	            	}
-            	}
-            }
-        }
-    }
+	public function isSessionAdmin(){
+		if(	$_SESSION[self::$ADMIN_LOGGED_IN] != null){
+			return true;
+		}
+		return false;
+	}
+	
+	public function sessionCheck(){
+		$bool = self::isSessionAdmin();
+		if($bool == false){
+			header("location: adminlogin.php");
+			die;
+		}
+	}
+	
+	public function destroySession(){
+		$boolAdmin = self::isSessionAdmin();
+		$_SESSION = array();
+		session_destroy();
+		if($boolAdmin == true){
+			header("Location:adminlogin.php");
+			die;
+		}
+	}
 
   
 

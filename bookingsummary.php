@@ -2,6 +2,10 @@
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
+require('razorconfig.php');
+require('razorpay-php/Razorpay.php');
+use Razorpay\Api\Api;
+
 $timeSlotSeq = $_POST["timeslotseq"];
 $selectedDate = $_POST["selectedDate"];
 $menus = $_POST["menuMembers"];
@@ -18,6 +22,7 @@ $totalAmountInPaise = 0;
 $menuBtnVisible = array(1=>"none",2=>"none",3=>"none");
 $menuImgVisible = array(1=>"none",2=>"none",3=>"none");
 
+$menusArr = array();
 foreach ($menuArr as $key=>$value){
 	if(empty($value)){
 		continue;
@@ -31,11 +36,8 @@ foreach ($menuArr as $key=>$value){
 	if(!in_array("inline-table", $menuImgVisible)){
 		$menuImgVisible[$key] = "inline-table";
 	}
+	array_push($menusArr, $menu);
 }
-// if($menuBtnVisible[2] == "inline-table" && $menuBtnVisible[3] == "inline-table"){
-// 	$menuImgVisible[3] = "none";
-// }
-	
 if(!empty($amount)){
 	$amount = number_format($amount,2);
 	$totalAmount +=  $handlingCharges;
@@ -43,6 +45,17 @@ if(!empty($amount)){
 	$totalAmountInPaise = $totalAmount * 100;
 }
 //$totalAmountInPaise = 100;
+
+$api = new Api($keyId, $keySecret);
+$orderData = [
+		//'receipt'         => 3456,
+		'amount'          => $totalAmountInPaise,
+		'currency'        => 'INR',
+		'payment_capture' => 1
+];
+$razorpayOrder = $api->order->create($orderData);
+$razorpayOrderId = $razorpayOrder['id'];
+
 ?>
 <html>
 <head>
@@ -70,17 +83,15 @@ if(!empty($amount)){
 	                       			<h1 style="padding-bottom:10px">
 											MENU
 									</h1>
-									<button class="btn btn-primary btn-rounded mockbtn" style="display:<?php echo $menuBtnVisible[1]?>">MOCKTAIL</button>
-									<button class="btn btn-primary btn-rounded vegbtn" style="display:<?php echo $menuBtnVisible[2]?>">VEG</button>
-									<button class="btn btn-primary btn-rounded nvegbtn" style="display:<?php echo $menuBtnVisible[3]?>">NON VEG</button>
-									
-									
+									<?php foreach($menusArr as $menu){?>
+										<button class="btn btn-primary btn-rounded menu<?php echo $menu->getSeq()?>btn" style="display:inline-table"><?php echo $menu->getTitle()?></button>
+                                    <?php }?>
 	                       		</div>
-		                       		<div class="row">
-		                       			<img class="mockimg" style="display:<?php echo $menuImgVisible[1]?>;height:auto;width:100%" src="images/mocktails.jpeg">
-		                       			<img class="vegimg" style="display:<?php echo $menuImgVisible[2]?>;height:auto;width:100%" src="images/veg.jpeg">
-		                       			<img class="nvegimg" style="display:<?php echo $menuImgVisible[3]?>;height:auto;width:100%" src="images/nveg.jpeg">
-	                       			</div>
+                                    <div class="row">
+                                    	<?php foreach($menusArr as $menu){?>
+											<img class="menu<?php echo $menu->getSeq()?>img"  style="height:auto;width:100%" src="images/menuImages/<?php echo $menu->getSeq().'.'.$menu->getImageName()?>">
+                                    	<?php }?>
+                                    </div>
                        			</div>
                     	</div>
                     	<div class="col-lg-4">
@@ -210,6 +221,22 @@ if(!empty($amount)){
 <script src="scripts/FormValidators/FormValidators.js"></script>
 <script>
 $( document ).ready(function() {
+	menuArr = [];
+	
+	<?php foreach($menusArr as $menu){?>
+		menuArr.push("<?php echo $menu->getSeq()?>");//populate js array
+		$(".menu<?php echo $menu->getSeq()?>img").hide();//hide all the photos
+
+
+		$( ".menu<?php echo $menu->getSeq()?>btn" ).click(function() {//click of button 
+			$.each(menuArr, function(key,value){
+				$(".menu"+ value +"img").hide();//hide all images
+			});
+			$(".menu<?php echo $menu->getSeq()?>img").show();//but show the clicked one
+		});
+	<?php }?>
+	$(".menu"+ menuArr[0] +"img").show();//hide all images
+
 	$( ".vegbtn" ).click(function() {
 		$(".nvegimg").hide();
 		$(".mockimg").hide();
@@ -220,11 +247,11 @@ $( document ).ready(function() {
 		$(".vegimg").hide();
 		$(".mockimg").hide();
 	});
-	$( ".mockbtn" ).click(function() {
-		$(".nvegimg").hide();
-		$(".vegimg").hide();
-		$(".mockimg").show();
-	});
+// 	$( ".mockbtn" ).click(function() {
+// 		$(".nvegimg").hide();
+// 		$(".vegimg").hide();
+// 		$(".mockimg").show();
+// 	});
 	$('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
@@ -273,7 +300,8 @@ document.getElementById('rzp-button').onclick = function(e){
 			    },
 			    "theme": {
 			        "color": "#1ab394"
-			    }
+			    },
+			    "order_id": "<?php echo $razorpayOrderId?>"
 			};
 		var rzp1 = new Razorpay(options);
 	    rzp1.open();

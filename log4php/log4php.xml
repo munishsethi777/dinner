@@ -7,7 +7,7 @@
 
   <appender name="myFileAppender" class="LoggerAppenderFile">
     <layout class="LoggerLayoutTTCC" />
-    <param name="file" value="/Applications/XAMPP/xamppfiles/htdocs/accfw_new/logs/ezaeV2.log" />
+    <param name="file" value="/Applications/XAMPP/xamppfiles/htdocs/dinner/logs/log.log" />
     <param name="maxFileSize" value="5MB" />
   </appender>
   <!--<appender name="myDBAppender" class="LoggerAppenderPDO">

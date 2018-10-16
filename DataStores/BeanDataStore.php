@@ -16,7 +16,7 @@ class BeanDataStore {
 		//$sessionUtil = SessionUtil::getInstance ();
 		//$this->companySeq = $sessionUtil->getAdminLoggedInCompanySeq ();
 		//$this->loggedInAdminSeq = $sessionUtil->getAdminLoggedInSeq();
-		///$this->logger = Logger::getLogger ( "logger" );
+		$this->logger = Logger::getLogger ( "logger" );
 		//$this->isManager = $sessionUtil->getLoggedInRole() == "manager";
 	}
 	private function key_implode($array) {

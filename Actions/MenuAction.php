@@ -75,7 +75,8 @@ if($call == "deleteMenus"){
 	        $message = "Menu(s) Deleted successfully";
 	    }catch(Exception $e){
 	        $success = 0;
-	        $message = ErrorUtil::checkReferenceError(LearningPlan::$className,$e);
+	        $message = $e->getMessage();
+	        //$message = ErrorUtil::checkReferenceError(LearningPlan::$className,$e);
 	    }
 	    $response = new ArrayObject();
 	    $response["message"] = $message;

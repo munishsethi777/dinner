@@ -59,11 +59,11 @@ require_once('IConstants.inc');
                 $('#loginForm').jqxValidator('validate', validationResult);
             }
             function submitLogin(e,btn){
-                //var l = Ladda.create(btn);
-                //l.start();
+                var l = Ladda.create(btn);
+                l.start();
                 $formData = $("#loginForm").serializeArray();
                 $.getJSON( "Actions/AdminAction.php?call=loginAdmin", $formData,function( data ){
-                    //l.stop();
+                    l.stop();
                     if(data.success == 0){
                         toastr.error("Invaid username or Password",'Login Failed');
                     }else{
