@@ -1,8 +1,8 @@
 <?php
 require_once ("MainDB.php5");
-require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
+//require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/FilterUtil.php");
-Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
+//Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 class BeanDataStore {
 	private $className;
 	private $tableName;
@@ -16,7 +16,7 @@ class BeanDataStore {
 		//$sessionUtil = SessionUtil::getInstance ();
 		//$this->companySeq = $sessionUtil->getAdminLoggedInCompanySeq ();
 		//$this->loggedInAdminSeq = $sessionUtil->getAdminLoggedInSeq();
-		$this->logger = Logger::getLogger ( "logger" );
+		//$this->logger = Logger::getLogger ( "logger" );
 		//$this->isManager = $sessionUtil->getLoggedInRole() == "manager";
 	}
 	private function key_implode($array) {
@@ -99,7 +99,7 @@ class BeanDataStore {
 			}
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured in BeanDataStore:" . $e );
+			//$this->logger->error ( "Error occured in BeanDataStore:" . $e );
 			throw $e ;
 		}
 		return $id;
@@ -164,7 +164,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $id;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 		return null;
@@ -212,7 +212,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $objList;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 	}
@@ -234,7 +234,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $objList;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -248,7 +248,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $obj;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -262,7 +262,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $obj;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e;
 		}
 	}
@@ -274,7 +274,7 @@ class BeanDataStore {
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -287,7 +287,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return $flag;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -306,7 +306,7 @@ class BeanDataStore {
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw  $e ;
 		}
 	}
@@ -318,7 +318,7 @@ class BeanDataStore {
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -330,7 +330,7 @@ class BeanDataStore {
 			$STH->execute ();
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -361,7 +361,7 @@ class BeanDataStore {
 			$objList = $STH->fetchAll ( PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className );
 			return $objList;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -386,7 +386,7 @@ class BeanDataStore {
 			$objList = $STH->fetchAll ( PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className );
 			return $objList;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -408,7 +408,7 @@ class BeanDataStore {
 			$objList = $STH->fetchAll ();
 			return $objList;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw  $e ;
 		}
 	}
@@ -434,7 +434,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return true;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -464,7 +464,7 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 			return true;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -492,7 +492,7 @@ class BeanDataStore {
 			$count = intval ( $result [0] );
 			return $count;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw  $e ;
 		}
 	}
@@ -688,7 +688,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			$count = intval ( $result [0] );
 			return $count;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -713,7 +713,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			}
 			return $objList;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -733,7 +733,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			$id = $conn->lastInsertId();
 			return $id;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
@@ -753,7 +753,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			$this->throwException ( $sth->errorInfo () );
 			$objList = $sth->fetchAll ( PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $this->className );
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw  $e ;
 		}
 		return $objList;
@@ -780,7 +780,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			$objList = $sth->fetchAll ();
 			return $objList;
 		} catch ( Exception $e ) {
-			$this->logger->error ( "Error occured :" . $e );
+			//$this->logger->error ( "Error occured :" . $e );
 			throw $e ;
 		}
 	}
