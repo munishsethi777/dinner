@@ -114,7 +114,7 @@ if(isset($_POST["seq"])){
 	    	 $('#timeSlotForm').ajaxSubmit(function( data ){
 	    		 var obj = $.parseJSON(data);
 	    		 if(obj.success == 1){
-	        		 location.href = "adminShowMenus.php";
+	        		 location.href = "adminShowTimeSlots.php";
 	    		 }else{
 	        		 alert("Error" + obj.message);
 	    		 }	 
