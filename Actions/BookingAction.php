@@ -64,7 +64,11 @@ if($call == "saveBookingsFromAdmins"){
 	try{
 		$bookingMgr = BookingMgr::getInstance();
 		$bookingDetailMgr = BookingDetailMgr::getInstance();
-		$timSlotSeqs = $_POST["timeslotseq"];
+		$seq = $_POST["seq"];
+		if(empty($seq)){
+			$seq = 0;
+		}
+		$timeSlotSeq = $_POST["timeSlot"];
 		$selectedDate = $_POST["bookingDate"];
 		$mobile = $_POST["mobile"];
 		$emailId = $_POST["email"];
@@ -72,31 +76,33 @@ if($call == "saveBookingsFromAdmins"){
 		
 		$tansactionId = $_POST["paymentid"];
 		$gstNo = $_POST["gstno"];
-		foreach ($timSlotSeqs as $timeSlotSeq){
-			$amount = $_POST[$timeSlotSeq."_amount"];
-			$totalAmount = 0;
-			foreach ($amount as $amt){
-				$totalAmount += $amt;
-			}
-			$booking = new Booking();
-			$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
-			$bookingDate = $bookingDate->setTime(0, 0);
-			$booking->setBookedOn(new DateTime());
-			$booking->setBookingDate($bookingDate);
-			$booking->setEmailId($emailId);
-			$booking->setFullName($fullName);
-			$booking->setMobileNumber($mobile);
-			$booking->setTimeSlot($timeSlotSeq);
-			$booking->setAmount($totalAmount);
-			$booking->setTransactionId($tansactionId);
-			$booking->setGSTNumber($gstNo);
-			$bookingId = $bookingMgr->saveBooking($booking);
-			$booking->setSeq($bookingId);
-			$menuPerson = $_POST[$timeSlotSeq."_selectedSeats"];
-			$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson);
-			$message = "Booking Saved Successfully";
+		$menuPerson = $_POST["selectedSeats"];
+		$sum = array_sum($menuPerson);
+		if(array_sum($menuPerson) == 0){
+			continue;
 		}
-		
+		$amount = $_POST["amount"];
+		$totalAmount = 0;
+		foreach ($amount as $amt){
+			$totalAmount += $amt;
+		}
+		$booking = new Booking();
+		$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
+		$bookingDate = $bookingDate->setTime(0, 0);
+		$booking->setBookedOn(new DateTime());
+		$booking->setBookingDate($bookingDate);
+		$booking->setEmailId($emailId);
+		$booking->setFullName($fullName);
+		$booking->setMobileNumber($mobile);
+		$booking->setTimeSlot($timeSlotSeq);
+		$booking->setAmount($totalAmount);
+		$booking->setTransactionId($tansactionId);
+		$booking->setGSTNumber($gstNo);
+		$booking->setSeq($seq);
+		$bookingId = $bookingMgr->saveBooking($booking);
+		$booking->setSeq($bookingId);
+		$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson);
+		$message = "Booking Saved Successfully";
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
@@ -107,6 +113,59 @@ if($call == "saveBookingsFromAdmins"){
 	echo json_encode($response);
 	return;
 }
+// if($call == "saveBookingsFromAdmins"){
+// 	try{
+// 		$bookingMgr = BookingMgr::getInstance();
+// 		$bookingDetailMgr = BookingDetailMgr::getInstance();
+// 		$timSlotSeqs = $_POST["timeslotseq"];
+// 		$selectedDate = $_POST["bookingDate"];
+// 		$mobile = $_POST["mobile"];
+// 		$emailId = $_POST["email"];
+// 		$fullName = $_POST["fullName"];
+
+// 		$tansactionId = $_POST["paymentid"];
+// 		$gstNo = $_POST["gstno"];
+// 		foreach ($timSlotSeqs as $timeSlotSeq){
+// 			$menuPerson = $_POST[$timeSlotSeq."_selectedSeats"];
+// 			$sum = array_sum($menuPerson);
+// 			if(array_sum($menuPerson) == 0){
+// 				continue;
+// 			}
+// 			$amount = $_POST[$timeSlotSeq."_amount"];
+// 			$totalAmount = 0;
+// 			foreach ($amount as $amt){
+// 				$totalAmount += $amt;
+// 			}
+// 			$booking = new Booking();
+// 			$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
+// 			$bookingDate = $bookingDate->setTime(0, 0);
+// 			$booking->setBookedOn(new DateTime());
+// 			$booking->setBookingDate($bookingDate);
+// 			$booking->setEmailId($emailId);
+// 			$booking->setFullName($fullName);
+// 			$booking->setMobileNumber($mobile);
+// 			$booking->setTimeSlot($timeSlotSeq);
+// 			$booking->setAmount($totalAmount);
+// 			$booking->setTransactionId($tansactionId);
+// 			$booking->setGSTNumber($gstNo);
+// 			$bookingId = $bookingMgr->saveBooking($booking);
+// 			$booking->setSeq($bookingId);
+				
+				
+// 			$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson);
+// 			$message = "Booking Saved Successfully";
+// 		}
+
+// 	}catch(Exception $e){
+// 		$success = 0;
+// 		$message  = $e->getMessage();
+// 	}
+// 	$response = new ArrayObject();
+// 	$response["success"]  = $success;
+// 	$response["message"]  = $message;
+// 	echo json_encode($response);
+// 	return;
+// }
 if($call == "getBookings"){
 	$bookingMgr = BookingMgr::getInstance();
 	$bookingJson = $bookingMgr->getBookingJsonForGrid();

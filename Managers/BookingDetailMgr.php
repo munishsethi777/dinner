@@ -1,6 +1,5 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/BookingDetail.php");
 class BookingDetailMgr{
 	private static  $bookingDetailMgr;
@@ -12,7 +11,6 @@ class BookingDetailMgr{
 		{
 			self::$bookingDetailMgr = new BookingDetailMgr();
 			self::$dataStore = new BeanDataStore(BookingDetail::$className, BookingDetail::$tableName);
-			self::$sessionUtil = SessionUtil::getInstance();
 		}
 		return self::$bookingDetailMgr;
 	}
@@ -31,6 +29,7 @@ class BookingDetailMgr{
 	}
 	
 	public function saveBookingDetail($bookingId,$menuAndMembers){
+		$this->deleteBookingDetailInList($bookingId);
 		foreach ($menuAndMembers as $selectedSeat){
 			if($selectedSeat > 0){
 				$selectedSeatArr = explode("_", $selectedSeat);
@@ -50,5 +49,34 @@ class BookingDetailMgr{
 		$query = "delete from bookingdetails where bookingseq in ($bookingSeqs)";
 		self::$dataStore->executeQuery($query);
 	}
+	
+	public function getAllBookingDetailsAndMenu(){
+		$query = "select * from bookingdetails inner join menus on bookingdetails.menuseq = menus.seq";
+		$bookingDetails = self::$dataStore->executeQuery($query);
+		$bookingDetailArr = array();
+		foreach ($bookingDetails as $bookingDetail){
+			$menuStrArr = "";
+			$bookingSeq = $bookingDetail["bookingseq"];
+			$members = $bookingDetail["members"];
+			$menuTitle = $bookingDetail["title"];
+			if(array_key_exists($bookingSeq, $bookingDetailArr)){
+				$menuStrArr = $bookingDetailArr[$bookingSeq];
+			}
+			if(!empty($menuStrArr)){
+ 				$bookingDetailArr[$bookingSeq] = $menuStrArr . " , " . $members . " - " . $menuTitle;
+ 			}else{
+ 				$bookingDetailArr[$bookingSeq] = $members . " - " . $menuTitle;
+ 			}
+ 		}
+ 		return $bookingDetailArr;
+	}
 
+	
+	public function getDetailByBookingSeqAndTimeSlot($bookingSeq,$timeSlot){
+		$query = "SELECT bookingdetails.menuseq,bookingdetails.members FROM `bookingdetails` inner join menutimeslots on bookingdetails.menuseq = menutimeslots.menuseq
+where bookingseq = $bookingSeq and menutimeslots.timeslotsseq = $timeSlot";
+		$bookingDetail = self::$dataStore->executeQuery($query);
+		return $bookingDetail;
+	}
+	
 }

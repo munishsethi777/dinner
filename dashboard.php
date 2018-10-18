@@ -31,7 +31,11 @@
         	</div>
        </div>
     </div>
+    <form id="form1" name="form1" method="post" action="adminEditBooking.php">
+     	<input type="hidden" id="seq" name="seq"/>
+   	</form>
    </body>
+   
 </html>
 
 	<script type="text/javascript">
@@ -176,7 +180,7 @@
 
 
                     container.append(addButton);
-                    //container.append(editButton);
+                    container.append(editButton);
                     container.append(deleteButton);
 
                     statusbar.append(container);
@@ -186,7 +190,7 @@
 
                     // create new row.
                     addButton.click(function (event) {
-                        location.href = ("adminAddBooking.php");
+                        location.href = ("adminEditBooking.php");
                     });
                     // update row.
                     editButton.click(function (event){

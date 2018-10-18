@@ -2,6 +2,7 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Booking.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/BookingDetail.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
 class BookingMgr{
 	private static  $bookingMgr;
 	private static $dataStore;
@@ -29,11 +30,12 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 	}
 	
 	public function getBookingJsonForGrid(){
-		$query = "select bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq as bookingseq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,bookingdetails.members as members,timeslots.title as timeslot,menus.title as menutitle from bookings
-inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join timeslots on bookings.timeslot = timeslots.seq inner join menus on bookingdetails.menuseq = menus.seq";
+		$query = "select bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq as bookingseq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,timeslots.title as timeslot from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
 		$bookingDetails =  self::$dataStore->executeQuery($query,true);
 		$bookingArr = array();
 		$bookingMainArr = array();
+		$bookingDetailMgr = BookingDetailMgr::getInstance();
+		$detailAndMenu = $bookingDetailMgr->getAllBookingDetailsAndMenu();
 		foreach ($bookingDetails as $booking){
 			$bookingSeq = $booking["bookingseq"];
 			$bookedOn = $booking["bookedon"];
@@ -52,19 +54,7 @@ inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join
 			$arr["mobilenumber"] = $booking["mobilenumber"];
 			$arr["emailid"] = $booking["emailid"];
  			$mainMenuArr = array();
-			$menuStrArr = "";
-			if(array_key_exists($bookingSeq, $bookingArr)){
-				$arr = $bookingArr[$bookingSeq];
-				$menuStrArr = $arr["menu"];
-			}
-			$menu = array();
-			$menuTitle = $booking["menutitle"];
-			$members = $booking["members"];
-			if(!empty($menuStrArr)){
-				$arr["menu"] = $menuStrArr . " , " . $members . " - " . $menuTitle;
-			}else{
-				$arr["menu"] = $members . " - " . $menuTitle;
-			}
+ 			$arr["menu"] = $detailAndMenu[$bookingSeq];
 			$bookingArr[$bookingSeq] = $arr;
 		}
 		$bookingMainArr = $this->getArrayForGrid($bookingArr);
@@ -95,5 +85,10 @@ inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join
 			$bookingDetailMgr->deleteBookingDetailInList($bookingSeqs);
 		}
 		return $flag;
+	}
+	
+	public function findBySeq($seq){
+		$booking = self::$dataStore->findBySeq($seq);
+		return $booking;
 	}
 }
