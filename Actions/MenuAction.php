@@ -82,4 +82,11 @@ if($call == "deleteMenus"){
 	    $response["message"] = $message;
 	    $response["success"] =  $success;
 	    echo json_encode($response);
-	}
+}
+if($call == "getMenusByTimeSlot"){
+	$menuMgr = MenuMgr::getInstance();
+	$timeSlotSeq = $_GET["timeSlotSeq"];
+	$selectedDate = $_GET["selectedDate"];
+	$menus = $menuMgr->getMenusAndSeats($selectedDate,$timeSlotSeq);
+	echo json_encode($menus);
+}

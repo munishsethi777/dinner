@@ -2,7 +2,7 @@
 class MenuTimeSlot{
 	public static $tableName = "menutimeslots";
 	public static $className = "MenuTimeSlot";
-	private $seq,$menuseq,$timeslotseq;
+	private $seq,$menuseq,$timeslotsseq;
 	
 	public function setSeq($seq){
 		$this->seq = $seq;
@@ -18,10 +18,10 @@ class MenuTimeSlot{
 		return $this->menuseq;
 	}
 	
-	public function setTimeSlotSeq($tSeq_){
-		$this->timeslotseq = $tSeq_;
+	public function setTimeSlotsSeq($tSeq_){
+		$this->timeslotsseq = $tSeq_;
 	}
-	public function getTimeSlotSeq(){
-		return $this->timeslotseq;
+	public function getTimeSlotsSeq(){
+		return $this->timeslotsseq;
 	}
 }

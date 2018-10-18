@@ -2,6 +2,8 @@
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Menu.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 class MenuMgr{
 	private static $menuMgr;
 	private static $dataStore;
@@ -87,20 +89,20 @@ class MenuMgr{
 	}
 	
 	public function getMenusTitleByTimeSlot($timeSlotSeq){
-		$query = "select * from menus inner join menutimeslots on menus.seq = menutimeslots.menuseq where menutimeslots.timeslotseq = $timeSlotSeq";
+		$query = "select menus.title, menus.seq from menus inner join menutimeslots on menus.seq = menutimeslots.menuseq where menutimeslots.timeslotsseq = $timeSlotSeq";
 		$menus = self::$dataStore->executeQuery($query);
 		if(!empty($menus)){
 			$menuTitles = array();
 			foreach ($menus as $menu){
-				array_push($menuTitles, $menu["title"]);
+				$menuTitles[$menu["seq"]] = $menu["title"];
 			}
-			return implode(",", $menuTitles);
+			return $menuTitles;
 		}
 		return null;
 	}
 	
-public function getMenusSeqsByTimeSlot($timeSlotSeq){
-		$query = "select * from menus inner join menutimeslots on menus.seq = menutimeslots.menuseq where menutimeslots.timeslotseq = $timeSlotSeq";
+	public function getMenusSeqsByTimeSlot($timeSlotSeq){
+		$query = "select * from menus inner join menutimeslots on menus.seq = menutimeslots.menuseq where menutimeslots.timeslotsseq = $timeSlotSeq";
 		$menus = self::$dataStore->executeQuery($query);
 		if(!empty($menus)){
 			$menuSeqs = array();
@@ -113,7 +115,31 @@ public function getMenusSeqsByTimeSlot($timeSlotSeq){
 	}
 	
 	
-	
+	public function getMenusAndSeats($selectedDate,$timeSlotSeq){
+		$query = "select menus.rate,menus.title, menus.seq,timeslots.seats from menus inner join menutimeslots on menus.seq = menutimeslots.menuseq inner join timeslots on menutimeslots.timeslotsseq = timeslots.seq where menutimeslots.timeslotsseq = $timeSlotSeq";
+		$menus = self::$dataStore->executeQuery($query);
+		if(!empty($menus)){
+			$menuTitles = array();
+			foreach ($menus as $menu){
+				$menuTitles[$menu["seq"]] = $menu;
+			}
+			$selectedDate .= " 00:00:00";
+			$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
+			$dateStr = $date->format("Y-m-d H:i:s");
+			$bookingMgr = BookingMgr::getInstance();
+			$totalSeats = $menus[0]["seats"];
+			$bookedSeats = $bookingMgr->getAvailableSeats($dateStr, $timeSlotSeq);
+			$availableSeats = intval($totalSeats);
+			if(!empty($bookedSeats)){
+				$availableSeats -= intval($bookedSeats); 
+			}
+			$mainArr["menus"] = $menuTitles;
+			$mainArr["seats"] = $availableSeats;
+			$mainArr["totalSeats"] = $totalSeats;
+			return $mainArr;
+		}
+		return null;
+	}
 	
 
 }
