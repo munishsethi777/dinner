@@ -26,7 +26,7 @@ class TimeSlotMgr{
 		$selectedDate = $_GET["selectedDate"];
 		$selectedDate .= " 00:00:00";
 		$query = "select timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
-inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotseq inner join menus on menutimeslots.menuseq = menus.seq";
+inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq";
 		$timeSlots = self::$dataStore->executeQuery($query);
 		$slotArr = array();
 		$bookingMgr = BookingMgr::getInstance();
@@ -89,7 +89,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotseq inner join
 			foreach ($menus as $menu){
 				$menuTimeSlot = new MenuTimeSlot();
 				$menuTimeSlot->setMenuSeq($menu);
-				$menuTimeSlot->setTimeSlotSeq($id);
+				$menuTimeSlot->setTimeSlotsSeq($id);
 				self::$menuTimeSlotDataStore->save($menuTimeSlot);
 			}
 		}
@@ -106,7 +106,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotseq inner join
 	}
 	
 	private function deleteMenuSlotsInList($timeSlotSeqs){
-		$query = "delete from menutimeslots where timeslotseq in ($timeSlotSeqs)";
+		$query = "delete from menutimeslots where timeslotsseq in ($timeSlotSeqs)";
 		self::$menuTimeSlotDataStore->executeQuery($query);
 		
 	}
@@ -120,7 +120,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotseq inner join
 			$arr["description"] = $timeSlot->getDescription();
 			$arr["seats"] = $timeSlot->getSeats();
 			$menus = $menuMgr->getMenusTitleByTimeSlot($timeSlot->getSeq());
-			$arr["menus"] = $menus;
+			$arr["menus"] = implode(",",$menus);
 			array_push($menuArr, $arr);
 		}
 		$mainArr["Rows"] = $menuArr;
@@ -132,6 +132,11 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotseq inner join
 		$query = "select count(*) from timeslots";
 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;	
+	}
+	
+	public function findAll(){
+		$timeSlots = self::$dataStore->findAll();
+		return $timeSlots;
 	}
 	
 	
