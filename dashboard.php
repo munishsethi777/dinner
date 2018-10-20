@@ -1,4 +1,4 @@
-<?include("SessionCheck.php");?>
+<?//include("SessionCheck.php");?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,6 +33,7 @@
     </div>
     <form id="form1" name="form1" method="post" action="adminEditBooking.php">
      	<input type="hidden" id="seq" name="seq"/>
+     	<input type="hidden" id="isView" name="isView" value="0"/>
    	</form>
    </body>
    
@@ -103,12 +104,12 @@
 			var columns = [
 			  { text: 'Payment ID', datafield: 'transactionid', width:"10%"}, 			
 			  { text: 'id', datafield: 'seq' , hidden:true},
-              { text: 'Booked On', datafield: 'bookedon',cellsformat: 'd-M-yyyy hh:mm tt',width:"15%"},
-              { text: 'Booking Date', datafield: 'bookingdate',cellsformat: 'd-M-yyyy',width:"10%"},
+              { text: 'Booked On', datafield: 'bookedon',cellsformat: 'd-M-yyyy hh:mm tt', filterable:false,width:"15%"},
+              { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date' ,filterable:false,cellsformat: 'd-M-yyyy',width:"10%"},
               { text: 'Slot', datafield: 'timeslot',width:"15%"},
-              { text: 'Menu', datafield: 'menu', width:"15%" ,sortable:false},
+              { text: 'Menu', datafield: 'menu', width:"25%" ,sortable:false},
               { text: 'Customer Name', datafield: 'fullname',width:"12%"},
-              { text: 'Email', datafield: 'emailid',width:"20%"},
+              { text: 'Email', datafield: 'emailid',width:"20%", hidden:true},
               { text: 'Mobile', datafield: 'mobilenumber',width:"10%"}
             ]
            
@@ -147,7 +148,6 @@
                     $("#bookingsgrid").jqxGrid('updatebounddata', 'sort');
                 }
             };
-            
             var dataAdapter = new $.jqx.dataAdapter(source);
             // initialize jqxGrid
             $("#bookingsgrid").jqxGrid(
@@ -177,16 +177,20 @@
                     var addButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-plus-square'></i><span style='margin-left: 4px; position: relative;'>    Add</span></div>");
                     var deleteButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-times-circle'></i><span style='margin-left: 4px; position: relative;'>Delete</span></div>");
                     var editButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>Edit</span></div>");
-
+                    var viewButton = $("<div style='float: left; margin-left: 5px;'><i class='fa fa-edit'></i><span style='margin-left: 4px; position: relative;'>View</span></div>");
+	
 
                     container.append(addButton);
+                    container.append(viewButton);
                     container.append(editButton);
                     container.append(deleteButton);
+                    
 
                     statusbar.append(container);
                     addButton.jqxButton({  width: 65, height: 18 });
                     deleteButton.jqxButton({  width: 70, height: 18 });
                     editButton.jqxButton({  width: 65, height: 18 });
+                    viewButton.jqxButton({  width: 65, height: 18 });
 
                     // create new row.
                     addButton.click(function (event) {
@@ -205,6 +209,21 @@
                         }
                         var row = $('#bookingsgrid').jqxGrid('getrowdata', indexes);
                         $("#seq").val(row.seq);                        
+                        $("#form1").submit();    
+                    });
+                    viewButton.click(function (event){
+                    	var selectedrowindex = $("#bookingsgrid").jqxGrid('selectedrowindexes');
+                        var value = -1;
+                        indexes = selectedrowindex.filter(function(item) { 
+                            return item !== value
+                        })
+                        if(indexes.length != 1){
+                            bootbox.alert("Please Select single row for edit.", function() {});
+                            return;    
+                        }
+                        var row = $('#bookingsgrid').jqxGrid('getrowdata', indexes);
+                        $("#seq").val(row.seq);
+                        $("#isView").val(1);                              
                         $("#form1").submit();    
                     });
                     // delete row.

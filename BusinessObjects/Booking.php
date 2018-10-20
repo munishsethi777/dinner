@@ -3,7 +3,7 @@ class Booking{
 	public static $tableName = "bookings";
 	public static $className = "Booking";
 	
-	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot,$bookingdate,$transactionid,$amount;
+	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot,$bookingdate,$transactionid,$amount,$companymobile,$companyname;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -75,5 +75,19 @@ class Booking{
 	}
 	public function getAmount(){
 		return $this->amount;
+	}
+	
+	public function setCompanyMobile($companyMobile){
+		$this->companymobile = $companyMobile;
+	}
+	public function getCompanyMobile(){
+		return $this->companymobile;
+	}
+	
+	public function setCompanyName($companyName){
+		$this->companyname = $companyName;
+	}
+	public function getCompanyName(){
+		return $this->companyname;
 	}
 }

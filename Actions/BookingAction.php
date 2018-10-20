@@ -2,10 +2,8 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
-
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
-
 $call = "";
 if(isset($_GET["call"])){
 	$call = $_GET["call"];
@@ -45,7 +43,6 @@ if($call == "saveBooking"){
 		$booking->setTransactionId($tansactionId);
 		$booking->setGSTNumber($gst);
 		$bookingId = $bookingMgr->saveBooking($booking);
-       
 		$booking->setSeq($bookingId);
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
         MailUtil::sendOrderEmailClient($booking,$menuPersonsObj);
@@ -73,13 +70,14 @@ if($call == "saveBookingsFromAdmins"){
 		$mobile = $_POST["mobile"];
 		$emailId = $_POST["email"];
 		$fullName = $_POST["fullName"];
-		
+		$companyName = $_POST["companyname"];
+		$companyMobile = $_POST["companymobile"];
 		$tansactionId = $_POST["paymentid"];
 		$gstNo = $_POST["gstno"];
 		$menuPerson = $_POST["selectedSeats"];
 		$sum = array_sum($menuPerson);
 		if(array_sum($menuPerson) == 0){
-			continue;
+			return ;
 		}
 		$amount = $_POST["amount"];
 		$totalAmount = 0;
@@ -99,8 +97,11 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setTransactionId($tansactionId);
 		$booking->setGSTNumber($gstNo);
 		$booking->setSeq($seq);
+		$booking->setCompanyMobile($companyMobile);
+		$booking->setCompanyName($companyName);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
+		
 		$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson);
 		$message = "Booking Saved Successfully";
 	}catch(Exception $e){
