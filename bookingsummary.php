@@ -5,7 +5,10 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require('razorconfig.php');
 require('razorpay-php/Razorpay.php');
 use Razorpay\Api\Api;
-
+if(!isset($_POST["timeslotseq"])){
+	echo ("Invalid Execution");
+	die;
+}
 $timeSlotSeq = $_POST["timeslotseq"];
 $selectedDate = $_POST["selectedDate"];
 $menus = $_POST["menuMembers"];
