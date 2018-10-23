@@ -136,6 +136,7 @@ class MenuMgr{
 			$mainArr["menus"] = $menuTitles;
 			$mainArr["seats"] = $availableSeats;
 			$mainArr["totalSeats"] = $totalSeats;
+			$mainArr["selectedSeats"] = $bookedSeats;
 			return $mainArr;
 		}
 		return null;

@@ -6,9 +6,16 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingDetailMgr.php")
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
 $timeSlotMgr = TimeSlotMgr::getInstance();
 $timeSlots = $timeSlotMgr->findAll();
-
 $booking = New Booking();
 $bookingDetailJson = "";
+$bookedOn = "";
+$disabled = "";
+if(isset($_POST["isView"])){
+	$isView = $_POST["isView"];
+	if(!empty($isView)){
+		$disabled = "disabled";
+	}
+}
 if(isset($_POST["seq"])){
 	$bookingSeq = $_POST["seq"];
 	$bookingManager = BookingMgr::getInstance();
@@ -54,48 +61,63 @@ if(isset($_POST["seq"])){
 	                       			<div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Booking Date</label>
 	                                    <div class="col-lg-2">
-	                                    	<input type="text" id="bookingDate" <?php echo $bookedOn?> onchange="loadData()" name="bookingDate" required placeholder="Select Date" class="form-control">
+	                                    	<input type="text" id="bookingDate" <?php echo $disabled?>  value="<?php echo $bookedOn?>" onchange="loadData()" name="bookingDate" required placeholder="Select Date" class="form-control">
 	                                    </div>
 	                                </div>
 	                               		<div class="form-group row">
 	                               			<label class="col-lg-2 col-form-label">FullName</label>
 	                                		<div class="col-lg-4">
-	                               				<input type="text" value="<?php echo $booking->getFullName()?>" id="fullName" name="fullName" required 
+	                               				<input type="text" <?php echo $disabled?> value="<?php echo $booking->getFullName()?>" id="fullName" name="fullName" required 
 			                                    placeholder="FullName" class="form-control">
 		                                    </div>
 		                                </div>
 		                                <div class="form-group row">
 		                                	<label class="col-lg-2 col-form-label">Mobile</label>
 		                                    <div class="col-lg-4">
-			                       				<input type="text" value="<?php echo $booking->getMobileNumber()?>" id="mobile" name="mobile" required 
+			                       				<input type="text" <?php echo $disabled?> value="<?php echo $booking->getMobileNumber()?>" id="mobile" name="mobile" required 
 			                                    placeholder="Mobile" class="form-control">
 		                                    </div>
 		                                </div>
 		                                 <div class="form-group row">    
 		                                 	<label class="col-lg-2 col-form-label">Email</label>
 		                                    <div class="col-lg-4">
-			                       				<input type="text" value="<?php echo $booking->getEmailId()?>" id="email" name="email" required 
+			                       				<input type="text" <?php echo $disabled?> value="<?php echo $booking->getEmailId()?>" id="email" name="email" required 
 			                                    placeholder="Email" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                                	<label class="col-lg-2 col-form-label">Payment Id</label>
 		                                    <div class="col-lg-4">
-			                       				<input type="text" value="<?php echo $booking->getTransactionId()?>" id="paymentid" name="paymentid"
+			                       				<input type="text" <?php echo $disabled?> value="<?php echo $booking->getTransactionId()?>" id="paymentid" name="paymentid"
 			                                    placeholder="Payment Id" class="form-control">
 		                                    </div>
 		                                </div>
 		                                <div class="form-group row">
 		                                	<label class="col-lg-2 col-form-label">GST No.</label>
 		                                    <div class="col-lg-4">
-			                       				<input type="text" value="<?php echo $booking->getGSTNumber()?>" id="gstno" name="gstno" 
+			                       				<input type="text" <?php echo $disabled?> value="<?php echo $booking->getGSTNumber()?>" id="gstno" name="gstno" 
 			                                    placeholder="GST No." class="form-control">
 		                                    </div>
 		                                </div>
+		                                <div class="form-group row">
+		                                	<label class="col-lg-2 col-form-label">Company Name</label>
+		                                    <div class="col-lg-4"> 
+			                       				<input type="text" <?php echo $disabled?> value="<?php echo $booking->getCompanyName()?>" id="companyName" name="companyname" 
+			                                    placeholder="Company Name" class="form-control">
+		                                    </div>
+		                                </div>
+		                                <div class="form-group row">
+		                                	<label class="col-lg-2 col-form-label">Company Number</label>
+		                                    <div class="col-lg-4">
+			                       				<input type="text" <?php echo $disabled?> value="<?php echo $booking->getCompanyMobile()?>" id="companyMobile" name="companymobile" 
+			                                    placeholder="Company Number" class="form-control">
+		                                    </div>
+		                                </div>
+		                                
 		                                 <div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Time Slot</label>
 		                                    <div class="col-lg-4">
-		                                    	<select class="form-control chosen-select" onchange="loadData()" required id="timeSlot" name="timeSlot">
+		                                    	<select class="form-control chosen-select" <?php echo $disabled?> onchange="loadData()" required id="timeSlot" name="timeSlot">
 													<?php foreach ($timeSlots as $timeSlot){
 														$seq = $timeSlot->getSeq();
 														$selected = "";
@@ -113,11 +135,18 @@ if(isset($_POST["seq"])){
 	                              	</div>
                                 	<hr>
                                  	<div class="form-group row">
-                                		<div class="col-lg-12">
-	                                		<button class="btn btn-primary" onclick="submitBookingForm()" type="button"  id="rzp-button" style="width:100%">
+                                		<div class="col-lg-2">
+                                			<?php if(empty($disabled)){?>
+	                                		<button class="btn btn-primary" onclick="submitBookingForm()" type="button" id="rzp-button">
 	                                			Save Booking
 		                                	</button>
+		                                	<?php }?>
 	                                	</div>
+	                                	<div class="col-lg-2">
+                                			<button class="btn btn-default" onclick="cancel()" type="button">
+	                                			Cancel
+		                                	</button>
+		                               </div>
 	                            	</div>
                        			</form>
 	                        
@@ -143,7 +172,11 @@ if(isset($_POST["seq"])){
                minDate:new Date()
            });
            currDate = getCurrentDate();
-       	   $('#bookingDate').val(currDate);
+           selectedDate = "<?php echo $bookedOn ?>";
+           if(selectedDate == ""){
+        	   selectedDate = currDate; 
+           }
+       	   $('#bookingDate').val(selectedDate);
 	       loadData();
         });
         
@@ -160,7 +193,10 @@ if(isset($_POST["seq"])){
             	menus = data.menus;
             	seats = data.seats;
             	totalSeats = data.totalSeats;
-            	
+            	selectedSeats = data.selectedSeats;
+            	if(bookingDetailJsonObject != null){
+            		seats += parseInt(selectedSeats)
+            	}
             	html = '<div class="form-group row">';
             	html += '<label class="col-lg-2 col-form-label">Menu</label>';
             	html += '<div class="col-lg-2">';
@@ -175,14 +211,13 @@ if(isset($_POST["seq"])){
                		if(bookingDetailJsonObject != null){
                			selectedSeat = getMembers(k,bookingDetailJsonObject);
                			menuAmount[k] = menu.rate * selectedSeat;
-               			if(selectedSeat > 0){
-               				seats += parseInt(selectedSeat);
-               			}
+               			//if(selectedSeat > 0){
+               				//seats += parseInt(selectedSeat);
+               			//}
                		}
-               		html += '<select id="'+k +'_selectedSeats" onchange="calculateAmount('+ k + ',' + menu.rate +')" name="selectedSeats[]" required class="form-control">';
+               		html += '<select id="'+k +'_selectedSeats" <?php echo $disabled?> onchange="calculateAmount('+ k + ',' + menu.rate +')" name="selectedSeats[]" required class="form-control">';
 	           		html += '<option id="0">0</option>';
-	           		
-	                for(var i = 1; i <= totalSeats; i++){
+	                for(var i = 1; i <= seats; i++){
 		                if(i == selectedSeat){
 		                	html += '<option selected value="'+k+'_' +i+'">'+i+'</option>';	  
 		                }else{
@@ -199,7 +234,7 @@ if(isset($_POST["seq"])){
                     if(menuAmount.length > 0){
                     	selectAmount = menuAmount[k];
                     }
-                	html += '<input type="text" id="'+k+'_amount" value="'+selectAmount+'" name="amount[]" required  class="form-control">';
+                	html += '<input type="text" <?php echo $disabled?> id="'+k+'_amount" value="'+selectAmount+'" name="amount[]" required  class="form-control">';
                 	html += '<br>';
                 });
            		html += '</div>'
@@ -269,7 +304,7 @@ if(isset($_POST["seq"])){
 		       		 if(obj.success == 1){
 		           		 location.href = "dashboard.php";
 		       		 }else{
-		           		 alert("Error" + obj.message);
+		           		 alert("Error - " + obj.message);
 		       		 }	 
 	       	 	});
 	       	 	
@@ -283,5 +318,8 @@ if(isset($_POST["seq"])){
         	    // do something here
         	    $(this).addClass( "myClass" );
         	})   
+        }
+        function cancel(){
+           	location.href = "dashboard.php";
         }
 </script>
