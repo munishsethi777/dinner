@@ -28,11 +28,17 @@ if($call == "saveBooking"){
 		$amount = $_POST["amount"];
 		$companyNumber = "";
 		$companyMobile = "";
+		$country = $_POST["country"];
+		$dateOfBirth = $_POST["dateofbirth"];
+		$dateOfBirth = DateUtil::StringToDateByGivenFormat("d-m-Y", $dateOfBirth);
+		$dateOfBirth = $dateOfBirth->setTime(0, 0);
 		$gst = "";
+		$gstState = "";
 		if(isset($_POST["companyInfo"])){
 			$companyName = $_POST["companyName"];
 			$companyMobile = $_POST["companyNumber"];
 			$gst = $_POST["gst"];
+			$gstState = $_POST["companyState"];
 		}
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$booking = new Booking();
@@ -48,13 +54,14 @@ if($call == "saveBooking"){
 		$booking->setTimeSlot($timSlotSeq);
 		$booking->setAmount($amount);
 		$booking->setTransactionId($tansactionId);
-		$booking->setGSTNumber($gst);
 		$booking->setCompanyMobile($companyName);
 		$booking->setCompanyName($companyMobile);
+		$booking->setGSTNumber($gst);
+		$booking->setGstState($gstState);
+		$booking->setCountry($country);
+		$booking->setDateOfBirth($dateOfBirth);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
-		$booking->setGSTNumber($gst);
-		
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
         //MailUtil::sendOrderEmailClient($booking,$menuPersonsObj);
 		$message = "Booking Saved Successfully";
@@ -85,6 +92,11 @@ if($call == "saveBookingsFromAdmins"){
 		$companyMobile = $_POST["companymobile"];
 		$tansactionId = $_POST["paymentid"];
 		$gstNo = $_POST["gstno"];
+		$gstState = $_POST["companyState"];
+		$dateOfBirth = $_POST["dateofbirth"];
+		$country = $_POST["country"];
+		$dateOfBirth = DateUtil::StringToDateByGivenFormat("d-m-Y", $dateOfBirth);
+		$dateOfBirth = $dateOfBirth->setTime(0, 0);
 		$menuPerson = $_POST["selectedSeats"];
 		$sum = array_sum($menuPerson);
 		if(array_sum($menuPerson) == 0){
@@ -110,6 +122,9 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setSeq($seq);
 		$booking->setCompanyMobile($companyMobile);
 		$booking->setCompanyName($companyName);
+		$booking->setGstState($gstState);
+		$booking->setCountry($country);
+		$booking->setDateOfBirth($dateOfBirth);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		

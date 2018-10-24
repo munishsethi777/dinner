@@ -48,7 +48,6 @@ if(!empty($amount)){
 	$totalAmountInPaise = $totalAmount * 100;
 }
 //$totalAmountInPaise = 100;
-
 $api = new Api($keyId, $keySecret);
 $orderData = [
 		//'receipt'         => 3456,
@@ -58,7 +57,6 @@ $orderData = [
 ];
 $razorpayOrder = $api->order->create($orderData);
 $razorpayOrderId = $razorpayOrder['id'];
-
 ?>
 <html>
 <head>
@@ -157,11 +155,24 @@ $razorpayOrderId = $razorpayOrder['id'];
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">DOB</label>
+		                                    <div class="col-lg-10">
+		                                    	<input type="text" id="dateofbirth" name="dateofbirth" required placeholder="Date of Birth" class="form-control">
+		                                    </div>
+	                                	</div>
+	                                	<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Country</label>
+			                                    <div class="col-lg-10">
+			                                    	<?php include 'countryList.php';?>
+			                                    </div>
+		                                	</div>
+	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Mobile</label>
 		                                    <div class="col-lg-10">
 		                                    	<input type="text" id="mobile" name="mobile" required placeholder="Mobile" class="form-control">
 		                                    </div>
 	                                	</div>
+	                                	
 	                                	<div class="form-group row">
 		                                	<div class="col-lg-10" >
 		                                       	<label> <input class="i-checks" type="checkbox" name="companyInfo" id="companyInfo" >  Fill GST Information</label>
@@ -181,9 +192,16 @@ $razorpayOrderId = $razorpayOrder['id'];
 			                                    </div>
 		                                	</div>
 		                                	<div class="form-group row">
-			                       				<label class="col-lg-2 col-form-label">Company Contact</label>
+			                       				<label class="col-lg-2 col-form-label">Company Mobile</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" name="companyNumber" placeholder="Company Contact" class="form-control">
+			                                    	<input type="text" id="gst" name="companyNumber" placeholder="Company Mobile" class="form-control">
+			                                    </div>
+		                                	</div>
+		                                	
+		                                	<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Company State</label>
+			                                    <div class="col-lg-10">
+			                                    	<?php include 'stateList.php';?>
 			                                    </div>
 		                                	</div>
 	                                	</div>
@@ -243,8 +261,12 @@ $razorpayOrderId = $razorpayOrder['id'];
 <script src="scripts/FormValidators/FormValidators.js"></script>
 <script>
 $( document ).ready(function() {
-	menuArr = [];
-	
+	 menuArr = [];
+	 $('#dateofbirth').datetimepicker({
+         timepicker:false,
+         format:'d-m-Y',
+     });
+     currDate = getCurrentDate();
 	<?php foreach($menusArr as $menu){?>
 		menuArr.push("<?php echo $menu->getSeq()?>");//populate js array
 		$(".menu<?php echo $menu->getSeq()?>img").hide();//hide all the photos
@@ -269,11 +291,6 @@ $( document ).ready(function() {
 		$(".vegimg").hide();
 		$(".mockimg").hide();
 	});
-// 	$( ".mockbtn" ).click(function() {
-// 		$(".nvegimg").hide();
-// 		$(".vegimg").hide();
-// 		$(".mockimg").show();
-// 	});
 	$('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
@@ -297,10 +314,15 @@ $( document ).ready(function() {
 
 document.getElementById('rzp-button').onclick = function(e){
 	if($("#userInfoForm")[0].checkValidity()) {
-	   // $("#transactionId").val("testid");
-	   // $("#amount").val("100");
-	   // saveBooking();
-	   // return;
+		var dateofbirth = $("#dateofbirth").val();
+		if(getAge(dateofbirth) <= 12) {
+		    alert("You have more than 12 years old!");
+		    return;
+		}
+	    $("#transactionId").val("testid");
+	    $("#amount").val("100");
+	    saveBooking();
+	    return;
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
 		var mobile = $("#mobile").val();
@@ -342,6 +364,20 @@ document.getElementById('rzp-button').onclick = function(e){
     }
 	
 }
+function getAge(birthDateString) {
+    var today = new Date();
+    var parts = birthDateString.split('-');
+    var month = parts[1] - 1;
+    var birthDate = new Date(parts[2],month,parts[0]);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+
 function back(){
 	location.href = "index.php";
 }

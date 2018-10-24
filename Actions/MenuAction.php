@@ -87,7 +87,8 @@ if($call == "getMenusByTimeSlot"){
 	$menuMgr = MenuMgr::getInstance();
 	$timeSlotSeq = $_GET["timeSlotSeq"];
 	$selectedDate = $_GET["selectedDate"];
-	$menus = $menuMgr->getMenusAndSeats($selectedDate,$timeSlotSeq);
+	$bookingSeq = $_GET["bookingSeq"];
+	$menus = $menuMgr->getMenusAndSeats($selectedDate,$timeSlotSeq,$bookingSeq);
 	echo json_encode($menus);
 }
 if($call == "getMenus"){

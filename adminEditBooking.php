@@ -23,6 +23,12 @@ if(isset($_POST["seq"])){
 	$bookingDate = $booking->getBookingDate();
 	$bookedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookingDate);
 	$bookedOn = $bookedOn->format("d-m-Y");
+	$bithDate = $booking->getDateOfBirth();
+	if(!empty($bithDate)){
+		$bithDate = DateUtil::StringToDateByGivenFormat("Y-m-d",$bithDate);
+		$bithDate = $bithDate->format("d-m-Y");
+	}
+	
 	$bookingDetailMgr = BookingDetailMgr::getInstance();
 	$bookingDetail = $bookingDetailMgr->getDetailByBookingSeqAndTimeSlot($bookingSeq, $booking->getTimeSlot());
 	$bookingDetailJson = json_encode($bookingDetail);
@@ -86,6 +92,18 @@ if(isset($_POST["seq"])){
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">DOB</label>
+		                                    <div class="col-lg-4">
+		                                    	<input type="text" id="dateofbirth" name="dateofbirth" value="<?php echo $bithDate?>" required placeholder="Date of Birth" class="form-control">
+		                                    </div>
+	                                	</div>
+	                                	<div class="form-group row">
+			                       			<label class="col-lg-2 col-form-label">Country</label>
+			                                   <div class="col-lg-4">
+			                                   	<?php include 'countryList.php';?>
+			                                   </div>
+		                                </div>
+	                                	<div class="form-group row">
 		                                	<label class="col-lg-2 col-form-label">Payment Id</label>
 		                                    <div class="col-lg-4">
 			                       				<input type="text" <?php echo $disabled?> value="<?php echo $booking->getTransactionId()?>" id="paymentid" name="paymentid"
@@ -113,7 +131,12 @@ if(isset($_POST["seq"])){
 			                                    placeholder="Company Number" class="form-control">
 		                                    </div>
 		                                </div>
-		                                
+		                                <div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Company State</label>
+			                                    <div class="col-lg-4">
+			                                    	<?php include 'stateList.php';?>
+			                                    </div>
+		                                	</div>
 		                                 <div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Time Slot</label>
 		                                    <div class="col-lg-4">
@@ -171,6 +194,10 @@ if(isset($_POST["seq"])){
                format:'d-m-Y',
                minDate:new Date()
            });
+           $('#dateofbirth').datetimepicker({
+               timepicker:false,
+               format:'d-m-Y',
+           });
            currDate = getCurrentDate();
            selectedDate = "<?php echo $bookedOn ?>";
            if(selectedDate == ""){
@@ -178,6 +205,8 @@ if(isset($_POST["seq"])){
            }
        	   $('#bookingDate').val(selectedDate);
 	       loadData();
+	       $('#companyState').val("<?php echo $booking->getGstState()?>");
+	       $('#country').val("<?php echo $booking->getCountry()?>");
         });
         
         function loadData(){
@@ -188,14 +217,16 @@ if(isset($_POST["seq"])){
             }
             var selectedDate = $("#bookingDate").val();
             var timeSlotSeq =  $("#timeSlot").val();
+            var bookingSeq = $("#seq").val()
             var html = "";
-        	$.getJSON("Actions/MenuAction.php?call=getMenusByTimeSlot&timeSlotSeq="+timeSlotSeq + "&selectedDate="+selectedDate, function(data){
+        	$.getJSON("Actions/MenuAction.php?call=getMenusByTimeSlot&timeSlotSeq="+timeSlotSeq + "&selectedDate="+selectedDate + "&bookingSeq="+bookingSeq, function(data){
             	menus = data.menus;
-            	seats = data.seats;
+            	availableSeats = data.availableSeats;
             	totalSeats = data.totalSeats;
+            	totalSelectedSeats = data.totalSelectedSeats;
             	selectedSeats = data.selectedSeats;
             	if(bookingDetailJsonObject != null){
-            		seats += parseInt(selectedSeats)
+            		availableSeats += parseInt(selectedSeats)
             	}
             	html = '<div class="form-group row">';
             	html += '<label class="col-lg-2 col-form-label">Menu</label>';
@@ -212,12 +243,12 @@ if(isset($_POST["seq"])){
                			selectedSeat = getMembers(k,bookingDetailJsonObject);
                			menuAmount[k] = menu.rate * selectedSeat;
                			//if(selectedSeat > 0){
-               				//seats += parseInt(selectedSeat);
+               			//	seats += parseInt(selectedSeat);
                			//}
                		}
                		html += '<select id="'+k +'_selectedSeats" <?php echo $disabled?> onchange="calculateAmount('+ k + ',' + menu.rate +')" name="selectedSeats[]" required class="form-control">';
 	           		html += '<option id="0">0</option>';
-	                for(var i = 1; i <= seats; i++){
+	                for(var i = 1; i <= availableSeats; i++){
 		                if(i == selectedSeat){
 		                	html += '<option selected value="'+k+'_' +i+'">'+i+'</option>';	  
 		                }else{
@@ -228,7 +259,7 @@ if(isset($_POST["seq"])){
                 });
                 html += '</div>';
 				html += '<div class="col-lg-2">';
-				$("#availableSeats").val(seats);
+				$("#availableSeats").val(availableSeats);
                 $.each( menus, function( k, menu ) {
                     var selectAmount = 0;
                     if(menuAmount.length > 0){
@@ -273,6 +304,11 @@ if(isset($_POST["seq"])){
 
         function submitBookingForm(){
         	if($("#bookingForm")[0].checkValidity()) {
+        		var dateofbirth = $("#dateofbirth").val();
+        		if(getAge(dateofbirth) <= 12) {
+        		    alert("You have more than 12 years old!");
+        		    return;
+        		}
 	            i = 1;
 	            var flag = false;
 	           	var timeSlotSeq = this.value;
@@ -321,5 +357,17 @@ if(isset($_POST["seq"])){
         }
         function cancel(){
            	location.href = "dashboard.php";
+        }
+        function getAge(birthDateString) {
+            var today = new Date();
+            var parts = birthDateString.split('-');
+            var month = parts[1] - 1;
+            var birthDate = new Date(parts[2],month,parts[0]);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
         }
 </script>

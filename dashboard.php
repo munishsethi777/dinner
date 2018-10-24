@@ -107,11 +107,11 @@
             
             var columns = [
 			  { text: 'Payment ID', datafield: 'transactionid', width:"10%"}, 			
-			  { text: 'id', datafield: 'seq' , hidden:false},
+			  { text: 'id', datafield: 'seq' , hidden:true},
               { text: 'Booked On', datafield: 'bookedon',filtertype: 'date' ,cellsformat: 'd-M-yyyy',width:"15%"},
               { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"10%"},
               { text: 'Slot', datafield: 'timeslots.title',width:"18%",filtertype: 'checkedlist'},
-              { text: 'Menu', datafield: 'menus.title', width:"22%" ,filtertype: 'checkedlist',sortable:true,filteritems:menus},
+              { text: 'Menu', datafield: 'menus.title', width:"22%" ,filtertype: 'checkedlist',sortable:false,filteritems:menus},
               { text: 'Customer Name', datafield: 'fullname',width:"12%"},
               { text: 'Email', datafield: 'emailid',width:"20%", hidden:true},
               { text: 'Mobile', datafield: 'mobilenumber',width:"10%"}
