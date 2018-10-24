@@ -26,7 +26,14 @@ if($call == "saveBooking"){
 		$menuPersonsStr = $_POST["menuPersons"];
 		$tansactionId = $_POST["transactionId"];
 		$amount = $_POST["amount"];
-		$gst = $_POST["gst"];
+		$companyNumber = "";
+		$companyMobile = "";
+		$gst = "";
+		if(isset($_POST["companyInfo"])){
+			$companyName = $_POST["companyName"];
+			$companyMobile = $_POST["companyNumber"];
+			$gst = $_POST["gst"];
+		}
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$booking = new Booking();
         
@@ -42,10 +49,14 @@ if($call == "saveBooking"){
 		$booking->setAmount($amount);
 		$booking->setTransactionId($tansactionId);
 		$booking->setGSTNumber($gst);
+		$booking->setCompanyMobile($companyName);
+		$booking->setCompanyName($companyMobile);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
+		$booking->setGSTNumber($gst);
+		
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
-        MailUtil::sendOrderEmailClient($booking,$menuPersonsObj);
+        //MailUtil::sendOrderEmailClient($booking,$menuPersonsObj);
 		$message = "Booking Saved Successfully";
 		}catch(Exception $e){
 			$success = 0;
@@ -172,6 +183,7 @@ if($call == "getBookings"){
 	$bookingJson = $bookingMgr->getBookingJsonForGrid();
 	echo $bookingJson;
 }
+
 if($call == "deleteBooking"){
 	$ids = $_GET["ids"];
 	try{

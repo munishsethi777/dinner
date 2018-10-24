@@ -90,3 +90,8 @@ if($call == "getMenusByTimeSlot"){
 	$menus = $menuMgr->getMenusAndSeats($selectedDate,$timeSlotSeq);
 	echo json_encode($menus);
 }
+if($call == "getMenus"){
+	$menuMgr = MenuMgr::getInstance();
+	$menus = $menuMgr->getAllMenuTitle();
+	echo json_encode($menus);
+}

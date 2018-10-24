@@ -59,6 +59,15 @@ class MenuMgr{
  		$jsonArr["TotalRows"] = $this->getCount();
  		return $jsonArr;
 	}
+	public function getAllMenuTitle(){
+		$menus = $this->findAll(true);
+		$mainArr = array();
+		foreach ($menus as $menu){
+			array_push($mainArr, $menu->getTitle());
+		}
+		sort($mainArr);
+		return $mainArr;
+	}
 	
 	public function getCount(){
 		$query = "select count(*) from menus";

@@ -43,7 +43,10 @@
 	
 	 isSelectAll = false;
         $(document).ready(function(){
-           loadGrid()
+        	$.getJSON("Actions/MenuAction.php?call=getMenus",function( menus ){
+            	loadGrid(menus)
+            }) 
+           
            $('.i-checks').iCheck({
 	        	checkboxClass: 'icheckbox_square-green',
 	        	radioClass: 'iradio_square-green',
@@ -100,14 +103,15 @@
                  bootbox.alert("No row selected.Please select row to delete!", function() {});
             }
         }    
-        function loadGrid(){
-			var columns = [
+        function loadGrid(menus){
+            
+            var columns = [
 			  { text: 'Payment ID', datafield: 'transactionid', width:"10%"}, 			
-			  { text: 'id', datafield: 'seq' , hidden:true},
-              { text: 'Booked On', datafield: 'bookedon',cellsformat: 'd-M-yyyy hh:mm tt', filterable:false,width:"15%"},
-              { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date' ,filterable:false,cellsformat: 'd-M-yyyy',width:"10%"},
-              { text: 'Slot', datafield: 'timeslot',width:"15%"},
-              { text: 'Menu', datafield: 'menu', width:"25%" ,sortable:false},
+			  { text: 'id', datafield: 'seq' , hidden:false},
+              { text: 'Booked On', datafield: 'bookedon',filtertype: 'date' ,cellsformat: 'd-M-yyyy',width:"15%"},
+              { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"10%"},
+              { text: 'Slot', datafield: 'timeslots.title',width:"18%",filtertype: 'checkedlist'},
+              { text: 'Menu', datafield: 'menus.title', width:"22%" ,filtertype: 'checkedlist',sortable:true,filteritems:menus},
               { text: 'Customer Name', datafield: 'fullname',width:"12%"},
               { text: 'Email', datafield: 'emailid',width:"20%", hidden:true},
               { text: 'Mobile', datafield: 'mobilenumber',width:"10%"}
@@ -124,11 +128,11 @@
                             { name: 'bookedon', type: 'date' },
                             { name: 'bookingdate', type: 'date' },
                             { name: 'transactionid', type: 'string'},
-                            { name: 'timeslot', type: 'string'},
+                            { name: 'timeslots.title', type: 'string'},
                             { name: 'emailid', type: 'string'},
                             { name: 'fullname', type: 'string'},
                             { name: 'mobilenumber', type: 'string'},
-                            { name: 'menu', type: 'string' }
+                            { name: 'menus.title', type: 'string' }
                             ],                          
                 url: 'Actions/BookingAction.php?call=getBookings',
                 root: 'Rows',
@@ -150,12 +154,14 @@
             };
             var dataAdapter = new $.jqx.dataAdapter(source);
             // initialize jqxGrid
+            
             $("#bookingsgrid").jqxGrid(
             {
             	width: '100%',
     			height: '75%',
     			source: dataAdapter,
     			filterable: true,
+    			showfilterrow: true,
     			sortable: true,
     			autoshowfiltericon: true,
     			columns: columns,

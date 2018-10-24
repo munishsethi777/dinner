@@ -160,10 +160,29 @@ $razorpayOrderId = $razorpayOrder['id'];
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
-		                       				<label class="col-lg-2 col-form-label">GST NO.</label>
-		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="gst" name="gst" placeholder="GST No." class="form-control">
-		                                    </div>
+		                                	<div class="col-lg-10" >
+		                                       	<label> <input class="i-checks" type="checkbox" name="companyInfo" id="companyInfo" >  Fill GST Information</label>
+		                                       </div>
+		                                 </div>
+		                                 <div id="companyDiv" style="display:none">
+		                                	<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">GST NO.</label>
+			                                    <div class="col-lg-10">
+			                                    	<input type="text" id="gst" name="gst" placeholder="GST No." class="form-control">
+			                                    </div>
+		                                	</div>
+		                                	<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Company Name</label>
+			                                    <div class="col-lg-10">
+			                                    	<input type="text" id="gst" name="companyName" placeholder="Company Name" class="form-control">
+			                                    </div>
+		                                	</div>
+		                                	<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Company Contact</label>
+			                                    <div class="col-lg-10">
+			                                    	<input type="text" id="gst" name="companyNumber" placeholder="Company Contact" class="form-control">
+			                                    </div>
+		                                	</div>
 	                                	</div>
 	                                	<div class="form-group row">
 	                                		<div class="col-lg-10" id="termDiv">
@@ -172,7 +191,7 @@ $razorpayOrderId = $razorpayOrder['id'];
 	                                    </div>
 	                                	<div class="form-group row">
 	                                		<div class="col-lg-12">
-		                                		<button class="btn btn-primary" id="rzp-button" style="width:100%">
+		                                		<button class="btn btn-primary" type="button" id="rzp-button" style="width:100%">
 			                                		Make Payment of Rs <?php echo $formatedTotalAmount?>
 			                                	</button>
 		                                	</div>
@@ -262,15 +281,23 @@ $( document ).ready(function() {
 			$('#myModal4').modal('show');
 		}
 	});
+	$('#companyInfo').on('ifChanged', function(event){
+		var flag  = $("#companyInfo").is(':checked');
+		if(flag){
+			$('#companyDiv').show();
+		}else{
+			$('#companyDiv').hide();
+		}
+	});
 });
 
 
 document.getElementById('rzp-button').onclick = function(e){
-    //$("#transactionId").val("testid");
-    //$("#amount").val("100");
-    //saveBooking();
-    //return;
 	if($("#userInfoForm")[0].checkValidity()) {
+	   // $("#transactionId").val("testid");
+	   // $("#amount").val("100");
+	   // saveBooking();
+	   // return;
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
 		var mobile = $("#mobile").val();

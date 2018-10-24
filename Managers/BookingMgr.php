@@ -31,13 +31,16 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 	
 	public function getBookingJsonForGrid(){
 		$query = "select bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq as bookingseq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,timeslots.title as timeslot from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
-		$bookingDetails =  self::$dataStore->executeQuery($query,true);
+		$bookings =  self::$dataStore->executeQuery($query,true,false,true);
 		$bookingArr = array();
 		$bookingMainArr = array();
 		$bookingDetailMgr = BookingDetailMgr::getInstance();
 		$detailAndMenu = $bookingDetailMgr->getAllBookingDetailsAndMenu();
-		foreach ($bookingDetails as $booking){
+		$timeSlotsArr = array();
+		$decCount = 0;
+		foreach ($bookings as $booking){
 			$bookingSeq = $booking["bookingseq"];
+			$menus = $detailAndMenu[$bookingSeq];
 			$bookedOn = $booking["bookedon"];
 			$bookedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookedOn);
 			$bookedOn = $bookedOn->format("d-m-Y H:i:s");
@@ -46,7 +49,8 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 			$bookedDate = $bookedDate->format("d-m-Y");
 			$arr = array();
 			$arr["seq"] = $bookingSeq;
-			$arr["timeslot"] = $booking["timeslot"];
+			$timeSlot = $booking["timeslot"];
+			$arr["timeslots.title"] = $timeSlot;
 			$arr["bookedon"] = $bookedOn;
 			$arr["bookingdate"] = $bookedDate;
 			$arr["fullname"] = $booking["fullname"];
@@ -54,14 +58,66 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 			$arr["mobilenumber"] = $booking["mobilenumber"];
 			$arr["emailid"] = $booking["emailid"];
  			$mainMenuArr = array();
- 			$arr["menu"] = $detailAndMenu[$bookingSeq];
+ 			$arr["menus.title"] = $menus;
 			$bookingArr[$bookingSeq] = $arr;
 		}
 		$bookingMainArr = $this->getArrayForGrid($bookingArr);
 		$mainArray["Rows"] = $bookingMainArr;
-		$mainArray["TotalRows"] = $this->getBookingCount();
+		$mainArray["TotalRows"] = $this->getBookingCount($detailAndMenu);
 		$json = json_encode($mainArray);
 		return $json;
+	}
+	
+	public static function isFilter($menuTitle){
+		// filter data.
+		$flag = false;
+		if (isset($_GET['filterscount']))
+		{
+			$filterscount = $_GET['filterscount'];
+	
+			if ($filterscount > 0)
+			{
+				$tmpdatafield = "";
+				$tmpfilteroperator = "";
+				$flag = true;
+				for ($i=0; $i < $filterscount; $i++)
+				{
+					// get the filter's value.
+					$filtervalue = $_GET["filtervalue" . $i];
+					// get the filter's condition.
+					$filtercondition = $_GET["filtercondition" . $i];
+					// get the filter's column.
+					$filterdatafield = $_GET["filterdatafield" . $i];
+					// get the filter's operator.
+					$filteroperator = $_GET["filteroperator" . $i];
+	
+					if ($tmpdatafield == "")
+					{
+						$tmpdatafield = $filterdatafield;
+					}
+					if($filterdatafield == "menus.title"){
+						$menusArr = explode(" , ", $menuTitle);
+						foreach ($menusArr as $menu){
+							$arr = explode(" - ", $menu);
+							if($arr[1] == $filtervalue && $filtercondition == "EQUAL"){
+								$flag = true;
+								return $flag;
+							}else{
+								$flag = false;
+							}
+						}
+					}
+					$tmpfilteroperator = $filteroperator;
+					$tmpdatafield = $filterdatafield;
+				}
+			}
+			else{
+				$flag = true;
+			}
+		}else{
+			$flag = true;;
+		}
+		return $flag;
 	}
 	
 	public function getArrayForGrid($bookingArr){
@@ -72,11 +128,17 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 		return $mainBookingArr;
 	}
 	
-	public function getBookingCount(){
-		$query = "select count(*) from bookings";
+	public function getBookingCount($detailAndMenu){
+		$query = "select count(DISTINCT bookings.seq) from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}
+	
+// 	public function getBookingCount(){
+// 		$query = "select count(*) from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
+// 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
+// 		return $count;
+// 	}
 	
 	public function deleteBySeqs($bookingSeqs){
 		$flag = self::$dataStore->deleteInList($bookingSeqs);
