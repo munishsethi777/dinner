@@ -692,7 +692,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 			throw $e ;
 		}
 	}
-	public function executeQuery($query, $isApplyFilter = false, $ommitIntegerArrayElements =false) {
+	public function executeQuery($query, $isApplyFilter = false, $ommitIntegerArrayElements =false,$isGroupBy = false) {
 		try {
 			$db = MainDB::getInstance ();
 			$conn = $db->getConnection ();
@@ -700,7 +700,7 @@ left join learningplanprofiles m_lpp on m_lpm.learningplanseq = m_lpp.learningpl
 				$query = $this->appendManagerCriteria($query);
 			}
 			if ($isApplyFilter) {
-				$query = FilterUtil::applyFilter ( $query );
+				$query = FilterUtil::applyFilter ( $query,true,$isGroupBy );
 			}
 			$sth = $conn->prepare ( $query );
 			$sth->execute ();
