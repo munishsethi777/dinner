@@ -4,6 +4,7 @@ class Booking{
 	public static $className = "Booking";
 	
 	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot,$bookingdate,$transactionid,$amount,$companymobile,$companyname;
+	private $dateofbirth,$gststate,$country;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -90,4 +91,26 @@ class Booking{
 	public function getCompanyName(){
 		return $this->companyname;
 	}
+	
+	public function setGstState($gstState_){
+		$this->gststate = $gstState_;
+	}
+	public function getGstState(){
+		return $this->gststate;
+	}
+	
+	public function setCountry($country_){
+		$this->country = $country_;
+	}
+	public function getCountry(){
+		return $this->country;
+	}
+	
+	public function setDateOfBirth($dateOfBirth_){
+		$this->dateofbirth = $dateOfBirth_;
+	}
+	public function getDateOfBirth(){
+		return $this->dateofbirth;
+	}
+	
 }

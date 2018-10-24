@@ -124,7 +124,7 @@ class MenuMgr{
 	}
 	
 	
-	public function getMenusAndSeats($selectedDate,$timeSlotSeq){
+	public function getMenusAndSeats($selectedDate,$timeSlotSeq,$bookingSeq){
 		$query = "select menus.rate,menus.title, menus.seq,timeslots.seats from menus inner join menutimeslots on menus.seq = menutimeslots.menuseq inner join timeslots on menutimeslots.timeslotsseq = timeslots.seq where menutimeslots.timeslotsseq = $timeSlotSeq";
 		$menus = self::$dataStore->executeQuery($query);
 		if(!empty($menus)){
@@ -137,14 +137,16 @@ class MenuMgr{
 			$dateStr = $date->format("Y-m-d H:i:s");
 			$bookingMgr = BookingMgr::getInstance();
 			$totalSeats = $menus[0]["seats"];
-			$bookedSeats = $bookingMgr->getAvailableSeats($dateStr, $timeSlotSeq);
+			$totalBookedSeats = $bookingMgr->getAvailableSeats($dateStr, $timeSlotSeq);
+			$bookedSeats = $bookingMgr->getBookedSeats($dateStr, $timeSlotSeq,$bookingSeq);
 			$availableSeats = intval($totalSeats);
-			if(!empty($bookedSeats)){
-				$availableSeats -= intval($bookedSeats); 
+			if(!empty($totalBookedSeats)){
+				$availableSeats -= intval($totalBookedSeats); 
 			}
 			$mainArr["menus"] = $menuTitles;
-			$mainArr["seats"] = $availableSeats;
+			$mainArr["availableSeats"] = $availableSeats;
 			$mainArr["totalSeats"] = $totalSeats;
+			$mainArr["totalSelectedSeats"] = $totalBookedSeats;
 			$mainArr["selectedSeats"] = $bookedSeats;
 			return $mainArr;
 		}

@@ -23,6 +23,12 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 		return self::$dataStore->executeCountQueryWithSql($query);
 	}
 	
+	public function getBookedSeats($date,$timeSlots,$bookingSeq){
+		$query = "SELECT sum(bookingdetails.members) as totalcount from bookings inner JOIN bookingdetails on bookings.seq = bookingdetails.bookingseq
+		where bookings.seq = $bookingSeq and bookingdate = '$date' and timeslot = $timeSlots";
+		return self::$dataStore->executeCountQueryWithSql($query);
+	}
+	
 	
 	public function saveBooking($bookingObj){
 		$id = self::$dataStore->save($bookingObj);	
