@@ -25,15 +25,40 @@ class TimeSlotMgr{
 	public function getTimeSlotsJson(){
 		$selectedDate = $_GET["selectedDate"];
 		$selectedDate .= " 00:00:00";
-		$query = "select timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
-inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq";
+		$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
+		$dateStr = $date->format("Y-m-d H:i:s");
+		$query = "select timeslots.starton,timeslots.endon,timeslots.bookingavailabletill, timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
+inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq where timeslots.seq not in (select slotdetails.slotseq from slotdetails where date = '$dateStr')";
 		$timeSlots = self::$dataStore->executeQuery($query);
 		$slotArr = array();
 		$bookingMgr = BookingMgr::getInstance();
 		foreach ($timeSlots as $timeSlot){
+			
+			$startOn = $timeSlot["starton"];
+			if(!empty($startOn)){
+				$startOnDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$startOn);
+				if($startOnDate > $date){
+					continue;
+				}
+			}
+			$endOn = $timeSlot["endon"];
+			if(!empty($endOn)){
+				$endOnDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$endOn);
+				if($endOnDate < $date){
+					continue;
+				}
+			}
+			$bookingTill = $timeSlot["bookingavailabletill"];
+			$currentDate = new DateTime();
+			if(!empty($bookingTill) && $date < $currentDate){
+				$currentTime = time();
+				$bookingTillTime = strtotime($bookingTill);
+				if ($currentTime > $bookingTillTime) {
+					continue;
+				}
+			}
 			$timeSlotSeq = $timeSlot["timeslotseq"];
-			$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
-			$dateStr = $date->format("Y-m-d H:i:s");
+			
 			$bookedSeats = $bookingMgr->getAvailableSeats($dateStr, $timeSlotSeq);
 			$arr = array();
 			$arr["seq"] = $timeSlotSeq;
@@ -61,9 +86,9 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$menu["menutitle"] = $timeSlot["menutitle"];
 			
 			$dayName =  $date->format('D');
-			if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
-				$timeSlot["rate"] += 1000;
-			}
+			//if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
+				//$timeSlot["rate"] += 1000;
+			//}
 			
 			$menu["rate"] = $timeSlot["rate"];
 			$menu["menuseq"] = $timeSlot["menuseq"];
