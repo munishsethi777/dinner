@@ -1,15 +1,34 @@
 <?//include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/TimeSlotMgr.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/SlotDetailMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
 $timeSlot = new TimeSlot();
 $menuMgr = MenuMgr::getInstance();
 $menus = $menuMgr->findAll();
 $selectedMenuSeqs = array();
+$startOn = "";
+$endOn = "";
+$bookingTill = "";
+$hideForDates = "";
 if(isset($_POST["seq"])){
 	$seq = $_POST["seq"];
 	$timeSlotMgr = TimeSlotMgr::getInstance();
 	$timeSlot = $timeSlotMgr->findBySeq($seq);
+	$slotDetailMgr = SlotDetailMgr::getInstance();
+	$hideForDates = $slotDetailMgr->findDatesBySlotSeq($seq);
+	if(!empty($timeSlot->getStartOn())){
+		$startOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$timeSlot->getStartOn());
+		$startOn = $startOn->format("d-m-Y");
+	}
+	if(!empty($timeSlot->getEndOn())){
+		$endOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$timeSlot->getEndOn());
+		$endOn = $endOn->format("d-m-Y");
+	}
+	if(!empty($timeSlot->getBookingAvailableTill())){
+		$bookingTill = date("h:i a",strtotime($timeSlot->getBookingAvailableTill()));
+	}
 	$selectedMenuSeqs = $menuMgr->getMenusSeqsByTimeSlot($seq);
 }
 ?>
@@ -48,6 +67,7 @@ if(isset($_POST["seq"])){
                                     	<input type="text" value="<?php echo $timeSlot->getTitle()?>"  id="title" name="title" required placeholder="Time 6 PM to 8 PM" class="form-control">
                                     </div>
                                </div>
+                               
                                 <div class="form-group row">
                        				<label class="col-lg-2 col-form-label">Description</label>
                                     <div class="col-lg-4">
@@ -77,6 +97,28 @@ if(isset($_POST["seq"])){
 										</select> <label class="jqx-validator-error-label" id="lpError"></label>
 								    </div>
                                </div>
+                               	<div class="form-group row">
+	                       				<label class="col-lg-2 col-form-label">Valid From</label>
+	                                    <div class="col-lg-2">
+	                                    	<input type="text" id="starton" value="<?php echo $startOn?>"  name="starton" required placeholder="Start on" class="form-control">
+                                    	</div>
+                                    	<label class="col-lg-1 col-form-label">To</label>
+	                                    <div class="col-lg-2">
+	                                    	<input type="text" id="endon" value="<?php echo $endOn?>"  name="endon" required placeholder="End on" class="form-control">
+                                    	</div>
+                                </div>
+                                	<div class="form-group row">
+	                       				<label class="col-lg-2 col-form-label">Booking Available Till</label>
+	                                    <div class="col-lg-4">
+	                                    	<input type="text" id="bookingavailabletill" value="<?php echo $bookingTill?>" name="bookingavailabletill" required placeholder="Select Time" class="form-control">
+                                    	</div>
+                                    </div>
+                                    <div class="form-group row">
+	                       				<label class="col-lg-2 col-form-label">Hide On Dates</label>
+	                                    <div class="col-lg-4">
+	                                    	<input type="text" id="hideOnDates" value="<?php echo $hideForDates?>" name="hideOnDates" required placeholder="Select Dates" class="form-control">
+                                    	</div>
+                                    </div>
                                <div class="form-group row">
                                		<div class="col-lg-6">
 	                               		<button class="btn btn-primary" type="button" onclick="javascript:submitMenuForm()" id="rzp-button" style="float:right">
@@ -105,6 +147,27 @@ if(isset($_POST["seq"])){
             buttondown_class: 'btn btn-white',
             buttonup_class: 'btn btn-white'
         });
+	    $('#starton').datetimepicker({
+            timepicker:false,
+            format:'d-m-Y',
+            minDate:new Date()
+        })
+        $('#endon').datetimepicker({
+            timepicker:false,
+            format:'d-m-Y',
+            minDate:new Date()
+        })
+        $('#bookingavailabletill').datetimepicker({
+            timepicker:true,
+            datepicker:false,
+            format:'h:i a',
+            minDate:new Date()
+        })
+        $('#hideOnDates').multiDatesPicker({
+        	 timepicker:false,
+        	 dateFormat: "d-m-y",
+             minDate:new Date()  
+    	});
     });
     function submitMenuForm(){
          if($("#timeSlotForm")[0].checkValidity()) {
