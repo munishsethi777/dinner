@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/MenuTimeSlot.php")
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
 class TimeSlotMgr{
 	private static $timeSlotMgr;
 	private static $dataStore;
@@ -32,6 +33,8 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 		$timeSlots = self::$dataStore->executeQuery($query);
 		$slotArr = array();
 		$bookingMgr = BookingMgr::getInstance();
+		$menuPricingMgr = MenuPricingMgr::getInstance();
+		$menuPricings = $menuPricingMgr->getAllMenuPricingArr();
 		foreach ($timeSlots as $timeSlot){
 			
 			$startOn = $timeSlot["starton"];
@@ -89,8 +92,8 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			//if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
 				//$timeSlot["rate"] += 1000;
 			//}
-			
-			$menu["rate"] = $timeSlot["rate"];
+			$menuPricingArr = $menuPricings[$timeSlot["menuseq"]];
+			$menu["rate"] = $this->getMenuPrice($date, $menuPricingArr, $timeSlot["rate"]) ;
 			$menu["menuseq"] = $timeSlot["menuseq"];
 			array_push($mainMenuArr, $menu);
 			$arr["menu"] = $mainMenuArr;
@@ -98,6 +101,21 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 		}
 		$json = json_encode($slotArr);
 		return $json;
+	}
+	
+	private function getMenuPrice($date,$menuPricingArr,$rate){
+		if(!empty($menuPricingArr)){
+			foreach($menuPricingArr as $menuPricing){
+				$pricingDate = $menuPricing->getDate();
+				$price = $menuPricing->getPrice();
+				$pricingDateObj = DateUtil::StringToDateByGivenFormat("Y-m-d", $pricingDate);
+				$pricingDateObj = $pricingDateObj->setTime(0, 0);
+				if($pricingDateObj == $date){
+					return $price;
+				}
+			}
+		}
+		return $rate;
 	}
 	
 	public function findBySeq($seq){
