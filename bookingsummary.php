@@ -2,6 +2,7 @@
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
 require('razorconfig.php');
 require('razorpay-php/Razorpay.php');
 use Razorpay\Api\Api;
@@ -12,6 +13,7 @@ $menus = $_POST["menuMembers"];
 $timeSlotMgr = TimeSlotMgr::getInstance();
 $timeSlot = $timeSlotMgr->findBySeq($timeSlotSeq);
 $menuMgr = MenuMgr::getInstance();
+$menuPricingMgr = MenuPricingMgr::getInstance();
 $menuArr = json_decode($menus);
 $menuHml = "";
 $amount = 0;
@@ -21,14 +23,17 @@ $formatedTotalAmount = 0;
 $totalAmountInPaise = 0;
 $menuBtnVisible = array(1=>"none",2=>"none",3=>"none");
 $menuImgVisible = array(1=>"none",2=>"none",3=>"none");
-
 $menusArr = array();
 foreach ($menuArr as $key=>$value){
 	if(empty($value)){
 		continue;
 	}
-	$menu = $menuMgr->findBySeq($key);	
+	$menu = $menuMgr->findBySeq($key);
+	$specialPrice = $menuPricingMgr->getPriceByMenuAndDate($key, $selectedDate);
 	$rate = $menu->getRate();
+	if(!empty($specialPrice)){
+		$rate = $specialPrice;
+	}
 	$menuHml .= $value . " " . $menu->getTitle() . " - " . $value . " X " . $rate . "<br/>";
 	$amount += $value * $rate;
 	$totalAmount += $value * $rate;
