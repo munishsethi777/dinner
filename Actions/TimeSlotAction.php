@@ -1,6 +1,8 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/SlotDetailMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 $call = "";
 if(isset($_GET["call"])){
 	$call = $_GET["call"];
@@ -26,13 +28,36 @@ if($call == "saveTimeSlot"){
  	$description = $_POST["description"];
  	$seats = $_POST["seats"];
  	$menus = $_POST["menus"];
+ 	
  	$timeSlotMgr = TimeSlotMgr::getInstance();
  	$timeSlot = new TimeSlot();
  	$timeSlot->setDescription($description);
  	$timeSlot->setSeats($seats);
  	$timeSlot->setTitle($title);
+ 	if(isset($_POST["starton"]) && !empty($_POST["starton"])){
+ 		$startOn = $_POST["starton"];
+ 		$startOnDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $startOn);
+ 		$startOnDate = $startOnDate->setTime(0, 0);
+ 		$timeSlot->setStartOn($startOnDate);
+ 	}
+ 	if(isset($_POST["endon"]) && !empty($_POST["endon"])){
+ 		$endOn = $_POST["endon"];
+ 		$endOnDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $endOn);
+ 		$endOnDate = $endOnDate->setTime(0, 0);
+ 		$timeSlot->setEndOn($endOnDate);
+ 	}
+ 	if(isset($_POST["bookingavailabletill"]) && !empty($_POST["bookingavailabletill"])){
+ 		$bookingAvailableTill = $_POST["bookingavailabletill"];
+ 		$bookingAvailableTillTime = date("H:i:s",strtotime($bookingAvailableTill));
+ 		$timeSlot->setBookingAvailableTill($bookingAvailableTillTime);
+ 	}
  	$timeSlot->setSeq($seq);
  	$id = $timeSlotMgr->saveTimeSlot($timeSlot,$menus);
+ 	if(isset($_POST["hideOnDates"]) && !empty($_POST["hideOnDates"]) && !empty($id)){
+ 		$hideForDates = explode(", ", $_POST["hideOnDates"]);
+ 		$slotDetailMgr = SlotDetailMgr::getInstance();
+ 		$slotDetailMgr->saveSlotDetail($hideForDates, $id);
+ 	}
  	$message = "Time Slot saved successfully";
  }catch (Exception $e){
  	$success = 0;

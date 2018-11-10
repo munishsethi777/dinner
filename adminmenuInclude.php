@@ -46,6 +46,11 @@ if($file == "dashboard.php"){
                     	<span class="nav-label">Time Slots</span>  
                     </a>
                 </li>
+                <li class="<?php echo $isChangePassword;?>">
+                    <a href="adminChangePassword.php"><i class="fa fa-clock-o"></i> 
+                    	<span class="nav-label">Change Password</span>  
+                    </a>
+                </li>
                 <li>
                     <a href="logout.php"><i class="fa fa-sign-out"></i> 
                     	<span class="nav-label">Logout</span>  

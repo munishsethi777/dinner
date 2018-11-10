@@ -1,12 +1,23 @@
 <?php
-include("SessionCheck.php");
+//include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuPricingMgr.php");
 $menu = new Menu();
+$pricingDates = "";
+$price = "";
+$priceDes = "";
 if(isset($_POST["seq"])){
 	$seq = $_POST["seq"];
 	$menuMgr = MenuMgr::getInstance();
 	$menu = $menuMgr->findBySeq($seq);
+	$menuPricingMgr = MenuPricingMgr::getInstance();
+	$menuPricing = $menuPricingMgr->findMenuPricingArrBySlotSeq($seq);
+	if(!empty($menuPricing)){
+		$pricingDates = $menuPricing["dates"];
+		$price = $menuPricing["price"];
+		$priceDes = $menuPricing["description"];
+	}
 }
 $imagePath = "images/dummy.jpg";
 $isEnabledChecked = "checked";
@@ -76,7 +87,25 @@ if(empty($menu->getIsEnabled())){
 											class="jqx-validator-error-label" id="imageError"></label>
 									</div>
 							   </div>
-							   <div class="form-group row i-checks">
+						      <div class="form-group row">
+                       				<label class="col-lg-2 col-form-label">Select Dates</label>
+                                    <div class="col-lg-4">
+                                    	<input type="text" id="priceDates" value="<?php echo $pricingDates?>" name="priceDates" required placeholder="Select Dates" class="form-control">
+                                    </div>
+                               </div>
+                               <div class="form-group row">
+                       				<label class="col-lg-2 col-form-label">Price</label>
+                                    <div class="col-lg-4">
+                                    	<input type="text" value="<?php echo $price?>"  id="price" name="price" required placeholder="Rate" class="form-control">
+                                    </div>
+                               </div>
+                                <div class="form-group row">
+                       				<label class="col-lg-2 col-form-label">Description</label>
+                                    <div class="col-lg-4">
+                                    	<input type="text" value="<?php echo $priceDes?>" id="priceDescription" name="priceDescription" required placeholder="Description" class="form-control">
+                                    </div>
+                               </div>
+                                <div class="form-group row i-checks">
                        				<label class="col-lg-2 col-form-label">Enable</label>
                                     <div class="col-lg-4">
                                     	<input type="checkbox" <?php echo $isEnabledChecked?>  id="isenable" name="isenable">
@@ -104,6 +133,11 @@ if(empty($menu->getIsEnabled())){
 			checkboxClass: 'icheckbox_square-green',
 		   	radioClass: 'iradio_square-green',
 		});
+	    $('#priceDates').multiDatesPicker({
+	       timepicker:false,
+	       dateFormat: "d-m-y",
+           minDate:new Date()  
+   		});
     });
     function submitMenuForm(){
     	if($("#menuForm")[0].checkValidity()) {

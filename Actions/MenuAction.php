@@ -2,6 +2,7 @@
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Menu.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/FileUtil.php");
 $call = "";
 if(isset($_GET["call"])){
@@ -50,6 +51,11 @@ if($call == "saveMenu"){
 				$name = $id . ".".$imageType;
 				FileUtil::uploadImageFiles($file,$uploaddir,$name);
 			}
+		}
+		if(isset($_POST["priceDates"]) && !empty($_POST["priceDates"])){
+			$priceDates = explode(", ", $_POST["priceDates"]);
+			$menuPricingMgr = MenuPricingMgr::getInstance();
+			$menuPricingMgr->saveMenuPricing($priceDates, $id);
 		}
 	}catch (Exception $e){
 		$success = 0;

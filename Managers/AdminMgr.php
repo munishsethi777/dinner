@@ -30,20 +30,21 @@ class AdminMgr{
 	}
 	
 	public function isPasswordExist($password){
-		$sessionUtil = SessionUtil::getInstance();
-		$adminSeq = $sessionUtil->getAdminLoggedInSeq();
+		//$sessionUtil = SessionUtil::getInstance();
+		//$adminSeq = $sessionUtil->getAdminLoggedInSeq();
 		$params["password"] = $password;
-		$params["seq"] = $adminSeq;
+		//$params["seq"] = $adminSeq;
 		$count = self::$adminDataStore->executeCountQuery($params);
 		return $count > 0;
 	}
 	
 	public function ChangePassword($password){
-		$sessionUtil = SessionUtil::getInstance();
-		$adminSeq = $sessionUtil->getAdminLoggedInSeq();
-		$attr["password"] = $password;
-		$condition["seq"] = $adminSeq;
-		self::$adminDataStore->updateByAttributesWithBindParams($attr,$condition);
+		//$sessionUtil = SessionUtil::getInstance();
+		//$adminSeq = $sessionUtil->getAdminLoggedInSeq();
+		//$attr["password"] = $password;
+		//$condition["seq"] = $adminSeq;
+		$sql = "update admins set password = '$password'";
+		self::$adminDataStore->executeQuery($sql);
 	}
 	
 	public function toArray($admin){

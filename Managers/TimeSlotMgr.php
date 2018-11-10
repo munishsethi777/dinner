@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/MenuTimeSlot.php")
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
 class TimeSlotMgr{
 	private static $timeSlotMgr;
 	private static $dataStore;
@@ -25,15 +26,42 @@ class TimeSlotMgr{
 	public function getTimeSlotsJson(){
 		$selectedDate = $_GET["selectedDate"];
 		$selectedDate .= " 00:00:00";
-		$query = "select timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
-inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq";
+		$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
+		$dateStr = $date->format("Y-m-d H:i:s");
+		$query = "select timeslots.starton,timeslots.endon,timeslots.bookingavailabletill, timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
+inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq where timeslots.seq not in (select slotdetails.slotseq from slotdetails where date = '$dateStr')";
 		$timeSlots = self::$dataStore->executeQuery($query);
 		$slotArr = array();
 		$bookingMgr = BookingMgr::getInstance();
+		$menuPricingMgr = MenuPricingMgr::getInstance();
+		$menuPricings = $menuPricingMgr->getAllMenuPricingArr();
 		foreach ($timeSlots as $timeSlot){
+			
+			$startOn = $timeSlot["starton"];
+			if(!empty($startOn)){
+				$startOnDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$startOn);
+				if($startOnDate > $date){
+					continue;
+				}
+			}
+			$endOn = $timeSlot["endon"];
+			if(!empty($endOn)){
+				$endOnDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$endOn);
+				if($endOnDate < $date){
+					continue;
+				}
+			}
+			$bookingTill = $timeSlot["bookingavailabletill"];
+			$currentDate = new DateTime();
+			if(!empty($bookingTill) && $date < $currentDate){
+				$currentTime = time();
+				$bookingTillTime = strtotime($bookingTill);
+				if ($currentTime > $bookingTillTime) {
+					continue;
+				}
+			}
 			$timeSlotSeq = $timeSlot["timeslotseq"];
-			$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
-			$dateStr = $date->format("Y-m-d H:i:s");
+			
 			$bookedSeats = $bookingMgr->getAvailableSeats($dateStr, $timeSlotSeq);
 			$arr = array();
 			$arr["seq"] = $timeSlotSeq;
@@ -61,11 +89,11 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$menu["menutitle"] = $timeSlot["menutitle"];
 			
 			$dayName =  $date->format('D');
-			if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
-				$timeSlot["rate"] += 1000;
-			}
-			
-			$menu["rate"] = $timeSlot["rate"];
+			//if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
+				//$timeSlot["rate"] += 1000;
+			//}
+			$menuPricingArr = $menuPricings[$timeSlot["menuseq"]];
+			$menu["rate"] = $this->getMenuPrice($date, $menuPricingArr, $timeSlot["rate"]) ;
 			$menu["menuseq"] = $timeSlot["menuseq"];
 			array_push($mainMenuArr, $menu);
 			$arr["menu"] = $mainMenuArr;
@@ -73,6 +101,21 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 		}
 		$json = json_encode($slotArr);
 		return $json;
+	}
+	
+	private function getMenuPrice($date,$menuPricingArr,$rate){
+		if(!empty($menuPricingArr)){
+			foreach($menuPricingArr as $menuPricing){
+				$pricingDate = $menuPricing->getDate();
+				$price = $menuPricing->getPrice();
+				$pricingDateObj = DateUtil::StringToDateByGivenFormat("Y-m-d", $pricingDate);
+				$pricingDateObj = $pricingDateObj->setTime(0, 0);
+				if($pricingDateObj == $date){
+					return $price;
+				}
+			}
+		}
+		return $rate;
 	}
 	
 	public function findBySeq($seq){
