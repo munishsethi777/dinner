@@ -90,6 +90,7 @@ require_once('IConstants.inc');
 							<input type="hidden" id ="timeslotseq" name="timeslotseq" />
 							<input type="hidden" id ="selectedDate" name="selectedDate" />
 							<input type="hidden" id ="menuMembers" name="menuMembers" />
+							<input type="hidden" id ="isTestMode" name="isTestMode" value="1"/>
 							<div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog"  aria-hidden="true">
 							    <div class="modal-dialog">
                                     <div class="modal-content animated fadeIn">
@@ -126,7 +127,6 @@ $(document).ready(function(){
         useCurrent:false,
         defaultDate:currDate,
         minDate:minDate,
-        //maxDate:new Date("11/1/2018")
     });
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
