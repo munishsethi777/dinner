@@ -145,11 +145,16 @@ if(empty($menu->getIsEnabled())){
 			checkboxClass: 'icheckbox_square-green',
 		   	radioClass: 'iradio_square-green',
 		});
-	    $('#priceDates').multiDatesPicker({
-	       timepicker:false,
-	       dateFormat: "d-m-y",
-           minDate:new Date()  
-   		});
+// 	    $('#priceDates1').multiDatesPicker({
+// 	       timepicker:false,
+// 	       dateFormat: "d-m-y",
+//            minDate:new Date()  
+//    		});
+
+	    $('#priceDates').datepicker({
+    	  	multidate: true,
+    		format: 'dd-mm-yyyy'
+    	});
     });
     function submitMenuForm(){
     	if($("#menuForm")[0].checkValidity()) {

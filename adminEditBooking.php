@@ -1,4 +1,4 @@
-<?include("SessionCheck.php");
+<?//include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/TimeSlotMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingMgr.php");
@@ -10,6 +10,7 @@ $booking = New Booking();
 $bookingDetailJson = "";
 $bookedOn = "";
 $disabled = "";
+$bithDate = "";
 if(isset($_POST["isView"])){
 	$isView = $_POST["isView"];
 	if(!empty($isView)){

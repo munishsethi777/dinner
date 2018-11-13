@@ -116,7 +116,7 @@ if(isset($_POST["seq"])){
                                     <div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Hide On Dates</label>
 	                                    <div class="col-lg-4">
-	                                    	<input type="text" id="hideOnDates" value="<?php echo $hideForDates?>" name="hideOnDates" required placeholder="Select Dates" class="form-control">
+	                                    	<input type="text" id="hideOnDates" value="<?php echo $hideForDates?>" name="hideOnDates" placeholder="Select Dates" class="form-control">
                                     	</div>
                                     </div>
                                <div class="form-group row">
