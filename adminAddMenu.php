@@ -87,29 +87,41 @@ if(empty($menu->getIsEnabled())){
 											class="jqx-validator-error-label" id="imageError"></label>
 									</div>
 							   </div>
-						      <div class="form-group row">
-                       				<label class="col-lg-2 col-form-label">Select Dates</label>
-                                    <div class="col-lg-4">
-                                    	<input type="text" id="priceDates" value="<?php echo $pricingDates?>" name="priceDates" required placeholder="Select Dates" class="form-control">
-                                    </div>
-                               </div>
-                               <div class="form-group row">
-                       				<label class="col-lg-2 col-form-label">Price</label>
-                                    <div class="col-lg-4">
-                                    	<input type="text" value="<?php echo $price?>"  id="price" name="price" required placeholder="Rate" class="form-control">
-                                    </div>
-                               </div>
-                                <div class="form-group row">
-                       				<label class="col-lg-2 col-form-label">Description</label>
-                                    <div class="col-lg-4">
-                                    	<input type="text" value="<?php echo $priceDes?>" id="priceDescription" name="priceDescription" required placeholder="Description" class="form-control">
-                                    </div>
-                               </div>
-                                <div class="form-group row i-checks">
+						        <div class="form-group row i-checks">
                        				<label class="col-lg-2 col-form-label">Enable</label>
                                     <div class="col-lg-4">
                                     	<input type="checkbox" <?php echo $isEnabledChecked?>  id="isenable" name="isenable">
                                     </div>
+                               </div>
+                               
+                               <div class="form-group row">
+                               	<label class="col-lg-11 col-form-label btn-primary">Add Rates variants for selected dates.</label>
+                               </div>
+                               
+                               <div class="form-group row">
+                       				<label class="col-lg-1 col-form-label">Dates</label>
+                                    <div class="col-lg-4">
+                                    	<input type="text" id="priceDates" value="<?php echo $pricingDates?>" name="priceDates" required placeholder="Select Dates" class="form-control">
+                                    </div>
+                               
+                       				<label class="col-lg-1 col-form-label">Price</label>
+                                    <div class="col-lg-2">
+                                    	<input type="text" value="<?php echo $price?>"  id="price" name="price" required placeholder="Rate" class="form-control">
+                                    </div>
+                               		<label class="col-lg-1 col-form-label">Description</label>
+                                    <div class="col-lg-2">
+                                    	<input type="text" value="<?php echo $priceDes?>" id="priceDescription" name="priceDescription" required placeholder="Description" class="form-control">
+                                    </div>
+                                    <label class="col-lg-1 col-form-label"> 
+                                    		<i class="fa fa-times"></i>
+                                    </label>
+                               </div>
+                               
+                               
+                               <div class="form-group row">
+                               <label class="col-lg-5 col-form-label"> 
+                                    		<a href="#"><i class="fa fa-plus"> Add More Dates</i></a> 
+                               </label>
                                </div>
                                <div class="form-group row">
                                		<div class="col-lg-6">
