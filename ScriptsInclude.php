@@ -47,8 +47,13 @@
 <script src="scripts/jquery.datetimepicker.js"></script>
 
 <!-- multidatepicker-->
-<link href="styles/jquery-ui.multidatespicker.css" rel="stylesheet">
+<!-- <link href="styles/jquery-ui.multidatespicker.css" rel="stylesheet">
 <script src="scripts/jquery-ui.multidatespicker.js"></script>
+ -->
+<script src="scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+<link href="styles/plugins/datapicker/datepicker3.css" rel="stylesheet">
+
+
 <!--liquidslider--->
 <script src="scripts/jquery.easing.min.js"></script>
 <script src="scripts/jquery.touchSwipe.min.js"></script>

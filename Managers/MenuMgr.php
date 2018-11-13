@@ -138,7 +138,10 @@ class MenuMgr{
 			$bookingMgr = BookingMgr::getInstance();
 			$totalSeats = $menus[0]["seats"];
 			$totalBookedSeats = $bookingMgr->getAvailableSeats($dateStr, $timeSlotSeq);
-			$bookedSeats = $bookingMgr->getBookedSeats($dateStr, $timeSlotSeq,$bookingSeq);
+			$bookedSeats = 0;
+			if($bookingSeq != ""){
+				$bookedSeats = $bookingMgr->getBookedSeats($dateStr, $timeSlotSeq,$bookingSeq);
+			}
 			$availableSeats = intval($totalSeats);
 			if(!empty($totalBookedSeats)){
 				$availableSeats -= intval($totalBookedSeats); 

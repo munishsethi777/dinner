@@ -126,7 +126,7 @@ $(document).ready(function(){
         useCurrent:false,
         defaultDate:currDate,
         minDate:minDate,
-        maxDate:new Date("11/1/2018")
+        //maxDate:new Date("11/1/2018")
     });
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
@@ -170,6 +170,9 @@ function loadData(selectedDate){
 			}else if(val.availableInPercent > 25 && val.availableInPercent <=75){
 				progressBarClass = "bg-warning";
 			}
+			if(val.seatsAvailable == 0){
+				val.availableInPercent = 0;
+            }
 			html += '<div style="width: '+val.availableInPercent+'%" class="'+progressBarClass+' progress-bar"></div></div>';
 			html += '<small class="text-muted buttonCol">'+ val.seatsAvailable  +' Seats</small></div>';
 			if(val.seatsAvailable == 0){
