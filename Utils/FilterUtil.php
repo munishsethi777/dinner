@@ -171,7 +171,13 @@
                         $where .= " " . $filterdatafield . " < '" . $filtervalue ."'";
                         break;
                     case "GREATER_THAN_OR_EQUAL":
-                    	if($filterdatafield == "bookedon" || $filterdatafield == "bookingdate"){
+                    	if($filterdatafield == "bookedon"){
+                    		//$filtervalue .= " 00:00:00";
+                    		//$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$filtervalue);
+                    		$bookedOn = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		$filtervalue = $bookedOn->format("Y-m-d H:i:s");
+                    	}
+                    	if($filterdatafield == "bookingdate"){
                     		$filtervalue .= " 00:00:00";
                     		$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$filtervalue);
                     		$filtervalue = $bookedOn->format("Y-m-d H:i:s");
@@ -179,11 +185,18 @@
                         $where .= " " . $filterdatafield . " >= '" . $filtervalue ."'";
                         break;
                     case "LESS_THAN_OR_EQUAL":
-                    	if($filterdatafield == "bookedon" || $filterdatafield == "bookingdate"){
-                    		$filtervalue .= " 23:59:00";
+                    	if($filterdatafield == "bookedon"){
+                    		//$filtervalue .= " 00:00:00";
+                    		//$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$filtervalue);
+                    		$bookedOn = DateUtil::StringToDateByGivenFormat("D M d Y H:i:s e+",$filtervalue);
+                    		$filtervalue = $bookedOn->format("Y-m-d H:i:s");
+                    	}
+                    	if($filterdatafield == "bookingdate"){
+                    		$filtervalue .= " 00:00:00";
                     		$bookedOn = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$filtervalue);
                     		$filtervalue = $bookedOn->format("Y-m-d H:i:s");
                     	}
+                    	
                         $where .= " " . $filterdatafield . " <= '" . $filtervalue ."'";
                         break;
                     case "STARTS_WITH_CASE_SENSITIVE":

@@ -93,9 +93,10 @@
         
         function loadGrid(){
         	var columns = [
-        	 			  { text: 'Title', datafield: 'title', width:"37%"}, 			
+        	 			  { text: 'Title', datafield: 'title', width:"20%"}, 			
         	 			  { text: 'id', datafield: 'seq' , hidden:true},
         	              { text: 'Description', datafield: 'description',width:"20%"},
+        	              { text: 'Available Till', datafield: 'availabletill',width:"8%"},
         	              { text: 'Seats', datafield: 'seats',width:"20%"},
         	              { text: 'Menu', datafield: 'menus',width:"20%"}
         	             ]
@@ -109,6 +110,7 @@
         	                 sortdirection: 'desc',
         	                 datafields: [{ name: 'seq', type: 'integer' },
         	                             { name: 'title', type: 'string' },
+        	                             { name: 'availabletill', type: 'string' },
         	                             { name: 'description', type: 'string'},
         	                             { name: 'seats', type: 'string' },
         	                             { name: 'menus', type: 'string' }

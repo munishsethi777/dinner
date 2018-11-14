@@ -114,10 +114,10 @@ require_once('IConstants.inc');
 $(document).ready(function(){ 
 	currDate = new Date();
 	minDate = new Date();
-	if(currDate.getHours() >= 13){
-		currDate.setDate(currDate.getDate() + 1);
-		minDate.setDate(minDate.getDate() + 1);
-	}
+	//if(currDate.getHours() >= 13){
+		//currDate.setDate(currDate.getDate() + 1);
+		//minDate.setDate(minDate.getDate() + 1);
+	//}
 	
 	$('.bookingDate').datetimepicker({
         timepicker:false,
@@ -148,6 +148,9 @@ function loadData(selectedDate){
 	$.getJSON("Actions/TimeSlotAction.php?call=getTimeSlots&selectedDate="+selectedDate, function(data){
 		  //var data = $.parseJSON(jsonString)
 			var html = getHeaders();
+			if(data.length == 0){
+				html += "<center style='margin-top:10px;'>No Timeslots available for booking, please select some other date</center>";
+			}
 		 $.each( data, function( key, val ) {
 	 		html += '<div class="row ibox-content">';
 			html += '<div class="col-xs-2 dateCol">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';

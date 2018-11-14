@@ -108,12 +108,12 @@
             var columns = [
 			  { text: 'Payment ID', datafield: 'transactionid', width:"10%"}, 			
 			  { text: 'id', datafield: 'seq' , hidden:true},
-              { text: 'Booked On', datafield: 'bookedon',filtertype: 'date' ,cellsformat: 'd-M-yyyy',width:"15%"},
-              { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"10%"},
-              { text: 'Slot', datafield: 'timeslots.title',width:"18%",filtertype: 'checkedlist'},
-              { text: 'Menu', datafield: 'menus.title', width:"22%" ,filtertype: 'checkedlist',sortable:false,filteritems:menus},
+              { text: 'Booked On', datafield: 'bookedon',filtertype: 'date' ,cellsformat: 'd-M-yyyy',width:"12%",cellsalign: 'right'},
+              { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"10%",cellsalign: 'right'},
+              { text: 'Slot', datafield: 'timeslots.title',width:"12%",filtertype: 'checkedlist',cellsalign: 'right'},
+              { text: 'Menu', datafield: 'menus.title', width:"12%" ,filtertype: 'checkedlist',sortable:false,filteritems:menus},
               { text: 'Customer Name', datafield: 'fullname',width:"12%"},
-              { text: 'Email', datafield: 'emailid',width:"20%", hidden:true},
+              { text: 'Email', datafield: 'emailid',width:"18%"},
               { text: 'Mobile', datafield: 'mobilenumber',width:"10%"}
             ]
            
@@ -125,7 +125,7 @@
                 sortcolumn: 'bookedon',
                 sortdirection: 'desc',
                 datafields: [{ name: 'seq', type: 'integer' },
-                            { name: 'bookedon', type: 'date' },
+                            { name: 'bookedon', type: 'datetime' },
                             { name: 'bookingdate', type: 'date' },
                             { name: 'transactionid', type: 'string'},
                             { name: 'timeslots.title', type: 'string'},
