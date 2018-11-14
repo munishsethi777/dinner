@@ -6,7 +6,7 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
 $timeSlot = new TimeSlot();
 $menuMgr = MenuMgr::getInstance();
-$menus = $menuMgr->findAll();
+$menus = $menuMgr->getAllForTimeSlot();
 $selectedMenuSeqs = array();
 $startOn = "";
 $endOn = "";
