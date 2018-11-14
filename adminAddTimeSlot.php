@@ -163,10 +163,9 @@ if(isset($_POST["seq"])){
             format:'h:i a',
             minDate:new Date()
         })
-        $('#hideOnDates').multiDatesPicker({
-        	 timepicker:false,
-        	 dateFormat: "d-m-y",
-             minDate:new Date()  
+        $('#hideOnDates').datepicker({
+    	  	multidate: true,
+    		format: 'dd-mm-yyyy'
     	});
     });
     function submitMenuForm(){
