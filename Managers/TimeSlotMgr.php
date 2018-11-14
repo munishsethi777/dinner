@@ -93,7 +93,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 				//$timeSlot["rate"] += 1000;
 			//}
 			$menuPricingArr = null;
-			if(!empty($menuPricings)){
+			if(!empty($menuPricings) && array_key_exists($timeSlot["menuseq"], $menuPricings)){
 				$menuPricingArr = $menuPricings[$timeSlot["menuseq"]];
 			}
 			$menu["rate"] = $this->getMenuPrice($date, $menuPricingArr, $timeSlot["rate"]) ;
