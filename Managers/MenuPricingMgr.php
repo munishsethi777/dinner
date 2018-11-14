@@ -20,6 +20,9 @@ class MenuPricingMgr{
 		$this->deleteByMenuSeq($menuSeq);
 		$priceDates = $_POST["priceDates"];
 		foreach ($priceDates as $key=>$priceDate){
+			if(empty($priceDate)){
+				continue;
+			}
 			$dates = explode(",", $priceDate);
 			$des = $_POST["priceDescription"][$key];
 			$price = $_POST["price"][$key];
