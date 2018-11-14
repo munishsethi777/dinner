@@ -28,6 +28,12 @@ class MenuMgr{
 		return $menus;
 	}
 	
+	public function getAllForTimeSlot(){
+		$colVal["isenabled"] = 1;
+		$menus = self::$dataStore->executeConditionQuery($colVal);
+		return $menus;
+	}
+	
 	public function getRateByMenuSeq($menuSeq){
 		$colVal["seq"] = $menuSeq;
 		$attr[0] = "rate";
