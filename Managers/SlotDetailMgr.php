@@ -25,7 +25,7 @@ class SlotDetailMgr{
 			$slotDetail = new SlotDetail();
 			$slotDetail->setAction(SlotDetailAction::hidden);
 			$slotDetail->setSlotSeq($slotSeq);
-			$dateObj = DateUtil::StringToDateByGivenFormat("d-m-y", $date);
+			$dateObj = DateUtil::StringToDateByGivenFormat("d-m-Y", $date);
 			$dateObj = $dateObj->setTime(0, 0);
 			$slotDetail->setDate($dateObj);
 			self::$dataStore->save($slotDetail);
@@ -42,10 +42,10 @@ class SlotDetailMgr{
 			foreach ($slotDetails as $slotDetail){
 				$date = $slotDetail->getDate();
 				$dateObj = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $date);
-				$formatedDate = $dateObj->format("d-m-y");
+				$formatedDate = $dateObj->format("d-m-Y");
 				array_push($dateArr, $formatedDate);
 			}
-			$dates = implode(", ", $dateArr);
+			$dates = implode(",", $dateArr);
 		}
 		return $dates;
 	}

@@ -53,9 +53,9 @@ if($call == "saveMenu"){
 			}
 		}
 		if(isset($_POST["priceDates"]) && !empty($_POST["priceDates"])){
-			$priceDates = explode(", ", $_POST["priceDates"]);
+			//$priceDates = explode(", ", $_POST["priceDates"]);
 			$menuPricingMgr = MenuPricingMgr::getInstance();
-			$menuPricingMgr->saveMenuPricing($priceDates, $id);
+			$menuPricingMgr->saveMenuPricingFromPost($id);
 		}
 	}catch (Exception $e){
 		$success = 0;

@@ -16,46 +16,63 @@ class MenuPricingMgr{
 	}
 	
 	
-	public function saveMenuPricing($dates,$menuSeq){
+	public function saveMenuPricingFromPost($menuSeq){
 		$this->deleteByMenuSeq($menuSeq);
-		$des = $_POST["priceDescription"];
-		$price = $_POST["price"];
-		foreach ($dates as $date){
-			$menuPricing = new MenuPricing();
-			$menuPricing->setDescription($des);
-			$menuPricing->setPrice($price);
-			$menuPricing->setMenuSeq($menuSeq);
-			$dateObj = DateUtil::StringToDateByGivenFormat("d-m-y", $date);
-			$dateObj = $dateObj->setTime(0, 0);
-			
-			$menuPricing->setDate($dateObj);
-			self::$dataStore->save($menuPricing);
+		$priceDates = $_POST["priceDates"];
+		foreach ($priceDates as $key=>$priceDate){
+			$dates = explode(",", $priceDate);
+			$des = $_POST["priceDescription"][$key];
+			$price = $_POST["price"][$key];
+			foreach ($dates as $date){
+				$menuPricing = new MenuPricing();
+				$menuPricing->setDescription($des);
+				$menuPricing->setPrice($price);
+				$menuPricing->setMenuSeq($menuSeq);
+				$dateObj = DateUtil::StringToDateByGivenFormat("d-m-Y", $date);
+				$dateObj = $dateObj->setTime(0, 0);
+				$menuPricing->setDate($dateObj);
+				self::$dataStore->save($menuPricing);
+			}
 		}
 	}
 	
 	public function findMenuPricingArrBySlotSeq($menuSeq){
-		$colval["menuseq"] = $menuSeq;
-		$menuPricing = self::$dataStore->executeConditionQuery($colval);
-		$menuPricingArr = array();
+		$query = "SELECT * FROM menupricing where menuseq = $menuSeq order by seq";
+		$menuPricing = self::$dataStore->executeObjectQuery($query);
+		$mainArr = array();
 		if(!empty($menuPricing)){
-			$dateArr = array();
-			$price = 0;
-			$des = null;
+			$menuPricingArr = array();
 			foreach ($menuPricing as $mp){
 				$arr = array();
-				$date = $mp->getDate();
-				$dateObj = DateUtil::StringToDateByGivenFormat("Y-m-d", $date);
-				$formatedDate = $dateObj->format("d-m-y");
-				array_push($dateArr, $formatedDate);
 				$price = $mp->getPrice();
-				$des = $mp->getDescription();
+				$dataArr = array();
+				if(array_key_exists($price,$menuPricingArr)){
+					$arr = $menuPricingArr[$price];
+				}
+				$dataArr["price"] = $price;
+				$dataArr["description"] = $mp->getDescription();
+				$dateObj = DateUtil::StringToDateByGivenFormat("Y-m-d", $mp->getDate());
+				$formatedDate = $dateObj->format("d-m-Y");
+				$dataArr["date"] = $formatedDate;
+				array_push($arr, $dataArr);
+				$menuPricingArr[$price] = $arr;
 			}
-			$dates = implode(", ", $dateArr);
-			$menuPricingArr["dates"] = $dates;
-			$menuPricingArr["price"] = $price;
-			$menuPricingArr["description"] = $des;
+			$mainArr = $this->getArray($menuPricingArr);
 		}
-		return $menuPricingArr;
+		return $mainArr;
+	}
+	
+	private function getArray($menuPricingArr){
+		$mainArr = array();
+		foreach ($menuPricingArr as $menuPricing){
+			$arr = array();
+			$dates  = array_map(create_function('$o', 'return $o["date"];'), $menuPricing);
+			$dates = implode(",", $dates);
+			$mp = $menuPricing[0];
+			$mp["date"] = $dates;
+			array_push($mainArr, $mp);
+		}
+		return $mainArr;
 	}
 	
 	public function getAllMenuPricingArr(){

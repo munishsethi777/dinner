@@ -7,6 +7,7 @@ $menu = new Menu();
 $pricingDates = "";
 $price = "";
 $priceDes = "";
+$menuPricing = array();
 if(isset($_POST["seq"])){
 	$seq = $_POST["seq"];
 	$menuMgr = MenuMgr::getInstance();
@@ -14,9 +15,9 @@ if(isset($_POST["seq"])){
 	$menuPricingMgr = MenuPricingMgr::getInstance();
 	$menuPricing = $menuPricingMgr->findMenuPricingArrBySlotSeq($seq);
 	if(!empty($menuPricing)){
-		$pricingDates = $menuPricing["dates"];
-		$price = $menuPricing["price"];
-		$priceDes = $menuPricing["description"];
+		//$pricingDates = $menuPricing["dates"];
+		//$price = $menuPricing["price"];
+		//$priceDes = $menuPricing["description"];
 	}
 }
 $imagePath = "images/dummy.jpg";
@@ -97,30 +98,53 @@ if(empty($menu->getIsEnabled())){
                                <div class="form-group row">
                                	<label class="col-lg-11 col-form-label btn-primary">Add Rates variants for selected dates.</label>
                                </div>
-                               
-                               <div class="form-group row">
-                       				<label class="col-lg-1 col-form-label">Dates</label>
-                                    <div class="col-lg-4">
-                                    	<input type="text" id="priceDates" value="<?php echo $pricingDates?>" name="priceDates" required placeholder="Select Dates" class="form-control">
-                                    </div>
-                               
-                       				<label class="col-lg-1 col-form-label">Price</label>
-                                    <div class="col-lg-2">
-                                    	<input type="text" value="<?php echo $price?>"  id="price" name="price" required placeholder="Rate" class="form-control">
-                                    </div>
-                               		<label class="col-lg-1 col-form-label">Description</label>
-                                    <div class="col-lg-2">
-                                    	<input type="text" value="<?php echo $priceDes?>" id="priceDescription" name="priceDescription" required placeholder="Description" class="form-control">
-                                    </div>
-                                    <label class="col-lg-1 col-form-label"> 
-                                    		<i class="fa fa-times"></i>
-                                    </label>
+                               <div id="priceDiv">
+                               	<?php if(!empty($menuPricing)){
+                               		$i = 0;
+                               		foreach ($menuPricing as $mp){?>
+                               			<div class="form-group row">
+		                       				<label class="col-lg-1 col-form-label">Dates</label>
+		                                    <div class="col-lg-4">
+		                                    	<input type="text"  value="<?php echo $mp["date"]?>" name="priceDates[]" required placeholder="Select Dates" class="form-control priceDates">
+		                                    </div>
+		                               
+		                       				<label class="col-lg-1 col-form-label">Price</label>
+		                                    <div class="col-lg-2">
+		                                    	<input type="text" value="<?php echo $mp["price"]?>"  id="price" name="price[]" required placeholder="Rate" class="form-control">
+		                                    </div>
+		                               		<label class="col-lg-1 col-form-label">Description</label>
+		                                    <div class="col-lg-2">
+		                                    	<input type="text" value="<?php echo $mp["description"]?>" id="priceDescription" name="priceDescription[]" required placeholder="Description" class="form-control">
+		                                    </div>
+		                                    <?php if($i > 0){?>
+		                                    <label class="col-lg-1 col-form-label">
+		                                    	<a onClick="removeRow(this)" href="#"><i class="fa fa-times"></i></a>
+		                                    </label>
+		                                    <?php }?>
+	                               		</div>			
+                               		<?php $i++;}
+                               	?>
+                               	<?php }else {?>
+	                               <div class="form-group row">
+	                       				<label class="col-lg-1 col-form-label">Dates</label>
+	                                    <div class="col-lg-4">
+	                                    	<input type="text"  name="priceDates[]" required placeholder="Select Dates" class="form-control priceDates">
+	                                    </div>
+	                               		<label class="col-lg-1 col-form-label">Price</label>
+	                                    <div class="col-lg-2">
+	                                    	<input type="text" id="price" name="price[]" required placeholder="Rate" class="form-control">
+	                                    </div>
+	                               		<label class="col-lg-1 col-form-label">Description</label>
+	                                    <div class="col-lg-2">
+	                                    	<input type="text" id="priceDescription" name="priceDescription[]" required placeholder="Description" class="form-control">
+	                                    </div>
+	                               </div>
+	                            <?php }?>
                                </div>
-                               
                                
                                <div class="form-group row">
                                <label class="col-lg-5 col-form-label"> 
-                                    		<a href="#"><i class="fa fa-plus"> Add More Dates</i></a> 
+                                    <a onClick="addRow()" href="#"><i class="fa fa-plus"> Add More Dates</i></a> 
                                </label>
                                </div>
                                <div class="form-group row">
@@ -151,7 +175,7 @@ if(empty($menu->getIsEnabled())){
 //            minDate:new Date()  
 //    		});
 
-	    $('#priceDates').datepicker({
+	    $('.priceDates').datepicker({
     	  	multidate: true,
     		format: 'dd-mm-yyyy'
     	});
@@ -183,5 +207,32 @@ if(empty($menu->getIsEnabled())){
             }
             reader.readAsDataURL(input.files[0]);
         }
+    }
+    function addRow(){
+     	var str  = '<div id="priceRow" class="form-group row">';
+				str += '<label class="col-lg-1 col-form-label">Dates</label>'
+                str += '<div class="col-lg-4">'
+                str += '<input type="text" value="" name="priceDates[]" required placeholder="Select Dates" class="form-control priceDates">'
+                str += '</div>'
+                str += '<label class="col-lg-1 col-form-label">Price</label>';
+                str += '<div class="col-lg-2">';
+                str += '<input type="text" value=""  id="price" name="price[]" required placeholder="Rate" class="form-control">';
+                str += '</div>';
+                str += '<label class="col-lg-1 col-form-label">Description</label>';
+                str += '<div class="col-lg-2">';
+                str += '<input type="text" value="" id="priceDescription" name="priceDescription[]" required placeholder="Description" class="form-control">';
+                str += '</div>';
+                str += '<label class="col-lg-1 col-form-label">'; 
+                str += '<a onClick="removeRow(this)" href="#"><i class="fa fa-times"></i></a>';
+                str += '</label></div>'; 
+        $("#priceDiv").append(str);  
+        $('.priceDates').datepicker({
+    	  	multidate: true,
+    		format: 'dd-mm-yyyy'
+    	});
+    }
+
+    function removeRow(btn){
+    	$(btn).closest("#priceRow").remove();
     }
  </script>	
