@@ -54,7 +54,7 @@ if($call == "saveTimeSlot"){
  	$timeSlot->setSeq($seq);
  	$id = $timeSlotMgr->saveTimeSlot($timeSlot,$menus);
  	if(isset($_POST["hideOnDates"]) && !empty($_POST["hideOnDates"]) && !empty($id)){
- 		$hideForDates = explode(", ", $_POST["hideOnDates"]);
+ 		$hideForDates = explode(",", $_POST["hideOnDates"]);
  		$slotDetailMgr = SlotDetailMgr::getInstance();
  		$slotDetailMgr->saveSlotDetail($hideForDates, $id);
  	}
