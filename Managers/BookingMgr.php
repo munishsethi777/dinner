@@ -49,7 +49,7 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 			$menus = $detailAndMenu[$bookingSeq];
 			$bookedOn = $booking["bookedon"];
 			$bookedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookedOn);
-			$bookedOn = $bookedOn->format("d-m-Y H:i:s");
+			$bookedOn = $bookedOn->format("d-m-Y H:i");
 			$bookedDate = $booking["bookingdate"];
 			$bookedDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookedDate);
 			$bookedDate = $bookedDate->format("d-m-Y");

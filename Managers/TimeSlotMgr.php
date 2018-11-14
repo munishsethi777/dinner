@@ -92,7 +92,10 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			//if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
 				//$timeSlot["rate"] += 1000;
 			//}
-			$menuPricingArr = $menuPricings[$timeSlot["menuseq"]];
+			$menuPricingArr = null;
+			if(!empty($menuPricings)){
+				$menuPricingArr = $menuPricings[$timeSlot["menuseq"]];
+			}
 			$menu["rate"] = $this->getMenuPrice($date, $menuPricingArr, $timeSlot["rate"]) ;
 			$menu["menuseq"] = $timeSlot["menuseq"];
 			array_push($mainMenuArr, $menu);
@@ -162,6 +165,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$arr["title"] = $timeSlot->getTitle();
 			$arr["description"] = $timeSlot->getDescription();
 			$arr["seats"] = $timeSlot->getSeats();
+			$arr["availabletill"] = $timeSlot->getBookingAvailableTill();
 			$menus = $menuMgr->getMenusTitleByTimeSlot($timeSlot->getSeq());
 			$arr["menus"] = implode(",",$menus);
 			array_push($menuArr, $arr);
