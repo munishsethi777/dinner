@@ -220,7 +220,7 @@ if(isset($_POST["seq"])){
             var timeSlotSeq =  $("#timeSlot").val();
             var bookingSeq = $("#seq").val()
             var html = "";
-        	$.get("Actions/MenuAction.php?call=getMenusByTimeSlot&timeSlotSeq="+timeSlotSeq + "&selectedDate="+selectedDate + "&bookingSeq="+bookingSeq, function(data){
+        	$.getJSON("Actions/MenuAction.php?call=getMenusByTimeSlot&timeSlotSeq="+timeSlotSeq + "&selectedDate="+selectedDate + "&bookingSeq="+bookingSeq, function(data){
             	menus = data.menus;
             	availableSeats = data.availableSeats;
             	totalSeats = data.totalSeats;
