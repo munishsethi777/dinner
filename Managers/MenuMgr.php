@@ -29,8 +29,7 @@ class MenuMgr{
 	}
 	
 	public function getAllForTimeSlot(){
-		$colVal["isenabled"] = 1;
-		$menus = self::$dataStore->executeConditionQuery($colVal);
+		$menus = $this->findAll();
 		return $menus;
 	}
 	
