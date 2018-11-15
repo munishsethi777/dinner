@@ -88,12 +88,12 @@ if(empty($menu->getIsEnabled())){
 											class="jqx-validator-error-label" id="imageError"></label>
 									</div>
 							   </div>
-						        <div class="form-group row i-checks">
+						        <!-- <div class="form-group row i-checks">
                        				<label class="col-lg-2 col-form-label">Enable</label>
                                     <div class="col-lg-4">
-                                    	<input type="checkbox" <?php echo $isEnabledChecked?>  id="isenable" name="isenable">
+                                    	<input type="checkbox"  id="isenable" name="isenable">
                                     </div>
-                               </div>
+                               </div> -->
                                
                                <div class="form-group row">
                                	<label class="col-lg-11 col-form-label btn-primary">Add Rates variants for selected dates.</label>
