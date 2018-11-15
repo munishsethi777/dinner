@@ -40,7 +40,7 @@ if($call == "saveMenu"){
 		$menu->setRate($rate);
 		$menu->setTitle($title);
 		$menu->setImageName($imageType);
-		$menu->setIsEnabled($isEnabled);
+		$menu->setIsEnabled(1);
 		$menuMgr = MenuMgr::getInstance();
 		$id = $menuMgr->saveMenu($menu);
 		if(isset($_FILES["menuImage"])){
