@@ -100,11 +100,11 @@ if(isset($_POST["seq"])){
                                	<div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Valid From</label>
 	                                    <div class="col-lg-2">
-	                                    	<input type="text" id="starton" value="<?php echo $startOn?>"  name="starton" required placeholder="Start on" class="form-control">
+	                                    	<input type="text" id="starton" value="<?php echo $startOn?>"  name="starton" placeholder="Start on" class="form-control">
                                     	</div>
                                     	<label class="col-lg-1 col-form-label">To</label>
 	                                    <div class="col-lg-2">
-	                                    	<input type="text" id="endon" value="<?php echo $endOn?>"  name="endon" required placeholder="End on" class="form-control">
+	                                    	<input type="text" id="endon" value="<?php echo $endOn?>"  name="endon" placeholder="End on" class="form-control">
                                     	</div>
                                 </div>
                                 	<div class="form-group row">
