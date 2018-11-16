@@ -1,4 +1,4 @@
-<?//include("SessionCheck.php");?>
+<?include("SessionCheck.php");?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -214,7 +214,8 @@
                             return;    
                         }
                         var row = $('#bookingsgrid').jqxGrid('getrowdata', indexes);
-                        $("#seq").val(row.seq);                        
+                        $("#seq").val(row.seq);
+                        $("#isView").val(0);                        
                         $("#form1").submit();    
                     });
                     viewButton.click(function (event){
