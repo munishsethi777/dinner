@@ -150,13 +150,13 @@ $razorpayOrderId = $razorpayOrder['id'];
 		                       			<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Name</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="fullName" name="fullName" required placeholder="FullName" class="form-control">
+		                                    	<input type="text" id="fullName" maxLength="100" name="fullName" required placeholder="FullName" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Email</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="email" id="email" name="email" required email placeholder="Email" class="form-control">
+		                                    	<input type="email" id="email" maxLength="100" name="email" required email placeholder="Email" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
@@ -174,7 +174,7 @@ $razorpayOrderId = $razorpayOrder['id'];
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Mobile</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="mobile" name="mobile" required placeholder="Mobile" class="form-control">
+		                                    	<input type="text" id="mobile" maxLength="20" name="mobile" required placeholder="Mobile" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	
@@ -187,19 +187,19 @@ $razorpayOrderId = $razorpayOrder['id'];
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">GST NO.</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" name="gst" placeholder="GST No." class="form-control">
+			                                    	<input type="text" id="gst" maxLength="50" name="gst" placeholder="GST No." class="form-control">
 			                                    </div>
 		                                	</div>
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Company Name</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" name="companyName" placeholder="Company Name" class="form-control">
+			                                    	<input type="text" id="gst" maxLength="100"  name="companyName" placeholder="Company Name" class="form-control">
 			                                    </div>
 		                                	</div>
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Company Mobile</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" name="companyNumber" placeholder="Company Mobile" class="form-control">
+			                                    	<input type="text" id="gst" maxLength="25" name="companyNumber" placeholder="Company Mobile" class="form-control">
 			                                    </div>
 		                                	</div>
 		                                	
