@@ -4,6 +4,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
+Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
+$logger = Logger::getLogger ( "logger" );
 $call = "";
 if(isset($_GET["call"])){
 	$call = $_GET["call"];
@@ -14,10 +17,8 @@ $success = 1;
 $message = "";
 if($call == "saveBooking"){
 	try{
-        
-		$bookingMgr = BookingMgr::getInstance();
+        $bookingMgr = BookingMgr::getInstance();
 		$bookingDetailMgr = BookingDetailMgr::getInstance();
-		
 		$timSlotSeq = $_POST["timeslotSeq"];
 		$mobile = $_POST["mobile"];
 		$emailId = $_POST["email"];
@@ -63,11 +64,12 @@ if($call == "saveBooking"){
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
-        //MailUtil::sendOrderEmailClient($booking,$menuPersonsObj);
+        MailUtil::sendOrderEmailClient($booking,$menuPersonsObj);
 		$message = "Booking Saved Successfully";
 		}catch(Exception $e){
 			$success = 0;
 			$message  = $e->getMessage();
+			$logger->error ( "Error occured in BookingAction during Action - saveBooking:" . $e );
 		}
 		$response = new ArrayObject();
 		$response["success"]  = $success;
@@ -133,6 +135,7 @@ if($call == "saveBookingsFromAdmins"){
 	}catch(Exception $e){
 		$success = 0;
 		$message  = $e->getMessage();
+		$logger->error ( "Error occured in BookingAction during Action - saveBookingsFromAdmins :" . $e );
 	}
 	$response = new ArrayObject();
 	$response["success"]  = $success;
@@ -208,6 +211,7 @@ if($call == "deleteBooking"){
 	}catch(Exception $e){
 		$success = 0;
 		$message = ErrorUtil::checkReferenceError(LearningPlan::$className,$e);
+		$logger->error ( "Error occured in BookingAction during Action - deleteBooking :" . $e );
 	}
 	$response = new ArrayObject();
 	$response["message"] = $message;
