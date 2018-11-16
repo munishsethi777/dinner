@@ -78,9 +78,10 @@ class MailUtil{
 				<br>
 				<h2>+91 99889 99919</h2>
 				<h2>info@flydining.com</h2>
+				<div>
+					<p>Please find session photographs in this <a href="https://photos.google.com/share/AF1QipNEwpOWZiYOV59xaV0_XPf0bbiukFcneeccG8yJ_uepL75c92w3TGsL-krGbQpWZw?key=THk0ZlZhR2NyclBiQWVyU013OFAzWGcwcS03SkNB">link</a>. We will upload pictures next day of the scheduled event.</p>
 				</div>
-		
-		
+				</div>
 				</div>
 				</div>';
 			$subject = "YOUR FLY DINING BOOKING CONFIRMATION.";
