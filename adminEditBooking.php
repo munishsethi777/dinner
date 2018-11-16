@@ -1,4 +1,4 @@
-<?//include("SessionCheck.php");
+<?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/TimeSlotMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingMgr.php");

@@ -1,5 +1,4 @@
-<?php
-//include("SessionCheck.php");
+<?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuPricingMgr.php");
