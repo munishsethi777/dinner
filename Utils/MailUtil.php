@@ -82,10 +82,24 @@ class MailUtil{
 				<div style="padding:15px;margin:10px;text-align:center;background-color:#1ab394;color:white;margin:0px -15px 0px -15px;">
 				<h1>Fly Dining</h1>
 				<br>
-				<h2>+91-844-8444-960</h2>
-				<h2>hello@flydining.com</h2>
+				<h2>+91-81325-40906</h2>
+				<h2>nivedika@flydining.com</h2>
 				</div>
                 <div>
+					<p>
+						<b>IMPORTANT, MUST READ:</b><br>
+							1. Be on time- at least a minimum of 60 minutes before your table reservation. If you are late for your reservation, no refund will be given and no rescheduling will be allowed.<br>
+							2. Dress comfortably. Avoid wearing loose shoes.<br>
+							3. Do not bring large handbags or umbrellas etc with you. We have limited storage/locker space.<br>
+							4. Do not make other plans for the night. Depending on the weather, we might delay your experience, to ensure you enjoy the beautiful Flydining In India.<br>
+							5. Do not bring valuables to the experience.<br>
+							5. Please bring along your Identification Card/ Passport for verification purpose.<br>
+							7. Remember, this experience is strictly for individuals that are 13 years old and above, with a minimum height 145cm and a maximum weight of 150kg. Anyone below the age of 18 MUST be accompanied by an adult or guardian, or not be allowed to board. Pregnant women are also not allowed to experience Flydining In India.<br>
+							8. The ticket is NOT-TRANSFERABLE in anyway and any changes of Dinner(s) name/information/menu is not allowed.<br>
+							9. If you are lost or need direction, please call +91-81325-40906. Kindly take note that we are unable to delay the experience for you if you call or message us on this number so please do not be late.<br>
+					</p> 
+					<p>For any queries you can contact us at +91-76981-81000,+91-81325-40906</p>
+                
                 <p>Please find session photographs in this <a href="https://photos.google.com/share/AF1QipNEwpOWZiYOV59xaV0_XPf0bbiukFcneeccG8yJ_uepL75c92w3TGsL-krGbQpWZw?key=THk0ZlZhR2NyclBiQWVyU013OFAzWGcwcS03SkNB">link</a>. We will upload pictures next day of the scheduled event.</p>
                 </div>
 				</div>
@@ -115,22 +129,21 @@ class MailUtil{
 		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:0px;font-family:arial;line-height:30px" >
 			<tr>
 				<td style="width:50%;padding:10px;border:1px silver solid">Fly Dining<br>
-					#24/10, House of Life,,<br>
-					Kempapura Main Road,<br>
-					BENGALURU, KARNATAKA 560024<br>
-					INDIA.<br>
-					+91-844-8444-960<br>
-					hello@flydining.com<br>
-					GST No :<br><br>
+					#24/10, Nagwara  Backside Lumbini Garden,<br> 
+					Bengaluru, Karnataka - 560024<br>
+					INDIA <br>
+					+91-81325-40906<br>
+					nivedika@flydining.com<br>
+					GST No :<br>
 					
-					Bill No : '.$booking->getSeq().'<br><br>
+					Bill No : '.$booking->getSeq().'<br>
 					
 					Date : '.$bookingDate .'
 				</td>
 				<td valign="top" style="width:50%;padding:10px;border:1px silver solid">
-					Customer Name : '.$booking->getFullName().'<br><br>
-					Contact No : '.$booking->getMobileNumber().'<br><br>
-					Email : '.$booking->getEmailId().'<br><br>
+					Customer Name : '.$booking->getFullName().'<br>
+					Contact No : '.$booking->getMobileNumber().'<br>
+					Email : '.$booking->getEmailId().'<br>
 				</td>
 			</tr>
 		</table>
@@ -225,7 +238,7 @@ class MailUtil{
 							5. Please bring along your Identification Card/ Passport for verification purpose.<br>
 							7. Remember, this experience is strictly for individuals that are 13 years old and above, with a minimum height 145cm and a maximum weight of 150kg. Anyone below the age of 18 MUST be accompanied by an adult or guardian, or not be allowed to board. Pregnant women are also not allowed to experience Flydining In India.<br>
 							8. The ticket is NOT-TRANSFERABLE in anyway and any changes of Dinner(s) name/information/menu is not allowed.<br>
-							9. If you are lost or need direction, please call +91-844-8444-960. Kindly take note that we are unable to delay the experience for you if you call or message us on this number so please do not be late.<br>
+							9. If you are lost or need direction, please call +91-81325-40906. Kindly take note that we are unable to delay the experience for you if you call or message us on this number so please do not be late.<br>
 					</p> 
 					
 				</td>
