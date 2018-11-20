@@ -39,7 +39,7 @@ class MailUtil{
 		<p>Thank you for choosing FlyDining. We will do our best to make this experience phenomenal for you. We look forward to see you.
 		<br>Bon Appétit.</p>
 		<div style="text-align:center">
-		<img src="https://ci4.googleusercontent.com/proxy/oZJFixdJqatJ4bPRlelACrUAiS7mmSp4OJja5qmREUBJVu47cIun1ciQ0hg1No-a2urGigmBjTwz7vi08Cs9arEdNLy3VuY916U=s0-d-e1-ft#http://www.skylounge.in/media/hero-image-receipt.png"
+		<img src="http://www.flydining.com/booking/images/icontick.png"
 				width="125" height="120" style=";border:0px">
 				<h1>Thank You For Your Order!</h1>
 				<h2>Order ID :'. $booking->getSeq() .'</h2>
@@ -51,6 +51,7 @@ class MailUtil{
                         BENGALURU, KARNATAKA 560024<br>
                         India.
                 </p>
+
 				</div>
 				</div>
 		
