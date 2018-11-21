@@ -25,6 +25,7 @@ if($call == "saveBooking"){
 		$fullName = $_POST["fullName"];
 		$selectedDate = $_POST["selectedDate"];
 		$menuPersonsStr = $_POST["menuPersons"];
+		$menuPriceStr = $_POST["menuPrice"];
 		$tansactionId = $_POST["transactionId"];
 		$amount = $_POST["amount"];
 		$companyNumber = "";
@@ -42,6 +43,7 @@ if($call == "saveBooking"){
 			$gstState = $_POST["companyState"];
 		}
 		$menuPersonsObj = json_decode($menuPersonsStr);
+		$menuPriceArr = json_decode($menuPriceStr);
 		$booking = new Booking();
         
 		$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
@@ -63,8 +65,8 @@ if($call == "saveBooking"){
 		$booking->setDateOfBirth($dateOfBirth);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
-		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj);
-        MailUtil::sendOrderEmailClient($booking,$menuPersonsObj);
+		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj,$menuPriceArr);
+        MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
 		$message = "Booking Saved Successfully";
 		}catch(Exception $e){
 			$success = 0;
@@ -130,7 +132,7 @@ if($call == "saveBookingsFromAdmins"){
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		
-		$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson);
+		$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson,$amount);
 		$message = "Booking Saved Successfully";
 	}catch(Exception $e){
 		$success = 0;
