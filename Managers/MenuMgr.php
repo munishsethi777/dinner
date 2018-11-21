@@ -130,15 +130,21 @@ class MenuMgr{
 	
 	
 	public function getMenusAndSeats($selectedDate,$timeSlotSeq,$bookingSeq){
-		$query = "select menus.rate,menus.title, menus.seq,timeslots.seats from menus inner join menutimeslots on menus.seq = menutimeslots.menuseq inner join timeslots on menutimeslots.timeslotsseq = timeslots.seq where menutimeslots.timeslotsseq = $timeSlotSeq";
+		$selectedDate .= " 00:00:00";
+		$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
+		$dbFormat = $date->format("Y-m-d");
+		$query = "select menupricing.price as specialprice,menus.rate,menus.title, menus.seq,timeslots.seats from menus inner join menutimeslots on menus.seq = menutimeslots.menuseq inner join timeslots on menutimeslots.timeslotsseq = timeslots.seq left join menupricing on menus.seq = menupricing.menuseq and menupricing.date = '$dbFormat' where menutimeslots.timeslotsseq = $timeSlotSeq";
 		$menus = self::$dataStore->executeQuery($query);
 		if(!empty($menus)){
 			$menuTitles = array();
 			foreach ($menus as $menu){
+				$menuSpecialPrice = $menu["specialprice"];
+				if(!empty($menuSpecialPrice)){
+					$menu["rate"] = $menuSpecialPrice;
+				}
 				$menuTitles[$menu["seq"]] = $menu;
 			}
-			$selectedDate .= " 00:00:00";
-			$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
+			
 			$dateStr = $date->format("Y-m-d H:i:s");
 			$bookingMgr = BookingMgr::getInstance();
 			$totalSeats = $menus[0]["seats"];
