@@ -125,7 +125,7 @@ class MailUtil{
 	}
 	
 	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr){
-		$bookingDate = $booking->getBookedOn()->format('M d, Y, h:is a');
+		$bookingDate = $booking->getBookedOn()->format('M d, Y, h:i:s a');
 		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:0px;font-family:arial;line-height:30px" >
 			<tr>
 				<td style="width:50%;padding:10px;border:1px silver solid">Fly Dining<br>
@@ -134,7 +134,7 @@ class MailUtil{
 					INDIA <br>
 					+91-81325-40906<br>
 					nivedika@flydining.com<br>
-					GST No :29ADHFS4111J1ZY<br>
+					GST No : 29ADHFS4111J1ZY<br>
 					
 					Bill No : '.$booking->getSeq().'<br>
 					
@@ -173,15 +173,15 @@ class MailUtil{
 				$rate = number_format($rate,2,'.','');
 				$tax = number_format($tax,2,'.','');
 				$html .='<tr style="font-size:13px">
-					<td style="padding:10px;border:1px silver solid;">'.$value["title"].'</td>
-					<td style="padding:10px;border:1px silver solid;text-align:right">'.$rate.'</td>
-					<td style="padding:10px;border:1px silver solid;text-align:right">'.$value["members"].'</td>
-					<td style="padding:10px;border:1px silver solid;text-align:right">'.$amountWithoutTax.'</td>
-					<td style="padding:10px;border:1px silver solid;text-align:right">2.5%</td>
-					<td style="padding:10px;border:1px silver solid;text-align:right">'.$tax.'</td>
-					<td style="padding:10px;border:1px silver solid;text-align:right">2.5%</td>
-					<td style="padding:10px;border:1px silver solid;text-align:right">'.$tax.'</td>
-					<td style="padding:10px;border:1px silver solid;text-align:right">'.$amount.'</td>
+					<td style="padding:10px;border:1px silver solid;width:20%">'.$value["title"].'</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;width:10%">'.$rate.'</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;width:10%">'.$value["members"].'</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;width:10%">'.$amountWithoutTax.'</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;width:10%">2.5%</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;width:10%">'.$tax.'</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;width:10%">2.5%</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;width:10%">'.$tax.'</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;width:10%">'.$amount.'</td>
 				</tr>';
 				$totalAmount += $amount;
 			}
@@ -252,14 +252,15 @@ class MailUtil{
 		$mail = new PHPMailer();
 		$body = eregi_replace("[\]",'',$body);
 		if($isSmtp){
+			$body = eregi_replace("[\]",'',$body);
 			$mail->IsSMTP(); // telling the class to use SMTP
-			//$mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
+			$mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
 			$mail->SMTPAuth   = true;                  // enable SMTP authentication
 			$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-			$mail->Host       = "smtp.zoho.in";      // sets GMAIL as the SMTP server
+			$mail->Host       = "mail.virsacouture.com";      // sets GMAIL as the SMTP server
 			$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-			$mail->Username   = "noreply@flydining.com";  // GMAIL username
-			$mail->Password   = "Sim#19913#Aana#2222215";            // GMAIL password
+			$mail->Username   = "info@virsacouture.com";  // GMAIL username
+			$mail->Password   = "Munish#314";          // GMAIL password
 		}
 		$mail->SetFrom('noreply@flydining.com', 'FlyDining');
 		$mail->Subject = $subject;
