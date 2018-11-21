@@ -241,8 +241,14 @@ if(isset($_POST["seq"])){
                	$.each( menus, function( k, menu ) {
                		var selectedSeat = 0;
                		if(bookingDetailJsonObject != null){
-               			selectedSeat = getMembers(k,bookingDetailJsonObject);
-               			menuAmount[k] = menu.rate * selectedSeat;
+               			bookingDetail = getMembers(k,bookingDetailJsonObject);
+               			selectedSeat = bookingDetail["members"];
+               			menuPrice = bookingDetail["menuprice"];
+               			var rate = menu.rate;
+               			if(menuPrice != null && menuPrice != "" && menuPrice != "0" && menuPrice > 0){
+               				rate = menuPrice;
+               			}
+               			menuAmount[k] = rate * selectedSeat;
                			//if(selectedSeat > 0){
                			//	seats += parseInt(selectedSeat);
                			//}
@@ -274,14 +280,18 @@ if(isset($_POST["seq"])){
       		});
        		
         }
+        
         function getMembers(value,jsonObject){
             var members = 0;
+            var bookingDetail = [];
         	$.each( jsonObject, function( index, val ) {
             	if(val.menuseq == value && members == 0){
             		members =  val.members;	
+            		bookingDetail["members"] = val.members;
+            		bookingDetail["menuprice"] = val.menuprice;
             	}
         	});
-        	return members;
+        	return bookingDetail;
         }
         
 		function calculateAmount(menuSeq,menuRate){

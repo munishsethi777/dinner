@@ -27,6 +27,8 @@ $totalAmountInPaise = 0;
 $menuBtnVisible = array(1=>"none",2=>"none",3=>"none");
 $menuImgVisible = array(1=>"none",2=>"none",3=>"none");
 $menusArr = array();
+$menuPriceArr = array();
+$menuPriceJson = "";
 foreach ($menuArr as $key=>$value){
 	if(empty($value)){
 		continue;
@@ -45,6 +47,10 @@ foreach ($menuArr as $key=>$value){
 		$menuImgVisible[$key] = "inline-table";
 	}
 	array_push($menusArr, $menu);
+	$menuPriceArr[$key] = $rate;
+}
+if(!empty($menuPriceArr)){
+	$menuPriceJson = json_encode($menuPriceArr);
 }
 if(!empty($amount)){
 	$amount = number_format($amount,2);
@@ -147,6 +153,7 @@ $razorpayOrderId = $razorpayOrder['id'];
 	                       				<input type="hidden" id ="timeslotseq" name="timeslotSeq" value="<?php echo $timeSlotSeq?>" />
 	                       				<input type="hidden" id ="selectedDate" name="selectedDate" value="<?php echo $selectedDate?>" />
 	                       				<input type="hidden" id ="menupersons" name="menuPersons" value='<?php echo $menus?>' />
+	                       				<input type="hidden" id ="menuPrice" name="menuPrice" value='<?php echo $menuPriceJson?>' />
 		                       			<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Name</label>
 		                                    <div class="col-lg-10">
@@ -325,7 +332,7 @@ document.getElementById('rzp-button').onclick = function(e){
 		    return;
 		}
 	    $("#transactionId").val("testid");
-	    $("#amount").val("100");
+	    $("#amount").val("<?php echo $totalAmountInPaise?>");
 	    saveBooking();
 	    return;
 		var fullName = $("#fullName").val();
