@@ -119,8 +119,8 @@ class MailUtil{
 	}
 	private static function getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot){
 		$invoiceAttachment = self::getInvoiceAttachments($booking, $menuPersonArr, $menuPriceArr);
-		$confimrationAttachment = self::getBookingConfirmationAttahment($booking, $menuPersonArr,$timeSlot);
-		$attachemtns = array("Invoice"=>$invoiceAttachment,"BookingConfimration"=>$confimrationAttachment);
+		//$confimrationAttachment = self::getBookingConfirmationAttahment($booking, $menuPersonArr,$timeSlot);
+		$attachemtns = array("Invoice"=>$invoiceAttachment);
 		return $attachemtns;
 	}
 	
@@ -134,7 +134,7 @@ class MailUtil{
 					INDIA <br>
 					+91-81325-40906<br>
 					nivedika@flydining.com<br>
-					GST No :<br>
+					GST No :29ADHFS4111J1ZY<br>
 					
 					Bill No : '.$booking->getSeq().'<br>
 					
@@ -248,21 +248,21 @@ class MailUtil{
 		return  $attachment1;
 	}
 	
-	public static function sendSmtpMail($subject,$body,$toEmails,$attachments = array()){
+	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
 		$mail = new PHPMailer();
 		//$body = file_get_contents('contents.html');
 		$body = eregi_replace("[\]",'',$body);
-		$mail->IsSMTP(); // telling the class to use SMTP
-		$mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
-		$mail->SMTPAuth   = true;                  // enable SMTP authentication
-		$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-		$mail->Host       = "mail.virsacouture.com";      // sets GMAIL as the SMTP server
-		$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-		$mail->Username   = "info@virsacouture.com";  // GMAIL username
-		$mail->Password   = "Munish#314";            // GMAIL password
-		
-		$mail->SetFrom('bookings@flydining.com', 'FlyDining');
-		$mail->AddReplyTo("bookings@flydining.com","FlyDining");
+		if($isSmtp){
+			$mail->IsSMTP(); // telling the class to use SMTP
+			//$mail->SMTPDebug  = 1;                     // enables SMTP debug information (for testing)
+			$mail->SMTPAuth   = true;                  // enable SMTP authentication
+			$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
+			$mail->Host       = "smtp.zoho.in";      // sets GMAIL as the SMTP server
+			$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
+			$mail->Username   = "noreply@flydining.com";  // GMAIL username
+			$mail->Password   = "Sim#19913#Aana#2222215";            // GMAIL password
+		}
+		$mail->SetFrom('noreply@flydining.com', 'FlyDining');
 		$mail->Subject = $subject;
 		$mail->AltBody    = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 		$mail->MsgHTML($body);
@@ -282,37 +282,5 @@ class MailUtil{
 		} else {
 			echo "Message sent!";
 		}
-	}
-	
-	function mail_attachment($subject,$body,$toEmails,$attachments = array()) {
-		$to = implode(",", $toEmails);
-		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-	    $headers  = 'From: FlyDining<hello@flydining.com>' . "\r\n";
-        $headers .= 'Bcc: hello@flydining.com,blr@flydining.com' . "\r\n";
-	    // boundary 
-	    $semi_rand = md5(time()); 
-	    $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
-	
-	    // headers for attachment 
-	    $headers .= "\nMIME-Version: 1.0\n" . "Content-Type: multipart/mixed;\n" . " boundary=\"{$mime_boundary}\""; 
-	
-	    // multipart boundary 
-	    $message = "This is a multi-part message in MIME format.\n\n" . "--{$mime_boundary}\n" . "Content-Type: text/plain; charset=\"iso-8859-1\"\n" . "Content-Transfer-Encoding: 7bit\n\n" . $message . "\n\n"; 
-	    $message .= "--{$mime_boundary}\n";
-	
-	    // preparing attachments
-	    foreach ($attachments as $key=>$attachment){
-	        $data = chunk_split(base64_encode($attachment));
-	        $message .= "Content-Type: {\"application/octet-stream\"};\n" . " name=\"$key\"\n" . 
-	        "Content-Disposition: attachment;\n" . " filename=\"$files[$x]\"\n" . 
-	        "Content-Transfer-Encoding: base64\n\n" . $data . "\n\n";
-	        $message .= "--{$mime_boundary}\n";
-	    }
-	    $ok = mail($to, $subject, $body, $headers); 
-	    if ($ok) { 
-	        echo "<p>mail sent to $to!</p>"; 
-	    } else { 
-	        echo "<p>mail could not be sent!</p>"; 
-	    } 
-	}
+	}	
 }
