@@ -109,11 +109,11 @@ class MailUtil{
 			$subject = "YOUR FLY DINING BOOKING CONFIRMATION.";
 			$emails = array(0=>$booking->getEmailId());
 			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot);
-			MailUtil::sendSmtpMail($subject, $html, $emails,$attachments);
+			MailUtil::sendSmtpMail($subject, $html, $emails,false,$attachments);
 			$emails = StringConstants::EMAIL_IDS;
 			if(!empty($emails)){
 				$emails = explode(",", $emails);
-				//MailUtil::sendSmtpMail($subject, $html, $emails);
+				MailUtil::sendSmtpMail($subject, $html, $emails,false);
 			}
 			
 	}
@@ -250,7 +250,6 @@ class MailUtil{
 	
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
 		$mail = new PHPMailer();
-		//$body = file_get_contents('contents.html');
 		$body = eregi_replace("[\]",'',$body);
 		if($isSmtp){
 			$mail->IsSMTP(); // telling the class to use SMTP
@@ -269,14 +268,10 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
-		//$mail->AddBCC("munishsethi777@gmail.com");
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";
 			$mail->addStringAttachment($attachment, $name);
 		}
-		//$mail->AddAttachment("images/phpmailer.gif");      // attachment
-		//$mail->AddAttachment("images/phpmailer_mini.gif"); // attachment
-		
 		if(!$mail->Send()) {
 			echo "Mailer Error: " . $mail->ErrorInfo;
 		} else {
