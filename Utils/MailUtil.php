@@ -5,10 +5,13 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."vendor/autoload.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/html2PdfUtil.php");
+Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
+require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 class MailUtil{
-	
-	
+	private static $logger;
 	public static function sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr){
+		self::$logger = Logger::getLogger ( "logger" );
+		self::$logger->info("sending sendOrderEmailClient email... ");
 		$timeSlotMgr = TimeSlotMgr::getInstance();
 		$menuMgr = MenuMgr::getInstance();
 		
@@ -249,6 +252,7 @@ class MailUtil{
 	}
 	
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
+		self::$logger->info("sending email for " . $subject);
 		$mail = new PHPMailer();
 		$body = eregi_replace("[\]",'',$body);
 		if($isSmtp){
@@ -274,9 +278,9 @@ class MailUtil{
 			$mail->addStringAttachment($attachment, $name);
 		}
 		if(!$mail->Send()) {
-			echo "Mailer Error: " . $mail->ErrorInfo;
+			self::$logger->info("Mailer Error: " . $mail->ErrorInfo . " for sending email ". $subject);
 		} else {
-			echo "Message sent!";
+			self::$logger->info("Email Sent for " . $subject);
 		}
 	}	
 }
