@@ -20,7 +20,6 @@ class SlotDetailMgr{
 	}
 	
 	public function saveSlotDetail($dates,$slotSeq){
-		$this->deleteBySlotSeq($slotSeq);
 		foreach ($dates as $date){
 			$slotDetail = new SlotDetail();
 			$slotDetail->setAction(SlotDetailAction::hidden);
