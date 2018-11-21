@@ -1,0 +1,1 @@
+ALTER TABLE `bookingdetails` ADD `menuprice` DOUBLE NOT NULL AFTER `members`;
