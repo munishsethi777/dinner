@@ -15,7 +15,7 @@ class BookingDetailMgr{
 		return self::$bookingDetailMgr;
 	}
 	
-	public function saveBookingDetails($bookingId, $menuDetails){
+	public function saveBookingDetails($bookingId, $menuDetails,$menuPriceArr){
 		foreach($menuDetails as $key=>$value){
 			if($value == null || $value == 0){
 				continue;
@@ -24,13 +24,14 @@ class BookingDetailMgr{
 			$bookingDetail->setBookingSeq($bookingId);
 			$bookingDetail->setMenuSeq($key);
 			$bookingDetail->setMembers($value);
+			$bookingDetail->setMenuPrice($menuPriceArr->$key);
 			self::$dataStore->save($bookingDetail);
 		}
 	}
 	
-	public function saveBookingDetail($bookingId,$menuAndMembers){
+	public function saveBookingDetail($bookingId,$menuAndMembers,$amount){
 		$this->deleteBookingDetailInList($bookingId);
-		foreach ($menuAndMembers as $selectedSeat){
+		foreach ($menuAndMembers as $key=>$selectedSeat){
 			if($selectedSeat > 0){
 				$selectedSeatArr = explode("_", $selectedSeat);
 				$menuSeq = $selectedSeatArr[0];
@@ -39,6 +40,8 @@ class BookingDetailMgr{
 				$bookingDetail->setBookingSeq($bookingId);
 				$bookingDetail->setMembers($members);
 				$bookingDetail->setMenuSeq($menuSeq);
+				$menuPrice = $amount[$key] / $members;
+				$bookingDetail->setMenuPrice($menuPrice);
 				$id = self::$dataStore->save($bookingDetail);
 			}
 		}
@@ -73,7 +76,7 @@ class BookingDetailMgr{
 
 	
 	public function getDetailByBookingSeqAndTimeSlot($bookingSeq,$timeSlot){
-		$query = "SELECT bookingdetails.menuseq,bookingdetails.members FROM `bookingdetails` inner join menutimeslots on bookingdetails.menuseq = menutimeslots.menuseq
+		$query = "SELECT bookingdetails.menuprice,bookingdetails.menuseq,bookingdetails.members FROM `bookingdetails` inner join menutimeslots on bookingdetails.menuseq = menutimeslots.menuseq
 where bookingseq = $bookingSeq and menutimeslots.timeslotsseq = $timeSlot";
 		$bookingDetail = self::$dataStore->executeQuery($query);
 		return $bookingDetail;
