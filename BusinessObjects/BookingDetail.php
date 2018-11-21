@@ -2,7 +2,7 @@
 class BookingDetail{
 	public static $tableName = "bookingdetails";
 	public static $className = "BookingDetail";
-	private $seq,$bookingseq,$menuseq,$members;
+	private $seq,$bookingseq,$menuseq,$members,$menuprice;
 	public function setSeq($seq_){
 		$this->seq = $seq_;
 	}
@@ -29,6 +29,13 @@ class BookingDetail{
 	}
 	public function getMembers(){
 		return $this->members;
+	}
+	
+	public function setMenuPrice($menuPrice){
+		$this->menuprice = $menuPrice;
+	}
+	public function getMenuPrice(){
+		return $this->menuprice;
 	}
 	
 	
