@@ -254,9 +254,9 @@ class MailUtil{
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
 		self::$logger->info("sending email for " . $subject);
 		$mail = new PHPMailer();
-		$body = eregi_replace("[\]",'',$body);
+		//$body = eregi_replace("[\]",'',$body);
 		if($isSmtp){
-			$body = eregi_replace("[\]",'',$body);
+			//$body = eregi_replace("[\]",'',$body);
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
 			$mail->SMTPAuth   = true;                  // enable SMTP authentication
@@ -273,6 +273,7 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
+        $mail->AddBCC("hello@flydining.com");
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";
 			$mail->addStringAttachment($attachment, $name);
