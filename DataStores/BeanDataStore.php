@@ -101,6 +101,8 @@ class BeanDataStore {
 			$this->throwException ( $STH->errorInfo () );
 		} catch ( Exception $e ) {
 			$this->logger->error ( "Error occured in BeanDataStore:" . $e );
+			$logMsg .= json_encode($columnValueArry);
+			$this->logger->error($logMsg);
 			throw $e ;
 		}
 		$logMsg .= json_encode($columnValueArry) . ". ID - " . $id;

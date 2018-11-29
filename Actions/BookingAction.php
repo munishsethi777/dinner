@@ -57,8 +57,8 @@ if($call == "saveBooking"){
 		$booking->setTimeSlot($timSlotSeq);
 		$booking->setAmount($amount);
 		$booking->setTransactionId($tansactionId);
-		$booking->setCompanyMobile($companyName);
-		$booking->setCompanyName($companyMobile);
+		$booking->setCompanyMobile($companyMobile);
+		$booking->setCompanyName($companyName);
 		$booking->setGSTNumber($gst);
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);
