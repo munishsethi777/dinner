@@ -1,5 +1,5 @@
 <?php ?>
-<select class="form-control"  onchange="loadData()" id="companyState" name="companyState">
+<select class="form-control" id="companyState" name="companyState">
 <option value="">Select State</option>
 <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
 <option value="Andhra Pradesh">Andhra Pradesh</option>

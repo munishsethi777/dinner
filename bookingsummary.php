@@ -328,13 +328,12 @@ document.getElementById('rzp-button').onclick = function(e){
 	if($("#userInfoForm")[0].checkValidity()) {
 		var dateofbirth = $("#dateofbirth").val();
 		if(getAge(dateofbirth) <= 12) {
-		    alert("You have more than 12 years old!");
+		    alert("You have to be more than 12 years old!");
 		    return;
 		}
-	    $("#transactionId").val("testid");
-	    $("#amount").val("<?php echo $totalAmountInPaise?>");
-	    saveBooking();
-	    return;
+	    //$("#amount").val("<?php echo $totalAmountInPaise?>");
+	    //saveBooking();
+	    //return;
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
 		var mobile = $("#mobile").val();

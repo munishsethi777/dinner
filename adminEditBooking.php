@@ -317,7 +317,7 @@ if(isset($_POST["seq"])){
         	if($("#bookingForm")[0].checkValidity()) {
         		var dateofbirth = $("#dateofbirth").val();
         		if(getAge(dateofbirth) <= 12) {
-        		    alert("You have more than 12 years old!");
+        		    alert("You have to be more than 12 years old!");
         		    return;
         		}
 	            i = 1;
