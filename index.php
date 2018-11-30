@@ -118,7 +118,7 @@ $(document).ready(function(){
 		//currDate.setDate(currDate.getDate() + 1);
 		//minDate.setDate(minDate.getDate() + 1);
 	//}
-	
+	var bookingEndDate = new Date(2019, 0, 31);
 	$('.bookingDate').datetimepicker({
         timepicker:false,
         inline: true,
@@ -127,6 +127,7 @@ $(document).ready(function(){
         useCurrent:false,
         defaultDate:currDate,
         minDate:minDate,
+        maxDate:bookingEndDate,
     });
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
