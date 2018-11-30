@@ -129,21 +129,25 @@ class MailUtil{
 	
 	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr){
 		$bookingDate = $booking->getBookedOn()->format('M d, Y, h:i:s a');
-		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:0px;font-family:arial;line-height:30px" >
+		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:0px;font-family:arial;
+				line-height:25px" >
 			<tr>
 				<td style="width:50%;padding:10px;border:1px silver solid">Fly Dining<br>
 					#24/10, Nagwara  Backside Lumbini Garden,<br> 
-					Bengaluru, Karnataka - 560024<br>
-					INDIA <br>
-					+91-81325-40906<br>
-					nivedika@flydining.com<br>
-					GST No : 29ADHFS4111J1ZY<br>
+					Bengaluru, Karnataka - 560024, INDIA <br>
+					Phone: +91-81325-40906<br>
+					Email: nivedika@flydining.com<br>
+					Bill No: '.$booking->getSeq().'<br>
+					Date: '.$bookingDate .'<br>
 					
-					Bill No : '.$booking->getSeq().'<br>
+					GST No: 29ADHFS4111J1ZY<br>
+					Company Name: Sky Lounge<br>
+					Company Address: 24/10, M M Reddy Layout, Mariyanpally, Beside Nagavara Lake,<br> 
+							Kempapura Main Road, Hebbal, Bengaluru, Karnataka - 560024, INDIA<br>
+					Company Registered State: Karnataka<br>
 					
-					Date : '.$bookingDate .'
 				</td>
-				<td valign="top" style="width:50%;padding:10px;border:1px silver solid">
+				<td valign="top" style="width:50%;padding:10px;border:1px silver solid;">
 					Customer Name : '.$booking->getFullName().'<br>
 					Contact No : '.$booking->getMobileNumber().'<br>
 					Email : '.$booking->getEmailId().'<br>
