@@ -118,7 +118,8 @@ $(document).ready(function(){
 		//currDate.setDate(currDate.getDate() + 1);
 		//minDate.setDate(minDate.getDate() + 1);
 	//}
-	var bookingEndDate = new Date(2019, 0, 31);
+	var bookingEndDate = new Date();
+	bookingEndDate.setMonth(bookingEndDate.getMonth() + 2);
 	$('.bookingDate').datetimepicker({
         timepicker:false,
         inline: true,
@@ -147,7 +148,7 @@ function loadData(selectedDate){
 	var n = weekday[d.getDay()];
 	
 	$.getJSON("Actions/TimeSlotAction.php?call=getTimeSlots&selectedDate="+selectedDate, function(data){
-		  //var data = $.parseJSON(jsonString)
+		   //var data = $.parseJSON(jsonString)
 			var html = getHeaders();
 			if(data.length == 0){
 				html += "<center style='margin-top:10px;'>No Timeslots available for booking, please select some other date</center>";
