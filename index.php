@@ -165,19 +165,19 @@ function loadData(selectedDate){
 				menuArr[k] = menu.menutitle;
 				menuSeqs[k] = menu.menuseq
 	 		});
-			html += '<div class="col-xs-3 fairCol">' + fair + '</div>';
-			html += '<div class="col-xs-2 text-center progressCol"><div class="progress progress-mini">';
-			progressBarClass = "bg-primary";
-			if(val.availableInPercent > 0 && val.availableInPercent <=25){
-				progressBarClass = "bg-danger";
-			}else if(val.availableInPercent > 25 && val.availableInPercent <=75){
-				progressBarClass = "bg-warning";
-			}
+			html += '<div class="col-xs-5 fairCol">' + fair + '</div>';
+			//html += '<div class="col-xs-2 text-center progressCol"><div class="progress progress-mini">';
+			//progressBarClass = "bg-primary";
+			//if(val.availableInPercent > 0 && val.availableInPercent <=25){
+				//progressBarClass = "bg-danger";
+			//}else if(val.availableInPercent > 25 && val.availableInPercent <=75){
+				//progressBarClass = "bg-warning";
+			//}
 			if(val.seatsAvailable == 0){
 				val.availableInPercent = 0;
-            }
-			html += '<div style="width: '+val.availableInPercent+'%" class="'+progressBarClass+' progress-bar"></div></div>';
-			html += '<small class="text-muted buttonCol">'+ val.seatsAvailable  +' Seats</small></div>';
+			}
+			//html += '<div style="width: '+val.availableInPercent+'%" class="'+progressBarClass+' progress-bar"></div></div>';
+			//html += '<small class="text-muted buttonCol">'+ val.seatsAvailable  +' Seats</small></div>';
 			if(val.seatsAvailable == 0){
 				html += '<div class="col-xs-2"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
 			}else{
@@ -286,8 +286,8 @@ function getHeaders(){
 	var html = '<div class="row ibox-content tableheaders">'
 	html += '<div class="col-xs-2">Date</div>';
 	html += '<div class="col-xs-3">Slot Time</div>';
-	html += '<div class="col-xs-3">Fare</div>';
-	html += '<div class="col-xs-2 text-center">Seats Available</div>'
+	html += '<div class="col-xs-5">Fare</div>';
+	//html += '<div class="col-xs-2 text-center">Seats Available</div>'
 	html += '<div class="col-xs-2">Action</div>'
 	html += '</div>';
 	return html;
