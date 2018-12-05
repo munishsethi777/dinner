@@ -31,92 +31,217 @@ class MailUtil{
 				}
 			}	
 		}
-		$html = '<div style="background-color:grey;width:100%;color:#676a6c;font-family:open sans, Helvetica Neue, Helvetica, Arial, sans-serif">
-		<div style="background-color:white;margin:auto;max-width:600px;padding:0px 15px 0px 15px">
-		<div style="padding:15px;background-color:#1ab394;color:white;margin:0px -15px 0px -15px;">
-		<h1 style="margin-top: 20px;margin-bottom: 10px;">Fly Dining</h1>
-		</div>
-		
-		<div style="font-size:16px;padding:15px;margin:0px -15px 0px -15px;">
-		<p>Dear '.$booking->getFullName().',</p>
-		<p>Thank you for choosing FlyDining. We will do our best to make this experience phenomenal for you. We look forward to see you.
-		<br>Bon Appétit.</p>
-		<div style="text-align:center">
-		<img src="http://www.flydining.com/booking/images/icontick.png"
-				width="125" height="120" style=";border:0px">
-				<h1>Thank You For Your Order!</h1>
-				<h2>Order ID :'. $booking->getSeq() .'</h2>
-				<h3>Venue</h3>
-				<p>'. $booking->getBookingDate()->format('d-m-Y') .' ('.$timeSlot->getTitle().')</p>
-				<p>Fly Dining<br>
-                        #24/10, House of Life,<br>
-                        Kempapura Main Road,<br>
-                        BENGALURU, KARNATAKA 560024<br>
-                        India.
-                </p>
-
+		$bookingDate = $booking->getBookingDate()->format('M d, Y');
+		$discountPercent = $booking->getDiscountPercent();
+		$html ='<html><head><link rel="stylesheet" type="text/css"href="1https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"></head>
+		<body><divstyle="background-color: grey; width: 100%; color: #676a6c; font-family: open sans, Helvetica Neue, Helvetica, Arial, sans-serif">
+		<div style="background-color: white; margin: auto; max-width: 600px; padding: 0px 15px 0px 15px">
+		<div style="padding: 15px; background-color: #DAA520; color: white; margin: 0px -15px 0px -15px;">
+		<h1 style="margin-top: 0px; margin-bottom: 20px;"><img src="https://1ceipl3l02ez252khj15lgak-wpengine.netdna-ssl.com/wp-content/uploads/2018/10/logo-white-small.png" style="float: left;">
+		</h1><p align="right" style="margin: 0px;"><a href="https://www.flydining.com/" style="color: #fff; text-decoration: none;">www.flydining.com</a>
+		</p></div><div style="margin-top: 20px;display:flex;padding:15px;">
+				<div style="max-width: 25%">
+					<img
+						src="https://static1.squarespace.com/static/597aa449d482e9e56c97117c/t/59e6cc69a9db0951565bdd72/1508297874678/green+checkmark+Large.png?format=300w"
+						width="100%">
 				</div>
+				<div style="padding:20px 15px;max-width: 75%">
+					<p style="margin: 0px; font-size: 24px;">Thank you for your
+						booking!</p>
+					<p
+						style="font-size: 24px; font-weight: bold; margin: 0px; color: #000;">Order
+						Id: '.$booking->getSeq().'</p>
 				</div>
-		
-				<div style="margin:10px;padding:10px;background-color:#f3f3f4">
-				<h3>Order Confirmation</h3>
+			</div><div style="margin: 20px 0 0;display:flex">
+				<div style="border-right: 1px solid #f1f1f1;max-width:50%;padding:0px 15px;">
+					<h2 style="color: #000;">Flydining</h2>
+					<p style="margin: 0px;">Sky Lounge, 24/10, M M Reddy Layout,
+						Mariyanpally, Beside Nagavara Lake, Kempapura Main Road, Hebbal,
+						Bengaluru, Karnataka - 560024, India</p>
+					<p style="margin: 0px;">
+						<span style="font-weight: bold;">GST#:</span> 29ADHFS4111J1ZY
+					</p>
+					<br>
+					<p>
+						to,<br> <span style="font-weight: bold;">'.$booking->getFullName().'</span><br>'.$booking->getMobileNumber().'<br>' .$booking->getEmailId().
+					'</p>
 				</div>
-				<div style="margin:10px;padding:10px">';
+				<div style="margin-bottom: 20px;max-width:50%;padding:0px 15px;">';
 					$totalPerson = 0;
 					foreach($menuPersonArr as $key=>$titleAndMembers){
-						$html .='<div style="padding:20px 30px;margin:0px -15px 10px -15px">
-							<div style="width:75%;float:left;position:relative;text-align:left">'.$titleAndMembers["title"].'</div>
-							<div style="width:25%;float:left;position:relative;text-align:left">'.$titleAndMembers["members"].'</div>
-						</div>';
-						$totalPerson += $titleAndMembers["members"];
+						$html .='<p style="font-weight: bold; font-size: 21px; color: #000; margin-bottom: 0px;">'.$titleAndMembers["members"]. 'x ' .$titleAndMembers["title"].'</p>';
 					}
-					$html .='<div style="padding:20px 30px 40px 30px;margin-top:10px;background-color:#f3f3f4;font-weight:bold;font-size:14px;">
-						<div style="width:75%;float:left;text-align:left">Total</div>
-						<div style="width:25%;float:left;text-align:left">'.$totalPerson.'</div>
+					
+					$html .= '<br>
+					<p style="margin: 0px;">Venue:</p>
+					<a
+						href="https://www.google.co.in/maps/dir//13.0424729,77.6135216/13.0464791,77.6115609/Fly+Dining,+Nagwara+Backside+Lumbini+Garden,+Bengaluru,+Karnataka+560024/@13.0436273,77.6099459,1255m/data=!3m1!1e3!4m11!4m10!1m0!1m0!1m0!1m5!1m1!1s0x3bae173340c3be35:0x19af15ffe521aced!2m2!1d77.6110824!2d13.0471114!3e0">Get
+						direction</a><br> <br>
+					<p style="margin: 0px;">Time:</p>
+					<p style="font-weight: bold; color: #000; font-size: 18px;">'.$timeSlot->getTitle().' | ' . $bookingDate . '</p>
+				</div>
+			</div><div style="background: #D8F5F5; margin: 0px; padding: 15px;display:flex">
+				<p style="margin: 0px;">
+					Dear '.$booking->getFullName().',<br> <br> Thank you for choosing Flydining. We will do
+					our best to make this experience phenomenal for you. We look
+					forward to see you.
+				</p>
+			</div><div style="margin: 0; background: #f1f1f1; padding: 15px;display:flex">
+				<div style="width:100%" class="col-sm-12">
+					<p
+						style="margin: 0 0 10px 0; font-weight: bold; border-bottom: 1px silver solid;">Order
+						Summary</p>
+					<table style="width:100%;text-align:left;font-size:12px;vertical-align:top;border-bottom:1px silver solid;">
+						<tr>
+							<th width="30%" style="text-align:left;vertical-align:top">Item</th>
+							<th width="15%" style="text-align:right;vertical-align:top">Rate</th>
+							<th width="10%" style="text-align:right;vertical-align:top">Qty</th>
+							<th width="15%" style="text-align:right;vertical-align:top">Gross Amt</th>
+							<th width="15%" style="text-align:right;vertical-align:top">CGST<br>(+2.5%)</th>
+							<th width="15%" style="text-align:right;vertical-align:top">SGST<br>(+2.5%)</th>
+						</tr>';
+					$totalAmount = 0;
+					foreach($menuPersonArr as $key=>$value){
+						$rate = $menuPriceArr->$key;
+						$amount = $rate * $value["members"];
+						$amountWithoutTax = floor(($amount * 100) / 105);
+						$taxAmount = $amount - $amountWithoutTax;
+						$tax = $taxAmount / 2;
+						$rate = $amountWithoutTax / $value["members"];
+					
+						$amountWithoutTax = number_format($amountWithoutTax,2,'.','');
+						$amount = number_format($amount,2,'.','');
+						$rate = number_format($rate,2,'.','');
+						$tax = number_format($tax,2,'.','');
+						$html .= '<tr>
+							<td width="30%" style="text-align:left;vertical-align:top">'.$value["title"].'</td>
+							<td width="15%" style="text-align:right;vertical-align:top">'.$rate.'</td>
+							<td width="10%" style="text-align:right;vertical-align:top">'.$value["members"].'</td>
+							<td width="15%" style="text-align:right;vertical-align:top">'.$amount.'</td>
+							<td width="15%" style="text-align:right;vertical-align:top">'.$tax.'</td>
+							<td width="15%" style="text-align:right;vertical-align:top;padding-bottom:30px">'.$tax.'</td>
+							</tr>';
+						$totalAmount += $amount;
+					}
+				   $netAmount = $totalAmount;
+				   $totalAmount = number_format($totalAmount,2,'.','');
+				   $html .='</table>';
+				   	if(!empty($discountPercent)){	
+						$discount = ($discountPercent / 100) * $totalAmount;
+						$netAmount = $netAmount - $discount;
+						$discount = number_format($discount,2,'.','');
+						$html .='<div style="display:flex;width:100%">
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+							<p style="color: #000; font-size: 16px; margin: 0px;">Gross Total</p>
+						</div>
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+							<p style="color: #000; font-size: 16px; text-align: right; margin: 0px;">'.$totalAmount.'/-</p>
+						</div>
+					</div><div style="display:flex;width:100%;border-bottom:1px silver solid;padding-bottom:10px;">
+							<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+								<p style="color:red; font-size: 16px; margin: 0px;">Discount</p>
+							</div>
+							<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+								<p style="color:red; font-size: 16px; text-align: right; margin: 0px;">'.$discount.'/-</p>
+							</div>
+						</div>';
+					}
+					$netAmount = number_format($netAmount,2,'.','');
+					$html .='<div style="display:flex;width:100%">
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+							<p
+								style="font-weight: bold; color: #000; font-size: 21px; margin: 0px;">Net Amount</p>
+						</div>
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+							<p style="font-weight: bold; color: #000; font-size: 21px; text-align: right; margin: 0px;">Rs.'.$netAmount.'/-</p>
+						</div>
 					</div>
-				
-					
 				</div>
-				<div style="padding:10px;margin:10px;text-align:center;">
-					<h3>'.$booking->getFullName().'</h3>
-					<h3>'.$booking->getEmailId().'</h3>
-					<h3>'.$booking->getMobileNumber().'</h3>
+			</div><div style="margin: 10px 0 0;">
+				<p><h4 style="display:block">Important Instructions</h4></p>
+				<ul style="font-size: 12px;">
+					<li>Be on time- at least a minimum of 60 minutes before your table
+						reservation. If you are late for your reservation, no refund will
+						be given and no rescheduling will be allowed.</li>
+					<li>Dress comfortably. Avoid wearing loose shoes.</li>
+					<li>Do not bring large handbags or umbrellas etc with you. We have
+						limited storage/locker space.</li>
+					<li>Do not make other plans for the night. Depending on the
+						weather, we might delay your experience, to ensure you enjoy the
+						beautiful Flydining In India.</li>
+					<li>Do not bring valuables to the experience.</li>
+					<li>Please bring along your Identification Card/ Passport for
+						verification purpose.</li>
+					<li>Remember, this experience is strictly for individuals that are
+						13 years old and above, with a minimum height 145cm and a maximum
+						weight of 150kg. Anyone below the age of 18 MUST be accompanied by
+						an adult or guardian, or not be allowed to board. Pregnant women
+						are also not allowed to experience Flydining In India.</li>
+					<li>The ticket is NOT-TRANSFERABLE in anyway and any changes of
+						Dinner(s) name/information/menu is not allowed.</li>
+					<li>If you are lost or need direction, please call
+						+91-769-81-81-000. Kindly take note that we are unable to delay
+						the experience for you if you call or message us on this number so
+						please do not be late.</li>
+				</ul>
+			</div>
+			<p align="center" style="color: #ff0000;">
+				<span style="font-size: 21px;">Sessions pictures will be updated on
+					the end of the day,</span><br> <a
+					href="https://photos.google.com/share/AF1QipNEwpOWZiYOV59xaV0_XPf0bbiukFcneeccG8yJ_uepL75c92w3TGsL-krGbQpWZw?key=THk0ZlZhR2NyclBiQWVyU013OFAzWGcwcS03SkNB">Click
+					here</a> <span style="color: #000;">to view images. </span><a
+					href="https://www.flydining.com/terms-conditions/">Terms &amp;
+					Conditions</a>
+			</p>
+
+			<div>
+				<div align="center">
+					<a
+						href="https://play.google.com/store/apps/details?id=com.ni.FlyDining"><img
+						src="https://1ceipl3l02ez252khj15lgak-wpengine.netdna-ssl.com/wp-content/uploads/2018/10/global-playstore.png"
+						width="30%" style="margin: 0 0 10px;"></a>&nbsp;<a
+						href="https://www.apple.com/in/ios/app-store/"><img
+						src="https://1ceipl3l02ez252khj15lgak-wpengine.netdna-ssl.com/wp-content/uploads/2018/11/Untitled-1.png"
+						width="30%" style="margin: 0 0 10px;"></a>
 				</div>
-				<div style="padding:15px;margin:10px;text-align:center;background-color:#1ab394;color:white;margin:0px -15px 0px -15px;">
-				<h1>Fly Dining</h1>
-				<br>
-				<h2>+91-81325-40906</h2>
-				<h2>nivedika@flydining.com</h2>
+			</div>
+
+			<div style="margin: 0 0 10px;">
+				<div align="center">
+					<p style="margin: 20px 0 0">
+						Follow us on: <a href="https://www.facebook.com/flydining"><img
+							src="https://ci4.googleusercontent.com/proxy/FwzcgIsBuYYL2YTPtfI17st2JQb_oFfserSYPNYEOqY35orlheD8cNvdNvgNzQsgGwSWzuBV5maD9eE8vsEsiH46fO3YshqOF8zTb0FWKJlDorF7=s0-d-e1-ft#https://in.bmscdn.com/mailers/images/160720bmsreview/facebook.png"></a><a
+							href="https://twitter.com/FlyDining"><img
+							src="https://ci4.googleusercontent.com/proxy/jcI7YLl108K8e8tJyok7swAAE_aD5vFR0LOGWfm8Nc4DR1fw3X9dkzFnUH_GtyZUMdl8Fjzsa3Y6q_EsJbBzVvu3CMsBNmXxO7SyKKvTXdf9Gas=s0-d-e1-ft#https://in.bmscdn.com/mailers/images/160720bmsreview/twitter.png"></a><a
+							href="https://www.youtube.com/channel/UCtmt1xDuJ7_chvSi2jVGiBA"><img
+							src="https://ci6.googleusercontent.com/proxy/hzZdxXsakGn7dEyoV3EM33eIpl_IpLrvpENCm3EEQ9y9As_CUFjK-yQj3u1sYsyR3KEA8Zyi-wQD2hF5LFwin6FoDrlaNmaghtEfBg9FvelnBJI=s0-d-e1-ft#https://in.bmscdn.com/mailers/images/160720bmsreview/youtube.png"
+							style="padding-left: 5px;"></a><a
+							href="https://www.instagram.com/fly.dining/"><img
+							src="https://ci3.googleusercontent.com/proxy/hC6s2VDAbzueVXNl2_3gaIwpjdNwR9JBIU0vdpBrHiln9bzJP7yxv8ACczjzHZcnEiKzH037w_sBCM-YYok8vdYByCLBr4YYq1fNSpCBdBYnjzzFYA=s0-d-e1-ft#https://in.bmscdn.com/mailers/images/160720bmsreview/instagram.png"
+							style="padding-left: 5px;"></a>
+					</p>
 				</div>
-                <div>
-					<p>
-						<b>IMPORTANT, MUST READ:</b><br>
-							1. Be on time- at least a minimum of 60 minutes before your table reservation. If you are late for your reservation, no refund will be given and no rescheduling will be allowed.<br>
-							2. Dress comfortably. Avoid wearing loose shoes.<br>
-							3. Do not bring large handbags or umbrellas etc with you. We have limited storage/locker space.<br>
-							4. Do not make other plans for the night. Depending on the weather, we might delay your experience, to ensure you enjoy the beautiful Flydining In India.<br>
-							5. Do not bring valuables to the experience.<br>
-							5. Please bring along your Identification Card/ Passport for verification purpose.<br>
-							7. Remember, this experience is strictly for individuals that are 13 years old and above, with a minimum height 145cm and a maximum weight of 150kg. Anyone below the age of 18 MUST be accompanied by an adult or guardian, or not be allowed to board. Pregnant women are also not allowed to experience Flydining In India.<br>
-							8. The ticket is NOT-TRANSFERABLE in anyway and any changes of Dinner(s) name/information/menu is not allowed.<br>
-							9. If you are lost or need direction, please call +91-81325-40906. Kindly take note that we are unable to delay the experience for you if you call or message us on this number so please do not be late.<br>
-					</p> 
-					<p>For any queries you can contact us at +91-76981-81000,+91-81325-40906</p>
-                
-                <p>Please find session photographs in this <a href="https://photos.google.com/share/AF1QipNEwpOWZiYOV59xaV0_XPf0bbiukFcneeccG8yJ_uepL75c92w3TGsL-krGbQpWZw?key=THk0ZlZhR2NyclBiQWVyU013OFAzWGcwcS03SkNB">link</a>. We will upload pictures next day of the scheduled event.</p>
-                </div>
+			</div>
+
+
+			<p
+				style="background: #DAA520; margin-top: 1 0px; color: #000; padding: 10px;"
+				align="center">
+				For any further assistance, mail to blr@flydining.com<br>or call:<b>769
+					81 81 333, 8130 540 906</b>
+			</p>
+					</div>
 				</div>
-				</div>';
-					
-					
+			</body>
+			</html>';
 			$subject = "YOUR FLY DINING BOOKING CONFIRMATION.";
 			$emails = array(0=>$booking->getEmailId());
 			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot);
-			MailUtil::sendSmtpMail($subject, $html, $emails,false,$attachments);
+			MailUtil::sendSmtpMail($subject, $html, $emails,true,$attachments);
 			$emails = StringConstants::EMAIL_IDS;
 			if(!empty($emails)){
 				$emails = explode(",", $emails);
-				MailUtil::sendSmtpMail($subject, $html, $emails,false);
+				//MailUtil::sendSmtpMail($subject, $html, $emails,false);
 			}
 			
 	}
@@ -130,27 +255,27 @@ class MailUtil{
 	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr){
 		$bookingDate = $booking->getBookedOn()->format('M d, Y, h:i:s a');
 		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:0px;font-family:arial;
-				line-height:25px" >
+				line-height:20px" >
 			<tr>
 				<td style="width:50%;padding:10px;border:1px silver solid">Fly Dining<br>
 					#24/10, Nagwara  Backside Lumbini Garden,<br> 
 					Bengaluru, Karnataka - 560024, INDIA <br>
-					Phone: +91-81325-40906<br>
-					Email: nivedika@flydining.com<br>
-					Bill No: '.$booking->getSeq().'<br>
-					Date: '.$bookingDate .'<br>
+					<b>Phone :</b> +91-81325-40906<br>
+					<b>Email :</b> nivedika@flydining.com<br>
+					<b>Bill No :</b> '.$booking->getSeq().'<br>
+					<b>Date :</b> '.$bookingDate .'<br>
 					
-					GST No: 29ADHFS4111J1ZY<br>
-					Company Name: Sky Lounge<br>
-					Company Address: 24/10, M M Reddy Layout, Mariyanpally, Beside Nagavara Lake,<br> 
+					<b>GST No :</b> 29ADHFS4111J1ZY<br>
+					<b>Company Name :</b> Sky Lounge<br>
+					<b>Company Address :</b> 24/10, M M Reddy Layout, Mariyanpally, Beside Nagavara Lake,<br> 
 							Kempapura Main Road, Hebbal, Bengaluru, Karnataka - 560024, INDIA<br>
-					Company Registered State: Karnataka<br>
+					<b>Company Registered State :</b> Karnataka<br>
 					
 				</td>
 				<td valign="top" style="width:50%;padding:10px;border:1px silver solid;">
-					Customer Name : '.$booking->getFullName().'<br>
-					Contact No : '.$booking->getMobileNumber().'<br>
-					Email : '.$booking->getEmailId().'<br>
+					<b>Customer Name :</b> '.$booking->getFullName().'<br>
+					<b>Contact No :</b> '.$booking->getMobileNumber().'<br>
+					<b>Email :</b> '.$booking->getEmailId().'<br>
 				</td>
 			</tr>
 		</table>
@@ -192,10 +317,26 @@ class MailUtil{
 				</tr>';
 				$totalAmount += $amount;
 			}
+			$netAmount = $totalAmount;
 			$totalAmount = number_format($totalAmount,2,'.','');
-			$html .= '<tr style="font-size:13px">
-				<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">TOTAL AMOUNT</td>
-				<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;">'.$totalAmount.'</td>
+			$discountPercent = $booking->getDiscountPercent();
+			if(!empty($discountPercent)){
+				$discount = ($discountPercent / 100) * $totalAmount;
+				$netAmount = $netAmount - $discount;
+				$discount = number_format($discount,2,'.','');
+				$html .= '<tr style="font-size:13px">
+					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">GROSS AMOUNT</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;">'.$totalAmount.'/-</td>
+				</tr>
+				<tr style="font-size:13px">
+					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">DISCOUNT</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;"><font color="red">'.$discount.'/-</font></td>
+				</tr>';
+			}
+			$netAmount = number_format($netAmount,2,'.','');
+			$html .='<tr style="font-size:13px">
+				<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">NET AMOUNT</td>
+				<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;">Rs. '.$netAmount.'/-</td>
 			</tr>
 			<tr style="font-size:13px">
 				<td colspan=9 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:Center">
@@ -262,13 +403,12 @@ class MailUtil{
 		if($isSmtp){
 			//$body = eregi_replace("[\]",'',$body);
 			$mail->IsSMTP(); // telling the class to use SMTP
-			$mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
 			$mail->SMTPAuth   = true;                  // enable SMTP authentication
 			$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-			$mail->Host       = "mail.virsacouture.com";      // sets GMAIL as the SMTP server
+			$mail->Host       = "mail.satyainfopages.in";      // sets GMAIL as the SMTP server
 			$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-			$mail->Username   = "info@virsacouture.com";  // GMAIL username
-			$mail->Password   = "Munish#314";          // GMAIL password
+			$mail->Username   = "munish@satyainfopages.in";  // GMAIL username
+			$mail->Password   = "Munish#314Munish#314";           // GMAIL password
 		}
 		$mail->SetFrom('noreply@flydining.com', 'FlyDining');
 		$mail->Subject = $subject;
@@ -277,7 +417,7 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
-        $mail->AddBCC("hello@flydining.com");
+		$mail->AddBCC("baljeetgaheer@gmail.com");
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";
 			$mail->addStringAttachment($attachment, $name);
