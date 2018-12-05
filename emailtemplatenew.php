@@ -108,9 +108,24 @@
 					</table>		
 					<div style="display:flex;width:100%">
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+							<p style="color: #000; font-size: 16px; margin: 0px;">Gross Total</p>
+						</div>
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+							<p style="color: #000; font-size: 16px; text-align: right; margin: 0px;">9998.00/-</p>
+						</div>
+					</div>
+					<div style="display:flex;width:100%;border-bottom:1px silver solid;padding-bottom:10px;">
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+							<p style="color:red; font-size: 16px; margin: 0px;">Discount</p>
+						</div>
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+							<p style="color:red; font-size: 16px; text-align: right; margin: 0px;">500.00/-</p>
+						</div>
+					</div>
+					<div style="display:flex;width:100%">
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
 							<p
-								style="font-weight: bold; color: #000; font-size: 21px; margin: 0px;">Total
-								Amount</p>
+								style="font-weight: bold; color: #000; font-size: 21px; margin: 0px;">Net Amount</p>
 						</div>
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
 							<p
