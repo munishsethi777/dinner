@@ -47,6 +47,11 @@ if($file == "dashboard.php"){
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
+                    <a href="adminShowDiscountCoupons.php"><i class="fa fa-clock-o"></i> 
+                    	<span class="nav-label">Discount Coupons</span>  
+                    </a>
+                </li>
+                <li class="<?php echo $isChangePassword;?>">
                     <a href="adminChangePassword.php"><i class="fa fa-clock-o"></i> 
                     	<span class="nav-label">Change Password</span>  
                     </a>
