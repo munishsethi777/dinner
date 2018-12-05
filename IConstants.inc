@@ -3,7 +3,7 @@
   $ConstantsArray = array('dbServerUrl' => $docroot .'/dinner/'
     ,'imagefolderpath' => $docroot .'/dinner/images/'
     ,'docspath' => $docroot .'/dinner/docs/'
-    ,'ImagePath' => $docroot .'/dinner/Images/AdminImages/')
+    ,'ImagePath' => $docroot .'/dinner/Images/menuImages/')
   ;
   $ConstantsArray['ApplicationURL'] = "http://localhost/dinner/";
 
