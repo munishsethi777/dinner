@@ -19,12 +19,12 @@ if($call == "saveBooking"){
 	try{
         $bookingMgr = BookingMgr::getInstance();
 		$bookingDetailMgr = BookingDetailMgr::getInstance();
-		$timSlotSeq = $_POST["timeslotSeq"];
+		$timSlotSeq = $_POST["timeslotseq"];
 		$mobile = $_POST["mobile"];
 		$emailId = $_POST["email"];
 		$fullName = $_POST["fullName"];
 		$selectedDate = $_POST["selectedDate"];
-		$menuPersonsStr = $_POST["menuPersons"];
+		$menuPersonsStr = $_POST["menuMembers"];
 		$menuPriceStr = $_POST["menuPrice"];
 		$tansactionId = $_POST["transactionId"];
 		$amount = $_POST["amount"];
@@ -32,6 +32,8 @@ if($call == "saveBooking"){
 		$companyMobile = "";
 		$country = $_POST["country"];
 		$dateOfBirth = $_POST["dateofbirth"];
+		$couponSeq = $_POST["couponSeq"]; 
+		$discountPercent = $_POST["discountPercent"];
 		$dateOfBirth = DateUtil::StringToDateByGivenFormat("d-m-Y", $dateOfBirth);
 		$dateOfBirth = $dateOfBirth->setTime(0, 0);
 		$gst = "";
@@ -59,6 +61,8 @@ if($call == "saveBooking"){
 		$booking->setTransactionId($tansactionId);
 		$booking->setCompanyMobile($companyMobile);
 		$booking->setCompanyName($companyName);
+		$booking->setCouponSeq($couponSeq);
+		$booking->setDiscountPercent($discountPercent);
 		$booking->setGSTNumber($gst);
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);
@@ -102,6 +106,14 @@ if($call == "saveBookingsFromAdmins"){
 		$dateOfBirth = DateUtil::StringToDateByGivenFormat("d-m-Y", $dateOfBirth);
 		$dateOfBirth = $dateOfBirth->setTime(0, 0);
 		$menuPerson = $_POST["selectedSeats"];
+		$couponSeqAndPercent = $_POST["couponSeq"];
+		$couponSeq = 0;
+		$couponPercent = 0;
+		if(!empty($couponSeqAndPercent)){
+			$couponSeqAndPercent = explode("_", $couponSeqAndPercent);
+			$couponSeq = $couponSeqAndPercent[0];
+			$couponPercent = $couponSeqAndPercent[1];
+		}
 		$sum = array_sum($menuPerson);
 		if(array_sum($menuPerson) == 0){
 			return ;
@@ -129,6 +141,8 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);
 		$booking->setDateOfBirth($dateOfBirth);
+		$booking->setCouponSeq($couponSeq);
+		$booking->setDiscountPercent($couponPercent);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		

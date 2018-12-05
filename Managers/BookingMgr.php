@@ -159,4 +159,10 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 		$booking = self::$dataStore->findBySeq($seq);
 		return $booking;
 	}
+	
+	public function getCouponUsageCount($couponSeq){
+		$colVal["couponseq"] = $couponSeq;
+		$bookingCount = self::$dataStore->executeCountQuery($colVal);
+		return $bookingCount;
+	}
 }

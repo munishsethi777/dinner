@@ -3,6 +3,7 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/DiscountCouponMgr.php");
 require('razorconfig.php');
 require('razorpay-php/Razorpay.php');
 use Razorpay\Api\Api;
@@ -52,13 +53,59 @@ foreach ($menuArr as $key=>$value){
 if(!empty($menuPriceArr)){
 	$menuPriceJson = json_encode($menuPriceArr);
 }
+//$totalAmountInPaise = 100;
+
+$name = "";
+$email = "";
+$dob = "";
+$country = "";
+$mobile= "";
+$isfillGst = "";
+$gstNo = "";
+$companyName = "";
+$companyMobile = "";
+$companyState = "";
+$coupon = "";
+$couponError = "";
+$discount  = 0;
+$discountPercent = 0;
+$couponSeq = 0;
+if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
+	$name = $_POST["fullName"];
+	$email = $_POST["email"];
+	$dob = $_POST["dateofbirth"];
+	$mobile = $_POST["mobile"];
+	if(isset($_POST["companyInfo"])){
+		$isfillGst = "checked";
+	}
+	$gstNo = $_POST["gst"];
+	$companyName = $_POST["companyName"];
+	$companyMobile = $_POST["companyNumber"];
+	$couponCode = $_POST["couponCode"];
+	$country = $_POST["country"];
+	$companyState = $_POST["companyState"];
+	$discountCoupnMgr = DiscountCouponMgr::getInstance();
+	$couponInfo = $discountCoupnMgr->applyCoupon($couponCode,$amount);
+	if(empty($couponInfo)){
+		$couponError = "Invalid coupon code!";
+	}else{
+		$discountPercent = $couponInfo["percent"];
+		$discountedAmount = $couponInfo["amount"];
+		$couponSeq = $couponInfo["couponSeq"];
+		$discount = $amount - $discountedAmount;
+		$totalAmount = $discountedAmount;
+		$couponError = "Coupon Applied Successfully!";
+	}
+}
 if(!empty($amount)){
 	$amount = number_format($amount,2);
 	$totalAmount +=  $handlingCharges;
 	$formatedTotalAmount = number_format($totalAmount,2);
 	$totalAmountInPaise = $totalAmount * 100;
 }
-//$totalAmountInPaise = 100;
+if(!empty($discount)){
+	$discount = number_format($discount,2);
+}
 $api = new Api($keyId, $keySecret);
 $orderData = [
 		//'receipt'         => 3456,
@@ -133,43 +180,75 @@ $razorpayOrderId = $razorpayOrder['id'];
 	                       				</div>
 	                       				<div class="col-xs-4 text-right">Rs 0.00</div>
 	                       			</div>
+	                       			<?php if(!empty($discount)){ ?>
+	                       			<div class="row m-b-sm">	
+	                       				<div class="col-xs-8">
+	                       					<small class="text-muted">
+	                       						Discount
+	                       					</small>
+	                       				</div>
+	                       				<div style="color:red" class="col-xs-4 text-right">- Rs.<?php echo $discount?></div>
+	                       			</div>
+	                       			<?php }?>
 	                       			<div class="row bg-muted p-h-sm">	
 	                       				<div class="col-xs-8">
 	                       					Sub Total
 	                       				</div>
 	                       				<div class="col-xs-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
 	                       			</div>
-	                       			
-	                       			<div class="row bg-success p-h-sm text-uppercase font-bold">	
-	                       				<div class="col-xs-8">
-	                       					AMOUNT PAYABLE
-	                       				</div>
-	                       				<div class="col-xs-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
-	                       			</div>
 	                       			<form id="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
+		                       			<div class="row bg-muted p-h-sm">	
+		                       				<div class="col-xs-6">
+		                       					Discount Coupon
+		                       				</div>
+		                       				<div class="col-xs-6 text-right">
+		                       					<input type="text" id="couponCode" value="<?php echo $couponCode?>" maxLength="100" name="couponCode" placeholder="Coupon Code" class="form-control">
+		                       				</div>
+		                       			</div>
+		                       			<div class="row bg-muted p-h-sm">
+		                       				
+		                       				<div class="col-xs-8 text-right">
+		                       					<?php echo $couponError?>
+		                       				</div>
+		                       			</div>
+		                       			<div class="row bg-muted p-h-sm">	
+		                       				<div class="col-xs-6">
+		                       				</div>
+		                       				<div class="col-xs-6 text-right">
+		                       					<button type="button" onclick="javascript:applyCoupon()" class="btn btn-outline btn-info btn-xs">Apply</button>
+		                       				</div>
+		                       			</div>
+		                       			<div class="row bg-success p-h-sm text-uppercase font-bold">	
+		                       				<div class="col-xs-8">
+		                       					AMOUNT PAYABLE
+		                       				</div>
+		                       				<div class="col-xs-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
+		                       			</div>
 	                       				<input type="hidden" id ="call" name="call" value="saveBooking"/>
 	                       				<input type="hidden" id ="transactionId" name="transactionId"/>
 	                       				<input type="hidden" id ="amount" name="amount"/>
-	                       				<input type="hidden" id ="timeslotseq" name="timeslotSeq" value="<?php echo $timeSlotSeq?>" />
+	                       				<input type="hidden" id ="timeslotseq" name="timeslotseq" value="<?php echo $timeSlotSeq?>" />
 	                       				<input type="hidden" id ="selectedDate" name="selectedDate" value="<?php echo $selectedDate?>" />
-	                       				<input type="hidden" id ="menupersons" name="menuPersons" value='<?php echo $menus?>' />
+	                       				<input type="hidden" id ="menupersons" name="menuMembers" value='<?php echo $menus?>' />
 	                       				<input type="hidden" id ="menuPrice" name="menuPrice" value='<?php echo $menuPriceJson?>' />
+	                       				<input type="hidden" id ="discountPercent" name="discountPercent" value='<?php echo $discountPercent?>' />
+	                       				<input type="hidden" id ="couponSeq" name="couponSeq" value='<?php echo $couponSeq?>' />
 		                       			<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Name</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="fullName" maxLength="100" name="fullName" required placeholder="FullName" class="form-control">
+		                                    	<input type="text" id="fullName" maxLength="100" value="<?php echo $name?>" name="fullName" required placeholder="FullName" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Email</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="email" id="email" maxLength="100" name="email" required email placeholder="Email" class="form-control">
+		                                    	<input type="email" id="email" maxLength="100" value="<?php echo $email?>" name="email" required email placeholder="Email" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">DOB</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="dateofbirth" name="dateofbirth" required placeholder="Date of Birth" class="form-control">
+		                                    	<input type="text" id="dateofbirth" value="<?php echo $dob?>" name="dateofbirth" required placeholder="Date of Birth" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
@@ -181,32 +260,32 @@ $razorpayOrderId = $razorpayOrder['id'];
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Mobile</label>
 		                                    <div class="col-lg-10">
-		                                    	<input type="text" id="mobile" maxLength="20" name="mobile" required placeholder="Mobile" class="form-control">
+		                                    	<input type="text" id="mobile" value="<?php echo $mobile?>" maxLength="20" name="mobile" required placeholder="Mobile" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	
 	                                	<div class="form-group row">
 		                                	<div class="col-lg-10" >
-		                                       	<label> <input class="i-checks" type="checkbox" name="companyInfo" id="companyInfo" >  Fill GST Information</label>
+		                                       	<label> <input class="i-checks" <?php echo $isfillGst?> type="checkbox"  name="companyInfo" id="companyInfo" >  Fill GST Information</label>
 		                                       </div>
 		                                 </div>
 		                                 <div id="companyDiv" style="display:none">
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">GST NO.</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" maxLength="50" name="gst" placeholder="GST No." class="form-control">
+			                                    	<input type="text" id="gst" value="<?php echo $gstNo?>" maxLength="50" name="gst" placeholder="GST No." class="form-control">
 			                                    </div>
 		                                	</div>
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Company Name</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" maxLength="100"  name="companyName" placeholder="Company Name" class="form-control">
+			                                    	<input type="text" id="gst" value="<?php echo $companyName?>" maxLength="100"  name="companyName" placeholder="Company Name" class="form-control">
 			                                    </div>
 		                                	</div>
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Company Mobile</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" maxLength="25" name="companyNumber" placeholder="Company Mobile" class="form-control">
+			                                    	<input type="text" id="gst" value="<?php echo $companyMobile?>" maxLength="25" name="companyNumber" placeholder="Company Mobile" class="form-control">
 			                                    </div>
 		                                	</div>
 		                                	
@@ -228,8 +307,7 @@ $razorpayOrderId = $razorpayOrder['id'];
 			                                		Make Payment of Rs <?php echo $formatedTotalAmount?>
 			                                	</button>
 		                                	</div>
-		                                	
-	                                	</div>
+		                            	</div>
 	                       			</form>
 	                       			<div class="row m-t-sm text-center">	
 	                       				<small class="text-muted">
@@ -274,6 +352,8 @@ $razorpayOrderId = $razorpayOrder['id'];
 <script>
 $( document ).ready(function() {
 	 menuArr = [];
+	 $("#country").val("<?php echo $country?>");
+	 $("#companyState").val("<?php echo $companyState?>");
 	 $('#dateofbirth').datetimepicker({
          timepicker:false,
          format:'d-m-Y',
@@ -313,6 +393,9 @@ $( document ).ready(function() {
 			$('#myModal4').modal('show');
 		}
 	});
+	<?php if(!empty($isfillGst)){?>
+		$('#companyDiv').show();
+	<?php }?>
 	$('#companyInfo').on('ifChanged', function(event){
 		var flag  = $("#companyInfo").is(':checked');
 		if(flag){
@@ -323,7 +406,11 @@ $( document ).ready(function() {
 	});
 });
 
-
+function applyCoupon(){
+	$('#call').val("applyCoupon");
+	$('#userInfoForm')[0].action = "bookingsummary.php";
+	$('#userInfoForm')[0].submit();		
+}
 document.getElementById('rzp-button').onclick = function(e){
 	if($("#userInfoForm")[0].checkValidity()) {
 		var dateofbirth = $("#dateofbirth").val();
@@ -331,9 +418,9 @@ document.getElementById('rzp-button').onclick = function(e){
 		    alert("You have to be more than 12 years old!");
 		    return;
 		}
-	    //$("#amount").val("<?php echo $totalAmountInPaise?>");
-	    //saveBooking();
-	    //return;
+	    $("#amount").val("<?php echo $totalAmountInPaise?>");
+	    saveBooking();
+	    return;
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
 		var mobile = $("#mobile").val();
