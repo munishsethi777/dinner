@@ -196,7 +196,7 @@ $razorpayOrderId = $razorpayOrder['id'];
 	                       				</div>
 	                       				<div class="col-xs-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
 	                       			</div>
-	                       			<form id="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
+	                       			<form id="userInfoForm" name="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
 		                       			<div class="row bg-muted p-h-sm">	
 		                       				<div class="col-xs-6">
 		                       					Discount Coupon
@@ -418,9 +418,9 @@ document.getElementById('rzp-button').onclick = function(e){
 		    alert("You have to be more than 12 years old!");
 		    return;
 		}
-	    $("#amount").val("<?php echo $totalAmountInPaise?>");
-	    saveBooking();
-	    return;
+	    //$("#amount").val("<?php echo $totalAmountInPaise?>");
+	   // saveBooking();
+	   //return;
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
 		var mobile = $("#mobile").val();
@@ -431,12 +431,12 @@ document.getElementById('rzp-button').onclick = function(e){
 			    "name": "Flydining",
 			    "description": "Purchase Description",
 			    "image": "https://www.flydining.com/booking/images/logo.png",
-			    "handler": function (response){
-				    $("#transactionId").val(response.razorpay_payment_id);
-				    $("#amount").val("<?php echo $totalAmountInPaise?>");
-			        //alert(response.razorpay_payment_id);
-			        saveBooking();
-			    },
+// 			    "handler": function (response){
+// 				    $("#transactionId").val(response.razorpay_payment_id);
+				   // $("#amount").val("<?php //echo $totalAmountInPaise?>");
+// 			        //alert(response.razorpay_payment_id);
+// 			        saveBooking();
+// 			    },
 			    "prefill": {
 				    "contact" : mobile,
 			        "name": fullName,
@@ -453,13 +453,33 @@ document.getElementById('rzp-button').onclick = function(e){
 			    },
 			    "order_id": "<?php echo $razorpayOrderId?>"
 			};
+		options.handler = function (response){
+			$("#transactionId").val(response.razorpay_payment_id);
+			    $("#amount").val("<?php echo $totalAmountInPaise?>");
+			    //saveBooking();
+			    //document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+			    //document.getElementById('razorpay_signature').value = response.razorpay_signature;
+			    document.userInfoForm.submit();
+			};
+
+			// Boolean whether to show image inside a white frame. (default: true)
+
+			options.modal = {
+			    ondismiss: function() {
+			        console.log("This code runs when the popup is closed");
+			    },
+			    escape: true,
+			    backdropclose: false
+			};
 		var rzp1 = new Razorpay(options);
 	    rzp1.open();
 	    e.preventDefault();
+	    
     }
     else {
         $("#userInfoForm")[0].reportValidity(); 
     }
+    
 	
 }
 function getAge(birthDateString) {
