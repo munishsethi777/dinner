@@ -4,7 +4,7 @@ class Booking{
 	public static $className = "Booking";
 	
 	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot,$bookingdate,$transactionid,$amount,$companymobile,$companyname;
-	private $dateofbirth,$gststate,$country;
+	private $dateofbirth,$gststate,$country,$couponseq,$discountpercent;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -113,4 +113,17 @@ class Booking{
 		return $this->dateofbirth;
 	}
 	
+	public function setCouponSeq($couponSeq_){
+		$this->couponseq = 	$couponSeq_;
+	}
+	public function getCouponSeq(){
+		return $this->couponseq;
+	}
+	
+	public function setDiscountPercent($discountPercent_){
+		$this->discountpercent = $discountPercent_;
+	}
+	public function getDiscountPercent(){
+		return $this->discountpercent;
+	}
 }

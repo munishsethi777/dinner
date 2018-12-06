@@ -3,6 +3,7 @@ require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/TimeSlotMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingDetailMgr.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/DiscountCouponMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
 $timeSlotMgr = TimeSlotMgr::getInstance();
 $timeSlots = $timeSlotMgr->findAll();
@@ -11,6 +12,7 @@ $bookingDetailJson = "";
 $bookedOn = "";
 $disabled = "";
 $bithDate = "";
+$discountCoupons = array();
 if(isset($_POST["isView"])){
 	$isView = $_POST["isView"];
 	if(!empty($isView)){
@@ -29,11 +31,12 @@ if(isset($_POST["seq"])){
 		$bithDate = DateUtil::StringToDateByGivenFormat("Y-m-d",$bithDate);
 		$bithDate = $bithDate->format("d-m-Y");
 	}
-	
 	$bookingDetailMgr = BookingDetailMgr::getInstance();
 	$bookingDetail = $bookingDetailMgr->getDetailByBookingSeqAndTimeSlot($bookingSeq, $booking->getTimeSlot());
 	$bookingDetailJson = json_encode($bookingDetail);
 }
+$discountCouponMgr = DiscountCouponMgr::getInstance();
+$discountCoupons = $discountCouponMgr->getAll();
 ?>
 <!DOCTYPE html>
 <html>
@@ -155,6 +158,28 @@ if(isset($_POST["seq"])){
 												</select> <label class="jqx-validator-error-label" id="lpError"></label>
 								    		</div>
                                			</div>
+                               		<div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">Discount Coupon</label>
+		                                    <div class="col-lg-4">
+		                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="couponSeq" name="couponSeq">
+													<?php foreach ($discountCoupons as $discountCoupon){
+														$seq = $discountCoupon->getSeq();
+														$percent = $discountCoupon->getPercent();
+														$selected = "";
+														if($seq == $booking->getCouponSeq()){
+															$selected = "selected";
+														}
+														?>
+														<option <?php echo $selected ?> value="<?php echo $seq . "_" .$percent?>"><?php echo $discountCoupon->getCode()?> (<?php echo $discountCoupon->getPercent()?>%)</option>
+													<?php }?>
+												</select>
+								    		</div>
+								    		<?php if(!empty($booking->getSeq())){?>
+									    		<div class="col-lg-1">
+									    			<input type="text" <?php echo $disabled?> value="<?php echo $booking->getDiscountPercent()?>%" class="form-control">
+									    		</div>
+								    		<?php }?>
+                               			</div>	
 	                                <div id="dataDiv">
 	                              	</div>
                                 	<hr>
@@ -248,7 +273,11 @@ if(isset($_POST["seq"])){
                			if(menuPrice != null && menuPrice != "" && menuPrice != "0" && menuPrice > 0){
                				rate = menuPrice;
                			}
-               			menuAmount[k] = rate * selectedSeat;
+               			menuAmount[k] = 0;
+               			if(selectedSeat > 0){
+               				menuAmount[k] = rate * selectedSeat;	
+               			}
+               			
                			//if(selectedSeat > 0){
                			//	seats += parseInt(selectedSeat);
                			//}
