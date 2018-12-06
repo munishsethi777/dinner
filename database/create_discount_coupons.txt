@@ -1,0 +1,1 @@
+CREATE TABLE `alpinetradeshows`.`discountcoupons` ( `seq` INT NOT NULL , `description` VARCHAR(250) NOT NULL , `code` VARCHAR(25) NOT NULL , `isenabled` TINYINT NOT NULL , `createdon` DATETIME NOT NULL , `validtilldate` DATE NOT NULL , `usagetimes` INT NOT NULL , `percent` DOUBLE NOT NULL ) ENGINE = InnoDB;
