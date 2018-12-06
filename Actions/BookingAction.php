@@ -7,16 +7,22 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 $logger = Logger::getLogger ( "logger" );
+
 $call = "";
+$data = array();
 if(isset($_GET["call"])){
 	$call = $_GET["call"];
+	$data = $_GET;
 }else{
 	$call = $_POST["call"];
+	$data = $_POST;
 }
 $success = 1;
 $message = "";
 if($call == "saveBooking"){
 	try{
+		$data = json_encode($data);
+		$logger->info("Booking Save initialize with request data - " . $data);
         $bookingMgr = BookingMgr::getInstance();
 		$bookingDetailMgr = BookingDetailMgr::getInstance();
 		$timSlotSeq = $_POST["timeslotseq"];
@@ -70,18 +76,21 @@ if($call == "saveBooking"){
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj,$menuPriceArr);
-        MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
+        //MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
 		$message = "Booking Saved Successfully";
+		session_start();
+		$_SESSION["bookingid"] = $bookingId;
 		}catch(Exception $e){
 			$success = 0;
 			$message  = $e->getMessage();
 			$logger->error ( "Error occured in BookingAction during Action - saveBooking:" . $e );
 		}
-		$response = new ArrayObject();
-		$response["success"]  = $success;
-		$response["message"]  = $message;
-		echo json_encode($response);
-	return;
+		header("Location: ../thankyou.php");
+		//$response = new ArrayObject();
+		//$response["success"]  = $success;
+		//$response["message"]  = $message;
+		//echo json_encode($response);
+		//return;
 }
 if($call == "saveBookingsFromAdmins"){
 	try{

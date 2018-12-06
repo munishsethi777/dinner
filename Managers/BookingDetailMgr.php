@@ -74,6 +74,12 @@ class BookingDetailMgr{
  		return $bookingDetailArr;
 	}
 
+	public function getBookingDetailAndMenu($bookingSeq){
+		$query = "select * FROM `bookingdetails` inner join menus on bookingdetails.menuseq = menus.seq
+where bookingseq = $bookingSeq";
+		$bookingDetail = self::$dataStore->executeQuery($query);
+		return $bookingDetail;	
+	}
 	
 	public function getDetailByBookingSeqAndTimeSlot($bookingSeq,$timeSlot){
 		$query = "SELECT bookingdetails.menuprice,bookingdetails.menuseq,bookingdetails.members FROM `bookingdetails` inner join menutimeslots on bookingdetails.menuseq = menutimeslots.menuseq

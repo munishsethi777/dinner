@@ -70,6 +70,7 @@ $couponError = "";
 $discount  = 0;
 $discountPercent = 0;
 $couponSeq = 0;
+$couponCode = "";
 if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
 	$name = $_POST["fullName"];
 	$email = $_POST["email"];
@@ -279,13 +280,13 @@ $razorpayOrderId = $razorpayOrder['id'];
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Company Name</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" value="<?php echo $companyName?>" maxLength="100"  name="companyName" placeholder="Company Name" class="form-control">
+			                                    	<input type="text" id="companyName" value="<?php echo $companyName?>" maxLength="100"  name="companyName" placeholder="Company Name" class="form-control">
 			                                    </div>
 		                                	</div>
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Company Mobile</label>
 			                                    <div class="col-lg-10">
-			                                    	<input type="text" id="gst" value="<?php echo $companyMobile?>" maxLength="25" name="companyNumber" placeholder="Company Mobile" class="form-control">
+			                                    	<input type="text" id="companyNumber" value="<?php echo $companyMobile?>" maxLength="25" name="companyNumber" placeholder="Company Mobile" class="form-control">
 			                                    </div>
 		                                	</div>
 		                                	
@@ -418,25 +419,18 @@ document.getElementById('rzp-button').onclick = function(e){
 		    alert("You have to be more than 12 years old!");
 		    return;
 		}
-	    //$("#amount").val("<?php echo $totalAmountInPaise?>");
-	   // saveBooking();
-	   //return;
+	   $("#amount").val("<?php echo $totalAmountInPaise?>");
+	    saveBooking();
+	   return;
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
 		var mobile = $("#mobile").val();
 		var options = {
-			    //"key": "rzp_live_KpbxYUeCTzMhDO",
 			    "key":"rzp_live_zZ6x7CvsASE4M3",
 			    "amount": "<?php echo $totalAmountInPaise?>", // 2000 paise = INR 20
 			    "name": "Flydining",
 			    "description": "Purchase Description",
 			    "image": "https://www.flydining.com/booking/images/logo.png",
-// 			    "handler": function (response){
-// 				    $("#transactionId").val(response.razorpay_payment_id);
-				   // $("#amount").val("<?php //echo $totalAmountInPaise?>");
-// 			        //alert(response.razorpay_payment_id);
-// 			        saveBooking();
-// 			    },
 			    "prefill": {
 				    "contact" : mobile,
 			        "name": fullName,
@@ -446,20 +440,24 @@ document.getElementById('rzp-button').onclick = function(e){
 			    	"BookingDate": "<?php echo $selectedDate; ?>",
 			    	"BookingSlot": "<?php echo $timeSlot->getTitle()?>",
 			    	"BookingDetails": "<?php echo $menuHml?>",
-			        
 			    },
 			    "theme": {
 			        "color": "#1ab394"
 			    },
 			    "order_id": "<?php echo $razorpayOrderId?>"
-			};
+		};
+		options.notes["Country"] = $("#country").val();
+		options.notes["DOB"] = $("#dateofbirth").val();
+		if($("#companyInfo").prop('checked') == true){
+			options.notes["GSTNo"] = $("#gst").val();
+			options.notes["CompanyName"] = $("#companyName").val();
+			options.notes["CompanyMobile"] = $("#companyNumber").val();
+			options.notes["CompanyState"] = $("#companyState").val();
+		} 
 		options.handler = function (response){
 			$("#transactionId").val(response.razorpay_payment_id);
 			    $("#amount").val("<?php echo $totalAmountInPaise?>");
-			    //saveBooking();
-			    //document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-			    //document.getElementById('razorpay_signature').value = response.razorpay_signature;
-			    document.userInfoForm.submit();
+			     document.userInfoForm.submit();
 			};
 
 			// Boolean whether to show image inside a white frame. (default: true)
@@ -500,8 +498,14 @@ function back(){
 	location.href = "index.php";
 }
 function saveBooking(){
-    $('#userInfoForm').ajaxSubmit(function( data ){
-        alert("Transaction completed successfuly");
-    })
+//     $('#userInfoForm').ajaxSubmit(function( data ){
+//         alert("Transaction completed successfuly");
+//     })
+	 $("#transactionId").val("10001214541210");
+	 $("#amount").val("<?php echo $totalAmountInPaise?>");
+	    //saveBooking();
+	    //document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+	    //document.getElementById('razorpay_signature').value = response.razorpay_signature;
+	    document.userInfoForm.submit();
 } 
 </script> 
