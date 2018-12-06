@@ -76,7 +76,7 @@ if($call == "saveBooking"){
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj,$menuPriceArr);
-        //MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
+        MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
 		$message = "Booking Saved Successfully";
 		session_start();
 		$_SESSION["bookingid"] = $bookingId;
