@@ -1,1 +1,31 @@
-CREATE TABLE `alpinetradeshows`.`discountcoupons` ( `seq` INT NOT NULL , `description` VARCHAR(250) NOT NULL , `code` VARCHAR(25) NOT NULL , `isenabled` TINYINT NOT NULL , `createdon` DATETIME NOT NULL , `validtilldate` DATE NOT NULL , `usagetimes` INT NOT NULL , `percent` DOUBLE NOT NULL ) ENGINE = InnoDB;
+CREATE TABLE `discountcoupons` (
+  `seq` int(11) NOT NULL,
+  `description` varchar(250) NOT NULL,
+  `code` varchar(25) NOT NULL,
+  `isenabled` tinyint(4) NOT NULL,
+  `createdon` datetime NOT NULL,
+  `validtilldate` date NOT NULL,
+  `usagetimes` int(11) NOT NULL,
+  `percent` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `discountcoupons`
+--
+ALTER TABLE `discountcoupons`
+  ADD PRIMARY KEY (`seq`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `discountcoupons`
+--
+ALTER TABLE `discountcoupons`
+  MODIFY `seq` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
