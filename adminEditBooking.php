@@ -163,7 +163,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 	                               		<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Discount Coupon</label>
 			                                    <div class="col-lg-4">
-			                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="couponSeq" name="couponSeq">
+			                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="couponSeq" onchange="applyDiscount()" name="couponSeq">
 														<option value="0">Select Coupon</option>
 														<?php foreach ($discountCoupons as $discountCoupon){
 															$seq = $discountCoupon->getSeq();
@@ -179,7 +179,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 									    		</div>
 									    		<?php if(!empty($booking->getSeq())){?>
 										    		<div class="col-lg-1">
-										    			<input type="text" <?php echo $disabled?> value="<?php echo $booking->getDiscountPercent()?>%" class="form-control">
+										    			<input type="text" id="discountPercent" disabled value="<?php echo $booking->getDiscountPercent()?>%" class="form-control">
 										    		</div>
 									    		<?php }?>
                                			</div>	
@@ -313,13 +313,14 @@ $discountCoupons = $discountCouponMgr->getAll();
                     if(menuAmount.length > 0){
                     	selectAmount = menuAmount[k];
                     }
-                	html += '<input type="text" <?php echo $disabled?> id="'+k+'_amount" value="'+selectAmount+'" name="amount[]" required  class="form-control menuPrices">';
+                	html += '<input type="text"onchange="applyDiscount()" <?php echo $disabled?> id="'+k+'_amount" value="'+selectAmount+'" name="amount[]" required  class="form-control menuPrices">';
                 	html += '<br>';
                 });
            		html += '</div>'
         		$("#dataDiv").html(html);
         		if(discountPercent != 0){
-					totalAmount = totalAmount - totalAmount/discountPercent;
+        			var discount = (discountPercent / 100) * totalAmount
+					totalAmount = totalAmount - discount;
             	}
             	$(".finalAmount").html("Rs. "+ totalAmount);
       		});
@@ -344,13 +345,19 @@ $discountCoupons = $discountCouponMgr->getAll();
 			selectesSeats = parseInt(selectedSeats);
 			var amount = selectedSeats * menuRate;
 			$("#"+menuSeq+"_amount").val(amount);
-			
-
 			var sum = 0;
 		    $(".menuPrices").each(function(){
 		        sum += +$(this).val();
 		    });
+		    var coupon = $("#couponSeq").val();
+		    if(coupon != "0" && coupon != 0){
+		    	var seqAndPercent = coupon.split("_");
+		    	var percent = parseInt(seqAndPercent[1]);
+		    	var discount = (percent / 100) * sum;
+		    	sum = sum - discount;
+		    }
 			$(".finalAmount").html("Rs. "+ sum);
+			applyDiscount();
 		}
 		
         function getHeaders(){
@@ -418,6 +425,28 @@ $discountCoupons = $discountCouponMgr->getAll();
         	    $(this).addClass( "myClass" );
         	})   
         }
+        
+        function applyDiscount(){
+            var totalAmount = 0;
+            var coupon = $("#couponSeq").val();
+           	$('select[name="selectedSeats[]"]').each(function() {
+				var selectedOptions = $(this).val();
+				var id = this.id
+				id = id.split("_");
+				id = id[0];
+				var amount = parseInt($("#"+id+"_amount").val());
+				totalAmount += amount;  						
+			}); 
+	        if(coupon != "0" && coupon != 0){  
+		       	var seqAndPercent = coupon.split("_");
+			    var percent = parseInt(seqAndPercent[1]);
+			    var discount = (percent / 100) * totalAmount;
+			    totalAmount = totalAmount - discount;
+			    $("#discountPercent").val(percent + "%");
+	        }
+	        $(".finalAmount").html("Rs. "+ totalAmount);
+        }
+        
         function cancel(){
            	location.href = "dashboard.php";
         }
