@@ -53,8 +53,6 @@ foreach ($menuArr as $key=>$value){
 if(!empty($menuPriceArr)){
 	$menuPriceJson = json_encode($menuPriceArr);
 }
-//$totalAmountInPaise = 100;
-
 $name = "";
 $email = "";
 $dob = "";
@@ -111,6 +109,7 @@ if(!empty($amount)){
 if(!empty($discount)){
 	$discount = number_format($discount,2);
 }
+$totalAmountInPaise = 100;
 $api = new Api($keyId, $keySecret);
 $orderData = [
 		//'receipt'         => 3456,
@@ -428,8 +427,8 @@ document.getElementById('rzp-button').onclick = function(e){
 		    return;
 		}
 	   $("#amount").val("<?php echo $totalAmountInPaise?>");
-	    saveBooking();
-	   return;
+	   // saveBooking();
+	   //return;
 		var fullName = $("#fullName").val();
 		var email = $("#email").val();
 		var mobile = $("#mobile").val();
@@ -456,6 +455,7 @@ document.getElementById('rzp-button').onclick = function(e){
 		};
 		options.notes["Country"] = $("#country").val();
 		options.notes["DOB"] = $("#dateofbirth").val();
+		options.notes["DiscountCoupon"] = $("#couponCode").val();
 		if($("#companyInfo").prop('checked') == true){
 			options.notes["GSTNo"] = $("#gst").val();
 			options.notes["CompanyName"] = $("#companyName").val();
