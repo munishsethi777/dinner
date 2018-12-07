@@ -158,30 +158,39 @@ $discountCoupons = $discountCouponMgr->getAll();
 												</select> <label class="jqx-validator-error-label" id="lpError"></label>
 								    		</div>
                                			</div>
-                               		<div class="form-group row">
-		                       				<label class="col-lg-2 col-form-label">Discount Coupon</label>
-		                                    <div class="col-lg-4">
-		                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="couponSeq" name="couponSeq">
-													<?php foreach ($discountCoupons as $discountCoupon){
-														$seq = $discountCoupon->getSeq();
-														$percent = $discountCoupon->getPercent();
-														$selected = "";
-														if($seq == $booking->getCouponSeq()){
-															$selected = "selected";
-														}
-														?>
-														<option <?php echo $selected ?> value="<?php echo $seq . "_" .$percent?>"><?php echo $discountCoupon->getCode()?> (<?php echo $discountCoupon->getPercent()?>%)</option>
-													<?php }?>
-												</select>
-								    		</div>
-								    		<?php if(!empty($booking->getSeq())){?>
-									    		<div class="col-lg-1">
-									    			<input type="text" <?php echo $disabled?> value="<?php echo $booking->getDiscountPercent()?>%" class="form-control">
+                               			<div id="dataDiv">
+	                              		</div>
+	                               		<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Discount Coupon</label>
+			                                    <div class="col-lg-4">
+			                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="couponSeq" name="couponSeq">
+														<option value="0">Select Coupon</option>
+														<?php foreach ($discountCoupons as $discountCoupon){
+															$seq = $discountCoupon->getSeq();
+															$percent = $discountCoupon->getPercent();
+															$selected = "";
+															if($seq == $booking->getCouponSeq()){
+																$selected = "selected";
+															}
+															?>
+															<option <?php echo $selected ?> value="<?php echo $seq . "_" .$percent?>"><?php echo $discountCoupon->getCode()?> (<?php echo $discountCoupon->getPercent()?>%)</option>
+														<?php }?>
+													</select>
 									    		</div>
-								    		<?php }?>
+									    		<?php if(!empty($booking->getSeq())){?>
+										    		<div class="col-lg-1">
+										    			<input type="text" <?php echo $disabled?> value="<?php echo $booking->getDiscountPercent()?>%" class="form-control">
+										    		</div>
+									    		<?php }?>
                                			</div>	
-	                                <div id="dataDiv">
-	                              	</div>
+                               			
+                               			<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Final Amount</label>
+			                                    <div class="col-lg-4 finalAmount"></div>
+									    		
+                               			</div>	
+	                                
+	                                
                                 	<hr>
                                  	<div class="form-group row">
                                 		<div class="col-lg-2">
@@ -213,6 +222,8 @@ $discountCoupons = $discountCouponMgr->getAll();
 
 	<script type="text/javascript">
 	 	isSelectAll = false;
+	 	var totalAmount = 0;
+		var discountPercent = "<?php echo $booking->getDiscountPercent()?>";
         $(document).ready(function(){
           
            $('#bookingDate').datetimepicker({
@@ -275,7 +286,8 @@ $discountCoupons = $discountCouponMgr->getAll();
                			}
                			menuAmount[k] = 0;
                			if(selectedSeat > 0){
-               				menuAmount[k] = rate * selectedSeat;	
+               				menuAmount[k] = rate * selectedSeat;
+               				totalAmount += rate * selectedSeat;	
                			}
                			
                			//if(selectedSeat > 0){
@@ -301,13 +313,17 @@ $discountCoupons = $discountCouponMgr->getAll();
                     if(menuAmount.length > 0){
                     	selectAmount = menuAmount[k];
                     }
-                	html += '<input type="text" <?php echo $disabled?> id="'+k+'_amount" value="'+selectAmount+'" name="amount[]" required  class="form-control">';
+                	html += '<input type="text" <?php echo $disabled?> id="'+k+'_amount" value="'+selectAmount+'" name="amount[]" required  class="form-control menuPrices">';
                 	html += '<br>';
                 });
            		html += '</div>'
         		$("#dataDiv").html(html);
+        		if(discountPercent != 0){
+					totalAmount = totalAmount - totalAmount/discountPercent;
+            	}
+            	$(".finalAmount").html("Rs. "+ totalAmount);
       		});
-       		
+      		
         }
         
         function getMembers(value,jsonObject){
@@ -328,6 +344,13 @@ $discountCoupons = $discountCouponMgr->getAll();
 			selectesSeats = parseInt(selectedSeats);
 			var amount = selectedSeats * menuRate;
 			$("#"+menuSeq+"_amount").val(amount);
+			
+
+			var sum = 0;
+		    $(".menuPrices").each(function(){
+		        sum += +$(this).val();
+		    });
+			$(".finalAmount").html("Rs. "+ sum);
 		}
 		
         function getHeaders(){

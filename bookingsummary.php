@@ -58,7 +58,7 @@ if(!empty($menuPriceArr)){
 $name = "";
 $email = "";
 $dob = "";
-$country = "";
+$country = "91";
 $mobile= "";
 $isfillGst = "";
 $gstNo = "";
@@ -67,6 +67,7 @@ $companyMobile = "";
 $companyState = "";
 $coupon = "";
 $couponError = "";
+$couponSuccess = "";
 $discount  = 0;
 $discountPercent = 0;
 $couponSeq = 0;
@@ -86,16 +87,19 @@ if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
 	$country = $_POST["country"];
 	$companyState = $_POST["companyState"];
 	$discountCoupnMgr = DiscountCouponMgr::getInstance();
-	$couponInfo = $discountCoupnMgr->applyCoupon($couponCode,$amount);
-	if(empty($couponInfo)){
-		$couponError = "Invalid coupon code!";
-	}else{
-		$discountPercent = $couponInfo["percent"];
-		$discountedAmount = $couponInfo["amount"];
-		$couponSeq = $couponInfo["couponSeq"];
-		$discount = $amount - $discountedAmount;
-		$totalAmount = $discountedAmount;
-		$couponError = "Coupon Applied Successfully!";
+	
+	if(!empty($couponCode)){
+		$couponInfo = $discountCoupnMgr->applyCoupon($couponCode,$amount);
+		if(empty($couponInfo)){
+			$couponError = "Invalid coupon code!";
+		}else{
+			$discountPercent = $couponInfo["percent"];
+			$discountedAmount = $couponInfo["amount"];
+			$couponSeq = $couponInfo["couponSeq"];
+			$discount = $amount - $discountedAmount;
+			$totalAmount = $discountedAmount;
+			$couponSuccess = "Coupon Applied Successfully!";
+		}
 	}
 }
 if(!empty($amount)){
@@ -182,44 +186,48 @@ $razorpayOrderId = $razorpayOrder['id'];
 	                       				<div class="col-xs-4 text-right">Rs 0.00</div>
 	                       			</div>
 	                       			<?php if(!empty($discount)){ ?>
-	                       			<div class="row m-b-sm">	
-	                       				<div class="col-xs-8">
-	                       					<small class="text-muted">
-	                       						Discount
-	                       					</small>
-	                       				</div>
-	                       				<div style="color:red" class="col-xs-4 text-right">- Rs.<?php echo $discount?></div>
-	                       			</div>
+		                       			<div class="row m-b-sm">	
+		                       				<div class="col-xs-8">
+		                       					<small class="text-muted">
+		                       						Discount
+		                       					</small>
+		                       				</div>
+		                       				<div style="color:red" class="col-xs-4 text-right">- Rs. <?php echo $discount?></div>
+		                       			</div>
 	                       			<?php }?>
-	                       			<div class="row bg-muted p-h-sm">	
+	                       			<!-- <div class="row bg-muted p-h-sm">	
 	                       				<div class="col-xs-8">
 	                       					Sub Total
 	                       				</div>
-	                       				<div class="col-xs-4 text-right">Rs <?php echo $formatedTotalAmount?></div>
-	                       			</div>
-	                       			<form id="userInfoForm" name="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
+	                       				<div class="col-xs-4 text-right">Rs <?php //echo $formatedTotalAmount?></div>
+	                       			</div> -->
+	                       			<form id="userInfoForm" name="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-xs">
 		                       			<div class="row bg-muted p-h-sm">	
-		                       				<div class="col-xs-6">
+		                       				<div class="col-xs-4">
 		                       					Discount Coupon
 		                       				</div>
 		                       				<div class="col-xs-6 text-right">
 		                       					<input type="text" id="couponCode" value="<?php echo $couponCode?>" maxLength="100" name="couponCode" placeholder="Coupon Code" class="form-control">
 		                       				</div>
-		                       			</div>
-		                       			<div class="row bg-muted p-h-sm">
-		                       				
-		                       				<div class="col-xs-8 text-right">
-		                       					<?php echo $couponError?>
+		                       				<div class="col-xs-2 p-xxs">
+		                       					<button type="button" onclick="javascript:applyCoupon()" class="btn btn-danger btn-xs">Apply</button>
 		                       				</div>
 		                       			</div>
-		                       			<div class="row bg-muted p-h-sm">	
-		                       				<div class="col-xs-6">
-		                       				</div>
-		                       				<div class="col-xs-6 text-right">
-		                       					<button type="button" onclick="javascript:applyCoupon()" class="btn btn-outline btn-info btn-xs">Apply</button>
-		                       				</div>
-		                       			</div>
-		                       			<div class="row bg-success p-h-sm text-uppercase font-bold">	
+		                       			<?php if(!empty($couponError)){ ?>
+			                       			<div class="row bg-danger p-h-sm m-b-xs">
+			                       				<div class="col-xs-12 text-center">
+			                       					<?php echo $couponError?>
+			                       				</div>
+			                       			</div>
+		                       			<?php }?>
+		                       			<?php if(!empty($couponSuccess)){ ?>
+			                       			<div class="row bg-info p-h-sm m-b-xs">
+			                       				<div class="col-xs-12 text-center">
+			                       					<?php echo $couponSuccess?>
+			                       				</div>
+			                       			</div>
+		                       			<?php }?>
+		                       			<div class="row bg-success p-h-sm text-uppercase font-bold m-b-sm">	
 		                       				<div class="col-xs-8">
 		                       					AMOUNT PAYABLE
 		                       				</div>
@@ -353,7 +361,7 @@ $razorpayOrderId = $razorpayOrder['id'];
 <script>
 $( document ).ready(function() {
 	 menuArr = [];
-	 $("#country").val("<?php echo $country?>");
+	 $("#country").val("<?php echo $country?>");	
 	 $("#companyState").val("<?php echo $companyState?>");
 	 $('#dateofbirth').datetimepicker({
          timepicker:false,
