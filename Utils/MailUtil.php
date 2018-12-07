@@ -417,7 +417,8 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
-		$mail->AddBCC("baljeetgaheer@gmail.com");
+        $mail->AddBCC("blr@flydining.com");
+        
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";
 			$mail->addStringAttachment($attachment, $name);

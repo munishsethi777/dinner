@@ -31,9 +31,10 @@
 <option value="Punjab">Punjab</option>
 <option value="Rajasthan">Rajasthan</option>
 <option value="Sikkim">Sikkim</option>
+<option value="Telangana">Telangana</option>
 <option value="Tamil Nadu">Tamil Nadu</option>
 <option value="Tripura">Tripura</option>
-<option value="Uttaranchal">Uttaranchal</option>
+<option value="Uttarakhand">Uttarakhand</option>
 <option value="Uttar Pradesh">Uttar Pradesh</option>
 <option value="West Bengal">West Bengal</option>
 </select>
