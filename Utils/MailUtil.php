@@ -7,6 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."vendor/autoload.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/html2PdfUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
+require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 class MailUtil{
 	private static $logger;
 	public static function sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr){
@@ -237,11 +238,11 @@ class MailUtil{
 			$subject = "YOUR FLY DINING BOOKING CONFIRMATION.";
 			$emails = array(0=>$booking->getEmailId());
 			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot);
-			MailUtil::sendSmtpMail($subject, $html, $emails,true,$attachments);
+			MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP,$attachments);
 			$emails = StringConstants::EMAIL_IDS;
 			if(!empty($emails)){
 				$emails = explode(",", $emails);
-				//MailUtil::sendSmtpMail($subject, $html, $emails,false);
+				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
 			}
 			
 	}
@@ -405,10 +406,10 @@ class MailUtil{
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->SMTPAuth   = true;                  // enable SMTP authentication
 			$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-			$mail->Host       = "mail.satyainfopages.in";      // sets GMAIL as the SMTP server
+			$mail->Host       = "mail.virsacouture.in";      // sets GMAIL as the SMTP server
 			$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-			$mail->Username   = "munish@satyainfopages.in";  // GMAIL username
-			$mail->Password   = "Munish#314Munish#314";           // GMAIL password
+			$mail->Username   = "info@virsacouture.com";  // GMAIL username
+			$mail->Password   = "xxx";           // GMAIL password
 		}
 		$mail->SetFrom('noreply@flydining.com', 'FlyDining');
 		$mail->Subject = $subject;
@@ -417,7 +418,7 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
-        $mail->AddBCC("blr@flydining.com");
+        $mail->AddBCC(StringConstants::BCC_EMAIL);
         
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";
