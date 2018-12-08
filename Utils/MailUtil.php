@@ -409,7 +409,6 @@ class MailUtil{
 	}
 	
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
-		self::$logger->info("sending email for " . $subject);
 		$mail = new PHPMailer();
 		//$body = eregi_replace("[\]",'',$body);
 		if($isSmtp){
