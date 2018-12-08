@@ -53,6 +53,8 @@ foreach ($menuArr as $key=>$value){
 if(!empty($menuPriceArr)){
 	$menuPriceJson = json_encode($menuPriceArr);
 }
+
+
 $name = "";
 $email = "";
 $dob = "";
@@ -460,6 +462,7 @@ document.getElementById('rzp-button').onclick = function(e){
 				        "color": "#1ab394"
 				    },
 				    "order_id": "<?php echo $razorpayOrderId?>"
+		
 			};
 			options.notes["Country"] = $("#country").val();
 			options.notes["DOB"] = $("#dateofbirth").val();
