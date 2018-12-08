@@ -8,6 +8,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/html2PdfUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/SMSUtil.php");
 class MailUtil{
 	private static $logger;
 	public static function sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr){
@@ -244,8 +245,18 @@ class MailUtil{
 				$emails = explode(",", $emails);
 				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
 			}
-			
+			MailUtil::sendBookingConfirmSMS($booking, $timeSlot);
 	}
+	
+	private static function sendBookingConfirmSMS($booking,$timeSlot){
+		$bookingDate = $booking->getBookingDate()->format('M d, Y');
+		$bookingId = $booking->getSeq();
+		$timeSlotTitle = $timeSlot->getTitle();
+		$msg = "Your FlyDining booking ID - $bookingId for $bookingDate @ $timeSlotTitle is confirmed. Pls reach 30 minutes before your timeslot. Route & Location - https://goo.gl/rwzvQ8";
+		$smsUtil = SMSUtil::getInstance();
+		$smsUtil->sendSMS($booking->getMobileNumber(), $msg);
+	}
+	
 	private static function getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot){
 		$invoiceAttachment = self::getInvoiceAttachments($booking, $menuPersonArr, $menuPriceArr);
 		//$confimrationAttachment = self::getBookingConfirmationAttahment($booking, $menuPersonArr,$timeSlot);
