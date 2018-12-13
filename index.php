@@ -61,6 +61,7 @@ require_once('IConstants.inc');
 						<h5>
 							FLY DINING<small> select your bookings</small>
 						</h5>
+						<div class="col-xs-2"><button onclick="rescheduleBooking()" class="btn btn-primary btn-xs">Reschedule Booking</button></div>
 					</div>
 					<div style="margin-top:10px">
 						<div class="col-sm-3 datediv1">
@@ -294,5 +295,7 @@ function getHeaders(){
 	html += '</div>';
 	return html;
 }
-
+function rescheduleBooking(){
+	location.href = "reschedule.php"
+}
 </script> 
