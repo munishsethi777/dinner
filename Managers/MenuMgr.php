@@ -167,5 +167,19 @@ class MenuMgr{
 		return null;
 	}
 	
+	public function findBySeqInList($seqs){
+		$query = "select * from menus where seq in ($seqs)";
+		$menus = self::$dataStore->executeQuery($query);
+		$menus = $this->_group_by($menus, "seq");
+		return $menus;
+	}
+	
+	function _group_by($array, $key) {
+		$return = array();
+		foreach($array as $val) {
+			$return[$val[$key]][] = $val;
+		}
+		return $return;
+	}
 
 }

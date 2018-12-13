@@ -102,3 +102,10 @@ if($call == "getMenus"){
 	$menus = $menuMgr->getAllMenuTitle();
 	echo json_encode($menus);
 }
+if($call == "getMenusBySeqs"){
+	$seqs = $_GET["seqs"];
+	$menuMgr = MenuMgr::getInstance();
+	$menus = $menuMgr->findBySeqInList($seqs);
+	echo json_encode($menus);
+}
+
