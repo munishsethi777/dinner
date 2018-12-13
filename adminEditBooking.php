@@ -5,9 +5,12 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingDetailMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/DiscountCouponMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BookingStatus.php");
 $timeSlotMgr = TimeSlotMgr::getInstance();
 $timeSlots = $timeSlotMgr->findAll();
 $booking = New Booking();
+$relatedBooking = null;
+$isRecheduled = false;
 $bookingDetailJson = "";
 $bookedOn = "";
 $disabled = "";
@@ -19,10 +22,21 @@ if(isset($_POST["isView"])){
 		$disabled = "disabled";
 	}
 }
+$bookingStatus = "";
+$parentBookingSeq = 0;
 if(isset($_POST["seq"])){
 	$bookingSeq = $_POST["seq"];
 	$bookingManager = BookingMgr::getInstance();
 	$booking = $bookingManager->findBySeq($bookingSeq);
+	$bookingStatus = $booking->getStatus();
+	if($bookingStatus == BookingStatus::rescheduled){
+		$relatedBooking = $bookingManager->getBookingByParentId($bookingSeq);
+		$isRecheduled = true;
+	}
+	$parentBookingSeq = $booking->getParentBookingSeq();
+	if(!empty($parentBookingSeq)){
+		$relatedBooking = $bookingManager->findBySeq($parentBookingSeq);
+	}
 	$bookingDate = $booking->getBookingDate();
 	$bookedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookingDate);
 	$bookedOn = $bookedOn->format("d-m-Y");
@@ -67,6 +81,8 @@ $discountCoupons = $discountCouponMgr->getAll();
 	                        <form id="bookingForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
 	                        		<input type="hidden" id ="call" name="call"  value="saveBookingsFromAdmins"/>
 	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $booking->getSeq() ?>"/>
+	                        		<input type="hidden" id ="status" name="status"  value="<?php echo $bookingStatus ?>"/>
+	                        		<input type="hidden" id ="parentbookingseq" name="parentbookingseq"  value="<?php echo $parentBookingSeq ?>"/>
 	                        		<input type="hidden" id ="availableSeats" name="availableSeats"/>
 	                       			<div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Booking Date</label>
@@ -181,6 +197,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 										    		<div class="col-lg-1">
 										    			<input type="text" id="discountPercent" disabled value="<?php echo $booking->getDiscountPercent()?>%" class="form-control">
 										    		</div>
+										    		
 									    		<?php }?>
                                			</div>	
                                			
@@ -190,7 +207,21 @@ $discountCoupons = $discountCouponMgr->getAll();
 									    		
                                			</div>	
 	                                
-	                                
+	                                <?php if(!empty($relatedBooking)){ 
+	                                		$status = "";
+	                                		if($isRecheduled){
+	                                			 $status = "Rescheduled to booking id  - " . $relatedBooking->getSeq();
+	                                		}else{
+	                                			$status = "Rescheduled from booking id  - " .$relatedBooking->getSeq();
+	                                		}
+	                                	    
+		                                	if(!empty($booking->getSeq())){?>
+	                               				<div class="form-group row">
+				                        		<label class="col-lg-2 col-form-label">Status</label>
+				                                <div class="col-lg-4"><?php echo $status?></div>
+									  		</div>	
+	                               		<?php }
+	                                }?>
                                 	<hr>
                                  	<div class="form-group row">
                                 		<div class="col-lg-2">

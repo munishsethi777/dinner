@@ -29,6 +29,8 @@ class BookingDetailMgr{
 		}
 	}
 	
+	
+	
 	public function saveBookingDetail($bookingId,$menuAndMembers,$amount){
 		$this->deleteBookingDetailInList($bookingId);
 		foreach ($menuAndMembers as $key=>$selectedSeat){

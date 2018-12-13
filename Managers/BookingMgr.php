@@ -36,7 +36,7 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 	}
 	
 	public function getBookingJsonForGrid(){
-		$query = "select bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq as bookingseq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,timeslots.title as timeslot from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
+		$query = "select bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,timeslots.title as timeslot from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
 		$bookings =  self::$dataStore->executeQuery($query,true,false,true);
 		$bookingArr = array();
 		$bookingMainArr = array();
@@ -45,7 +45,7 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 		$timeSlotsArr = array();
 		$decCount = 0;
 		foreach ($bookings as $booking){
-			$bookingSeq = $booking["bookingseq"];
+			$bookingSeq = $booking["seq"];
 			$menus = $detailAndMenu[$bookingSeq];
 			$bookedOn = $booking["bookedon"];
 			$bookedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookedOn);
@@ -54,6 +54,7 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 			$bookedDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookedDate);
 			$bookedDate = $bookedDate->format("d-m-Y");
 			$arr = array();
+			$arr["bookings.seq"] = $bookingSeq;
 			$arr["seq"] = $bookingSeq;
 			$timeSlot = $booking["timeslot"];
 			$arr["timeslots.title"] = $timeSlot;
@@ -164,5 +165,50 @@ where bookingdate = '$date' and timeslot = $timeSlots";
 		$colVal["couponseq"] = $couponSeq;
 		$bookingCount = self::$dataStore->executeCountQuery($colVal);
 		return $bookingCount;
+	}
+	
+	private function getBookingWithTimeSlot($bookingId){
+		$query = "select bookings.*,timeslots.title from bookings inner join timeslots on bookings.timeslot = timeslots.seq where bookings.seq = $bookingId";
+		$bookings = self::$dataStore->executeQuery($query);
+		if(!empty($bookings)){
+			return $bookings[0];
+		}
+		return null;
+	}
+	
+	public function updateBookingStatus($status,$bookigId){
+		$colVal["status"] = $status;
+		$condition["seq"] = $bookigId;
+		self::$dataStore->updateByAttributesWithBindParams($colVal,$condition);
+	}
+	
+	public function getBookingDetail($bookingId){
+		$booking = $this->getBookingWithTimeSlot($bookingId);
+		if(!empty($booking)){
+			$bookingDate = $booking["bookingdate"];
+			$bookedOn = $booking["bookedon"];
+			$bookingDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $bookingDate);
+			$bookedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $bookedOn);
+			$bookingDateStr = $bookingDate->format("jS F Y");
+			$bookedOnStr = $bookedOn->format("jS F Y H:i a");
+			$booking["bookingdate"] = $bookingDateStr;
+			$booking["bookedon"] = $bookedOnStr;
+			$bookingDtailMgr = BookingDetailMgr::getInstance();
+			$bookingDetails = $bookingDtailMgr->getBookingDetailAndMenu($booking["seq"]);
+			$booking["menuDetail"] = $bookingDetails;
+			$discountPercent = $booking["discountpercent"];
+			$amount = $booking["amount"] / 100;
+			$booking["amount"] = $amount;
+		}
+		return $booking;
+	}
+	
+	public function getBookingByParentId($parentBookingId){
+		$colVal["parentbookingseq"] = $parentBookingId;
+		$booking = self::$dataStore->executeConditionQuery($colVal);
+		if(!empty($booking)){
+			return $booking[0];
+		}
+		return null;
 	}
 }

@@ -1,6 +1,7 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BookingStatus.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
@@ -25,6 +26,10 @@ if($call == "saveBooking"){
 		$logger->info("Booking Save initialize with request data - " . $data);
         $bookingMgr = BookingMgr::getInstance();
 		$bookingDetailMgr = BookingDetailMgr::getInstance();
+		$rescheduleBookingId = 0;
+		if(isset($_POST["rescheduleBookingId"]) && !empty($_POST["rescheduleBookingId"])){
+			$rescheduleBookingId = $_POST["rescheduleBookingId"];
+		}
 		$timSlotSeq = $_POST["timeslotseq"];
 		$mobile = $_POST["mobile"];
 		$emailId = $_POST["email"];
@@ -36,6 +41,7 @@ if($call == "saveBooking"){
 		$amount = $_POST["amount"];
 		$companyNumber = "";
 		$companyMobile = "";
+		$companyName = "";
 		$country = $_POST["country"];
 		$dateOfBirth = $_POST["dateofbirth"];
 		$couponSeq = $_POST["couponSeq"]; 
@@ -73,10 +79,14 @@ if($call == "saveBooking"){
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);
 		$booking->setDateOfBirth($dateOfBirth);
+		$booking->setParentBookingSeq($rescheduleBookingId);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj,$menuPriceArr);
-        MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
+		if(!empty($rescheduleBookingId)){
+			$bookingMgr->updateBookingStatus(BookingStatus::rescheduled, $rescheduleBookingId);
+		}
+		//MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
 		$message = "Booking Saved Successfully";
 		session_start();
 		$_SESSION["bookingid"] = $bookingId;
@@ -132,6 +142,8 @@ if($call == "saveBookingsFromAdmins"){
 		foreach ($amount as $amt){
 			$totalAmount += $amt;
 		}
+		$bookingStatus = $_POST["status"];
+		$parentBookingSeq = $_POST["parentbookingseq"];
 		$booking = new Booking();
 		$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
 		$bookingDate = $bookingDate->setTime(0, 0);
@@ -152,6 +164,8 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setDateOfBirth($dateOfBirth);
 		$booking->setCouponSeq($couponSeq);
 		$booking->setDiscountPercent($couponPercent);
+		$booking->setStatus($bookingStatus);
+		$booking->setParentBookingSeq($parentBookingSeq);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		
@@ -243,5 +257,28 @@ if($call == "deleteBooking"){
 	$response["success"] =  $success;
 	echo json_encode($response);
 }
+
+if($call == "getBookingDetail"){
+	$bookingDetail = array();
+	try{
+		$bookingId = $_GET["id"];
+		$bookingMgr = BookingMgr::getInstance();
+		$bookingDetail = $bookingMgr->getBookingDetail($bookingId);
+		if(empty($bookingDetail)){
+			$success = 0;
+			$message = "Booking Not Found";
+		}
+	}catch (Exception $e){
+		$success = 0;
+		$logger->error ( "Error occured in BookingAction during Action - getBookingDetail :" . $e );
+		$message = $e->getMessage();
+	}
+	$response = new ArrayObject();
+	$response["message"] = $message;
+	$response["success"] =  $success;
+	$response["bookingDetail"] = $bookingDetail;
+	echo json_encode($response);
+}
+
 
 

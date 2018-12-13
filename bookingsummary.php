@@ -3,6 +3,7 @@ require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DiscountCouponMgr.php");
 require('razorconfig.php');
 require('razorpay-php/Razorpay.php');
@@ -10,6 +11,17 @@ use Razorpay\Api\Api;
 if(!isset($_POST["timeslotseq"])){
 	echo ("Invalid Execution");
 	die;
+}
+$rescheduleBooking = array();
+$isReschedule = false;
+$rescheduleBookingId = 0;
+$reschedulingAmount = 0;
+if(isset($_POST["rescheduleBookingId"])){
+	$rescheduleBookingId = $_POST["rescheduleBookingId"];
+	$bookingMgr = BookingMgr::getInstance();
+	$rescheduleBooking = $bookingMgr->getBookingDetail($rescheduleBookingId);
+	$reschedulingAmount = $rescheduleBooking["amount"];
+	$isReschedule = true;
 }
 $timeSlotSeq = $_POST["timeslotseq"];
 $selectedDate = $_POST["selectedDate"];
@@ -102,6 +114,10 @@ if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
 		}
 	}
 }
+if(!empty($reschedulingAmount) && !empty($totalAmount)){
+	$totalAmount = $totalAmount - $reschedulingAmount;
+	$reschedulingAmount = number_format($reschedulingAmount,2);
+}
 if(!empty($amount)){
 	$amount = number_format($amount,2);
 	$totalAmount +=  $handlingCharges;
@@ -192,6 +208,16 @@ if(!empty($totalAmountInPaise)){
 	                       				</div>
 	                       				<div class="col-xs-4 text-right">Rs 0.00</div>
 	                       			</div>
+	                       			<?php if(!empty($isReschedule)){ ?>
+		                       			<div class="row m-b-sm">	
+		                       				<div class="col-xs-8">
+		                       					<small class="text-muted">
+		                       						Earlier Paid Amount
+		                       					</small>
+		                       				</div>
+		                       				<div style="color:red" class="col-xs-4 text-right">- Rs. <?php echo $reschedulingAmount?></div>
+		                       			</div>
+	                       			<?php }?>
 	                       			<?php if(!empty($discount)){ ?>
 		                       			<div class="row m-b-sm">	
 		                       				<div class="col-xs-8">
@@ -244,6 +270,7 @@ if(!empty($totalAmountInPaise)){
 	                       				<input type="hidden" id ="transactionId" name="transactionId"/>
 	                       				<input type="hidden" id ="amount" name="amount"/>
 	                       				<input type="hidden" id ="timeslotseq" name="timeslotseq" value="<?php echo $timeSlotSeq?>" />
+	                       				<input type="hidden" id ="rescheduleBookingId" name="rescheduleBookingId" value="<?php echo $rescheduleBookingId?>" />
 	                       				<input type="hidden" id ="selectedDate" name="selectedDate" value="<?php echo $selectedDate?>" />
 	                       				<input type="hidden" id ="menupersons" name="menuMembers" value='<?php echo $menus?>' />
 	                       				<input type="hidden" id ="menuPrice" name="menuPrice" value='<?php echo $menuPriceJson?>' />

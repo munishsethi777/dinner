@@ -106,10 +106,11 @@
         function loadGrid(menus){
             
             var columns = [
+			  { text: 'ID', datafield: 'bookings.seq',width:"5%"},
+			  { text: 'seq', datafield: 'seq',hidden:true},
 			  { text: 'Payment ID', datafield: 'transactionid', width:"10%"}, 			
-			  { text: 'id', datafield: 'seq' , hidden:true},
-              { text: 'Booked On', datafield: 'bookedon',filtertype: 'date' ,cellsformat: 'd-M-yyyy',width:"12%",cellsalign: 'right'},
-              { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"10%",cellsalign: 'right'},
+			  { text: 'Booked On', datafield: 'bookedon',filtertype: 'date' ,cellsformat: 'd-M-yyyy',width:"12%",cellsalign: 'right'},
+              { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"9%",cellsalign: 'right'},
               { text: 'Slot', datafield: 'timeslots.title',width:"12%",filtertype: 'checkedlist',cellsalign: 'right'},
               { text: 'Menu', datafield: 'menus.title', width:"12%" ,filtertype: 'checkedlist',sortable:false,filteritems:menus},
               { text: 'Customer Name', datafield: 'fullname',width:"12%"},
@@ -124,7 +125,8 @@
                 pagesize: 20,
                 sortcolumn: 'bookedon',
                 sortdirection: 'desc',
-                datafields: [{ name: 'seq', type: 'integer' },
+                datafields: [{ name: 'bookings.seq', type: 'integer' },
+                             { name: 'seq', type: 'integer' },
                             { name: 'bookedon', type: 'datetime' },
                             { name: 'bookingdate', type: 'date' },
                             { name: 'transactionid', type: 'string'},
