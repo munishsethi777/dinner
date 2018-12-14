@@ -66,17 +66,17 @@ require('razorpay-php/Razorpay.php');
 					</div>
 					</div>
 					<div class="row ibox-content">
-						<form role="form" method="post" action="bookingsummary.php" class="form-inline">
+						<form role="form" name="validateForm" id="validateForm" method="post" action="bookingsummary.php" class="form-inline">
 							<div class="form-group row">
 	                       		<label class="col-lg-4 col-form-label">Booking Id</label>
 	                            	<div class="col-lg-6">
 	                                	<input type="text"  id="bookingId" name="bookingId" required placeholder="Booking Id" class="form-control">
 	                                </div>
 	                                <div class="col-lg-2">
-	                                	<button type="button" onclick="validateBooking()" class="btn btn-primary btn-sm">Validate</button>
+	                                	<button type="button"  onclick="validateBooking()" class="btn btn-primary btn-sm">Validate</button>
 	                                </div>
 	                        </div>
-	                        <div id= "bookingDetailDiv" class="m-t-sm">
+	                        <div id= "bookingDetailDiv" class="m-t-sm mainDiv">
 		                        
                        		</div>
                        </form>	
@@ -153,6 +153,12 @@ $(document).ready(function(){
     });
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
+	$('#bookingId').keypress(function (e) {
+	    if (e.which == 13) {
+        	validateBooking()
+            return false;
+        }
+    })
 });
 function loadData(selectedDate){
 	var from = selectedDate.split("-")
@@ -319,79 +325,83 @@ function getHeaders(){
 }
 
 function validateBooking(){
-	var bookingId = $("#bookingId").val();
-	$.getJSON("Actions/BookingAction.php?call=getBookingDetail&id="+bookingId, function(data){
-		$("#bookingDetailDiv").html("");
-		$("#amountPaid").val(0);
-		$("#rescheduleBookingId").val(0);
-		$("#timeSlotDiv").hide();	
-		var success = data.success
-		if(success == 1){
-			var bookingDetail = data.bookingDetail;
-			var status = bookingDetail.status;
-			if(status == "Rescheduled"){
-				var html = '<div class="row">';
-       			html += '<div class="col-xs-4"><h2>Booking is already rescheduled!</h2></div>';
-   				html += '</div>';
-			}else{
-				var menuDetail = bookingDetail.menuDetail
-				var html = '<div class="row">';
-	       			html += '<div class="col-xs-2">Booked On :</div>';
-	   				html += '<div class="col-xs-2">'+bookingDetail.bookedon+'</div>';
-	   				html += '</div>';
-	   				html += '<div class="row">';
-	   				html += '<div class="col-xs-2">Booking Date :</div>';
-	   				html += '<div class="col-xs-2">'+bookingDetail.bookingdate+'</div>';
-	   				html += '</div>';
-	        		html += '<div class="row">';
-	   				html += '<div class="col-xs-2">Payment Id :</div>';
-	   				html += '<div class="col-xs-2">'+bookingDetail.transactionid+'</div>';
-	   				html += '</div>';
-	   				html += '<div class="row">';
-	   				html += '<div class="col-xs-2">Time Slot :</div>';
-	   				html += '<div class="col-xs-2">'+bookingDetail.title+'</div>';
-	   				html += '</div>'
-	   				html += '<div class="row">'
-	   				html += '<div class="col-xs-2">Menus :</div>'
-	   				html += '<div class="col-xs-2">';
-	   				var menuPrice = 0;
-	   				$.each( menuDetail, function( key, val ) {
-	   	   				var price = val.members * parseInt(val.menuprice);
-	   	   				html += val.members + ' seats x ' + val.title + ' - Rs.' + price +'/-<br>';
-	   	   				menuPrice += price;
-	   				});
-	   				
-	   				html += '</div>'
-	   				html += '</div>';
-	   				var discountPercent =  bookingDetail.discountpercent;
-	   				if(discountPercent != null && discountPercent != "" && discountPercent != 0){
-	   					var discount = (discountPercent / 100) * menuPrice;
-	   					html += '<div class="row">';
-	   	   				html += '<div class="col-xs-2">Total :</div>';
-	   	   				html += '<div class="col-xs-2">Rs. '+menuPrice+'/-</div>';
-	   	   				html += '</div>';
-		   	   			html += '<div class="row">';
-		   				html += '<div class="col-xs-2">Discount :</div>';
-		   				html += '<div class="col-xs-2">Rs. '+discount+'/-</div>';
-		   				html += '</div>';
-	   				}
-	   				html += '<div class="row">';
-	   				html += '<div class="col-xs-2">Amount Paid :</div>';
-	   				html += '<div class="col-xs-2">Rs. '+bookingDetail.amount+'/-</div>';
-	   				html += '</div>';
-	   				$("#amountPaid").val(bookingDetail.amount);
-	   				$("#rescheduleBookingId").val(bookingDetail.seq);
-					$("#timeSlotDiv").show();	
-			}
-			
-			$("#bookingDetailDiv").html(html);
-		}else{
+	if($("#validateForm")[0].checkValidity()) {
+		var bookingId = $("#bookingId").val();
+		$.getJSON("Actions/BookingAction.php?call=getBookingDetail&id="+bookingId, function(data){
+			$("#bookingDetailDiv").html("");
+			$("#amountPaid").val(0);
+			$("#rescheduleBookingId").val(0);
+			$("#timeSlotDiv").hide();	
 			removeMessagesDivs();
-			var message = data.message;
-            var errorDiv = getErrorDiv(message);
-            $(".ibox-content").append(errorDiv);
-		}
-	});
+			var success = data.success
+			if(success == 1){
+				var bookingDetail = data.bookingDetail;
+				var status = bookingDetail.status;
+				if(status == "Rescheduled"){
+					var html = '<div class="row">';
+	       			html += '<div class="col-xs-4"><h2>Booking is already rescheduled!</h2></div>';
+	   				html += '</div>';
+				}else{
+					var menuDetail = bookingDetail.menuDetail
+					var html = '<div class="row">';
+		       			html += '<div class="col-xs-2">Booked On :</div>';
+		   				html += '<div class="col-xs-2">'+bookingDetail.bookedon+'</div>';
+		   				html += '</div>';
+		   				html += '<div class="row">';
+		   				html += '<div class="col-xs-2">Booking Date :</div>';
+		   				html += '<div class="col-xs-2">'+bookingDetail.bookingdate+'</div>';
+		   				html += '</div>';
+		        		html += '<div class="row">';
+		   				html += '<div class="col-xs-2">Payment Id :</div>';
+		   				html += '<div class="col-xs-2">'+bookingDetail.transactionid+'</div>';
+		   				html += '</div>';
+		   				html += '<div class="row">';
+		   				html += '<div class="col-xs-2">Time Slot :</div>';
+		   				html += '<div class="col-xs-2">'+bookingDetail.title+'</div>';
+		   				html += '</div>'
+		   				html += '<div class="row">'
+		   				html += '<div class="col-xs-2">Menus :</div>'
+		   				html += '<div class="col-xs-2">';
+		   				var menuPrice = 0;
+		   				$.each( menuDetail, function( key, val ) {
+		   	   				var price = val.members * parseInt(val.menuprice);
+		   	   				html += val.members + ' seats x ' + val.title + ' - Rs.' + price +'/-<br>';
+		   	   				menuPrice += price;
+		   				});
+		   				
+		   				html += '</div>'
+		   				html += '</div>';
+		   				var discountPercent =  bookingDetail.discountpercent;
+		   				if(discountPercent != null && discountPercent != "" && discountPercent != 0){
+		   					var discount = (discountPercent / 100) * menuPrice;
+		   					html += '<div class="row">';
+		   	   				html += '<div class="col-xs-2">Total :</div>';
+		   	   				html += '<div class="col-xs-2">Rs. '+menuPrice+'/-</div>';
+		   	   				html += '</div>';
+			   	   			html += '<div class="row">';
+			   				html += '<div class="col-xs-2">Discount :</div>';
+			   				html += '<div class="col-xs-2">Rs. '+discount+'/-</div>';
+			   				html += '</div>';
+		   				}
+		   				html += '<div class="row">';
+		   				html += '<div class="col-xs-2">Amount Paid :</div>';
+		   				html += '<div class="col-xs-2">Rs. '+bookingDetail.amount+'/-</div>';
+		   				html += '</div>';
+		   				$("#amountPaid").val(bookingDetail.amount);
+		   				$("#rescheduleBookingId").val(bookingDetail.seq);
+						$("#timeSlotDiv").show();	
+				}
+				
+				$("#bookingDetailDiv").html(html);
+			}else{
+				var message = data.message;
+	            var errorDiv = getErrorDiv(message);
+	            $(".mainDiv").append(errorDiv);
+			}
+		});
+	}else{
+		$("#validateForm")[0].reportValidity();
+	}
 }
 
 </script> 
