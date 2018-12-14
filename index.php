@@ -164,11 +164,17 @@ function loadData(selectedDate){
 			var menuArr = [];
 			var menuSeqs = [];
 			$.each( menuList, function( k, menu ) {
-				fair += "Rs. " + menu.rate +"<small class='text-muted'> ("+menu.menutitle+")</small><br>";	
+				fair = "Rs. " + menu.rate;
+				if(menu.discountedRate != null){
+					fair = "<label style='text-decoration: line-through;font-weight:normal'>Rs. " + menu.rate + "</label>";
+					fair += " <label style='color:red;font-weight:normal;font-size:15px;'> Rs. "+menu.discountedRate+"</label>";
+				}	
+				
+				fair +="<br><small class='text-muted'> ("+menu.menutitle+")</small><br>";	
 				menuArr[k] = menu.menutitle;
 				menuSeqs[k] = menu.menuseq
 	 		});
-			html += '<div class="col-xs-5 fairCol">' + fair + '</div>';
+			html += '<div class="col-xs-4 fairCol">' + fair + '</div>';
 			//html += '<div class="col-xs-2 text-center progressCol"><div class="progress progress-mini">';
 			//progressBarClass = "bg-primary";
 			//if(val.availableInPercent > 0 && val.availableInPercent <=25){
@@ -182,9 +188,10 @@ function loadData(selectedDate){
 			//html += '<div style="width: '+val.availableInPercent+'%" class="'+progressBarClass+' progress-bar"></div></div>';
 			//html += '<small class="text-muted buttonCol">'+ val.seatsAvailable  +' Seats</small></div>';
 			if(val.seatsAvailable == 0){
-				html += '<div class="col-xs-2"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
+				html += '<div class="col-xs-3"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
 			}else{
-				html += '<div class="col-xs-2"><button class="btn btn-primary btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button></div>';
+				html += '<div class="col-xs-3"><button class="btn btn-primary btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
+				html += val.msg + '</div>';
 			}
 			html += '</div>';
 		});
@@ -289,9 +296,9 @@ function getHeaders(){
 	var html = '<div class="row ibox-content tableheaders">'
 	html += '<div class="col-xs-2">Date</div>';
 	html += '<div class="col-xs-3">Slot Time</div>';
-	html += '<div class="col-xs-5">Fare</div>';
+	html += '<div class="col-xs-4">Fare</div>';
 	//html += '<div class="col-xs-2 text-center">Seats Available</div>'
-	html += '<div class="col-xs-2">Action</div>'
+	html += '<div class="col-xs-3">Action</div>'
 	html += '</div>';
 	return html;
 }

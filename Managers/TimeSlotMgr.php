@@ -70,6 +70,8 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$totalSeats = $timeSlot["seats"];
             $arr["seats"] = $totalSeats;
 			$arr["description"] = $timeSlot["description"];
+			$arr["msg"] = self::getMsg();
+			
 			$availableInPercent = 100;
 			if($bookedSeats > 0){
 				$percent = ($bookedSeats*100)/$totalSeats;
@@ -85,9 +87,10 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 				$arr = $slotArr[$timeSlotSeq];
 				$mainMenuArr = $arr["menu"];
 			}
+			
+			
 			$menu = array();
 			$menu["menutitle"] = $timeSlot["menutitle"];
-			
 			$dayName =  $date->format('D');
 			//if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
 				//$timeSlot["rate"] += 1000;
@@ -96,8 +99,16 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			if(!empty($menuPricings) && array_key_exists($timeSlot["menuseq"], $menuPricings)){
 				$menuPricingArr = $menuPricings[$timeSlot["menuseq"]];
 			}
-			$menu["rate"] = $this->getMenuPrice($date, $menuPricingArr, $timeSlot["rate"]) ;
+			$rate = $this->getMenuPrice($date, $menuPricingArr, $timeSlot["rate"]) ;
+			
+			//temp code to inflate and rebate
+				$menu["discountedRate"] = number_format((float)round($rate), 2, '.', '') ;
+				$rate = ($rate) + ($rate * 40/100);
+			//temp code ends
+			
+			$menu["rate"] = number_format((float)round($rate), 2, '.', '') ;
 			$menu["menuseq"] = $timeSlot["menuseq"];
+			
 			array_push($mainMenuArr, $menu);
 			$arr["menu"] = $mainMenuArr;
 			$slotArr[$timeSlotSeq] = $arr;
@@ -119,6 +130,18 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			}
 		}
 		return $rate;
+	}
+	
+	private function getMsg(){
+		$str1 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Booked 3 times in last 24 hrs</small></h4>';
+		$str2 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Latest Booking: Yesterday</small></h4>';
+		$str3 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Latest Booking: 10mins ago</small></h4>';
+		$str4 = '<br><h4 class="text-danger"><i class="fa fa-clock-o" aria-hidden="true"></i><small class="text-danger"> Just Booked</small></h4>';
+		$str5= "";
+		$str6= "";
+		$arr = array($str1,$str2,$str3,$str4,$str5,$str6);
+		$random_keys=array_rand($arr,1);
+		return $arr[$random_keys];
 	}
 	
 	public function findBySeq($seq){
