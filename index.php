@@ -166,7 +166,7 @@ function loadData(selectedDate){
 				fair = "Rs. " + menu.rate;
 				if(menu.discountedRate != null){
 					fair = "<label style='text-decoration: line-through;font-weight:normal'>Rs. " + menu.rate + "</label>";
-					fair += " <label style='color:red;font-weight:normal;font-size:15px;'> Rs. "+menu.discountedRate+"</label>";
+					fair += " <label class='text-danger' style='font-weight:normal;font-size:15px;'> Rs. "+menu.discountedRate+"</label>";
 				}	
 				
 				fair +="<br><small class='text-muted'> ("+menu.menutitle+")</small><br>";	
