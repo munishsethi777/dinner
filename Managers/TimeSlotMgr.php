@@ -135,7 +135,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 	private function getMsg(){
 		$randomNumbers = array();
 		for($i=1;$i<=15;$i++){
-			array_push($randomNumbers,$i);
+			$randomNumbers[$i] = $i;
 		}
 		
 		$str1 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Booked '.array_rand($randomNumbers,1) .' times in last 24 hrs</small></h4>';
