@@ -115,7 +115,12 @@ if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
 	}
 }
 if(!empty($reschedulingAmount) && !empty($totalAmount)){
-	$totalAmount = $totalAmount - $reschedulingAmount;
+	if($totalAmount < $reschedulingAmount){
+		$totalAmount = 0;
+	}else{
+		$totalAmount = $totalAmount - $reschedulingAmount;
+	}
+	
 	$reschedulingAmount = number_format($reschedulingAmount,2);
 }
 if(!empty($amount)){
