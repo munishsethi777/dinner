@@ -175,44 +175,44 @@ function loadData(selectedDate){
 	var n = weekday[d.getDay()];
 	
 	$.getJSON("Actions/TimeSlotAction.php?call=getTimeSlots&selectedDate="+selectedDate, function(data){
-		   //var data = $.parseJSON(jsonString)
-			var html = getHeaders();
+		   var html = getHeaders();
 			if(data.length == 0){
 				html += "<center style='margin-top:10px;'>No Timeslots available for booking, please select some other date</center>";
 			}
 		 $.each( data, function( key, val ) {
 	 		html += '<div class="row ibox-content">';
-			html += '<div class="col-xs-2 dateCol">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
-			html += '<div class="col-xs-3 timeslotCol">'+val.timeslot;
+			html += '<div class="col-xs-2 dateCol p-xs">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
+			html += '<div class="col-xs-3 timeslotCol p-xs">'+val.timeslot;
 			html += '<br/><small class="text-muted">'+ val.description  +'</small></div>';
 			var fair = "";
 			var menuList = val.menu; 
 			var menuArr = [];
 			var menuSeqs = [];
-			var menuPrices = [];
 			$.each( menuList, function( k, menu ) {
-				fair += "Rs. " + menu.rate +"<small class='text-muted'> ("+menu.menutitle+")</small><br>";	
+				fair = "Rs. " + menu.rate;
+				if(menu.discountedRate != null){
+					fair = "<label style='text-decoration: line-through;font-weight:normal'>Rs. " + menu.rate + "</label>";
+					fair += " <label style='color:red;font-weight:normal;font-size:15px;'> Rs. "+menu.discountedRate+"</label>";
+				}	
+				
+				fair +="<br><small class='text-muted'> ("+menu.menutitle+")</small><br>";	
 				menuArr[k] = menu.menutitle;
 				menuSeqs[k] = menu.menuseq
-				menuPrices[k] = menu.rate;
 	 		});
-			html += '<div class="col-xs-5 fairCol">' + fair + '</div>';
-			//html += '<div class="col-xs-2 text-center progressCol"><div class="progress progress-mini">';
-			//progressBarClass = "bg-primary";
-			//if(val.availableInPercent > 0 && val.availableInPercent <=25){
-				//progressBarClass = "bg-danger";
-			//}else if(val.availableInPercent > 25 && val.availableInPercent <=75){
-				//progressBarClass = "bg-warning";
-			//}
+			html += '<div class="col-xs-3 fairCol p-xs">' + fair + '</div>';
+			html += '<div class="col-lg-1 col-sm-2 col-xs-2 p-xs"><select class="form-control">';
+			for(i=0;i<=val.seatsAvailable;i++){
+				html += '<option>'+i+'</option>';
+			}
+			html += "/<select></div>";
 			if(val.seatsAvailable == 0){
 				val.availableInPercent = 0;
 			}
-			//html += '<div style="width: '+val.availableInPercent+'%" class="'+progressBarClass+' progress-bar"></div></div>';
-			//html += '<small class="text-muted buttonCol">'+ val.seatsAvailable  +' Seats</small></div>';
 			if(val.seatsAvailable == 0){
-				html += '<div class="col-xs-2"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
+				html += '<div class="col-lg-3 col-sm-2 col-xs-4 p-xs"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
 			}else{
-				html += '<div class="col-xs-2"><button class="btn btn-primary btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button></div>';
+				html += '<div class="col-lg-3 col-sm-2 col-xs-4 p-xs text-center"><button class="btn btn-primary btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
+				html += val.msg + '</div>';
 			}
 			html += '</div>';
 		});
@@ -317,8 +317,8 @@ function getHeaders(){
 	var html = '<div class="row ibox-content tableheaders">'
 	html += '<div class="col-xs-2">Date</div>';
 	html += '<div class="col-xs-3">Slot Time</div>';
-	html += '<div class="col-xs-5">Fare</div>';
-	//html += '<div class="col-xs-2 text-center">Seats Available</div>'
+	html += '<div class="col-xs-3">Fare</div>';
+	html += '<div class="col-xs-2">Seats</div>'
 	html += '<div class="col-xs-2">Action</div>'
 	html += '</div>';
 	return html;
@@ -345,23 +345,23 @@ function validateBooking(){
 					var menuDetail = bookingDetail.menuDetail
 					var html = '<div class="row">';
 		       			html += '<div class="col-xs-2">Booked On :</div>';
-		   				html += '<div class="col-xs-2">'+bookingDetail.bookedon+'</div>';
+		   				html += '<div class="col-xs-6">'+bookingDetail.bookedon+'</div>';
 		   				html += '</div>';
 		   				html += '<div class="row">';
 		   				html += '<div class="col-xs-2">Booking Date :</div>';
-		   				html += '<div class="col-xs-2">'+bookingDetail.bookingdate+'</div>';
+		   				html += '<div class="col-xs-6">'+bookingDetail.bookingdate+'</div>';
 		   				html += '</div>';
 		        		html += '<div class="row">';
 		   				html += '<div class="col-xs-2">Payment Id :</div>';
-		   				html += '<div class="col-xs-2">'+bookingDetail.transactionid+'</div>';
+		   				html += '<div class="col-xs-6">'+bookingDetail.transactionid+'</div>';
 		   				html += '</div>';
 		   				html += '<div class="row">';
 		   				html += '<div class="col-xs-2">Time Slot :</div>';
-		   				html += '<div class="col-xs-2">'+bookingDetail.title+'</div>';
+		   				html += '<div class="col-xs-6">'+bookingDetail.title+'</div>';
 		   				html += '</div>'
 		   				html += '<div class="row">'
 		   				html += '<div class="col-xs-2">Menus :</div>'
-		   				html += '<div class="col-xs-2">';
+		   				html += '<div class="col-xs-6">';
 		   				var menuPrice = 0;
 		   				$.each( menuDetail, function( key, val ) {
 		   	   				var price = val.members * parseInt(val.menuprice);
@@ -376,16 +376,16 @@ function validateBooking(){
 		   					var discount = (discountPercent / 100) * menuPrice;
 		   					html += '<div class="row">';
 		   	   				html += '<div class="col-xs-2">Total :</div>';
-		   	   				html += '<div class="col-xs-2">Rs. '+menuPrice+'/-</div>';
+		   	   				html += '<div class="col-xs-6">Rs. '+menuPrice+'/-</div>';
 		   	   				html += '</div>';
 			   	   			html += '<div class="row">';
-			   				html += '<div class="col-xs-2">Discount :</div>';
-			   				html += '<div class="col-xs-2">Rs. '+discount+'/-</div>';
+			   				html += '<div class="col-xs-2 text-danger">Discount :</div>';
+			   				html += '<div class="col-xs-6 text-danger">Rs. '+discount+'/-</div>';
 			   				html += '</div>';
 		   				}
 		   				html += '<div class="row">';
-		   				html += '<div class="col-xs-2">Amount Paid :</div>';
-		   				html += '<div class="col-xs-2">Rs. '+bookingDetail.amount+'/-</div>';
+		   				html += '<div class="col-xs-2 text-navy">Amount Already Paid :</div>';
+		   				html += '<div class="col-xs-2 text-navy">Rs. '+bookingDetail.amount+'/-</div>';
 		   				html += '</div>';
 		   				$("#amountPaid").val(bookingDetail.amount);
 		   				$("#rescheduleBookingId").val(bookingDetail.seq);
