@@ -61,7 +61,7 @@ require_once('IConstants.inc');
 						<h5>
 							FLY DINING<small> select your bookings</small>
 						</h5>
-						<div class="col-xs-2"><button onclick="rescheduleBooking()" class="btn btn-primary btn-xs">Reschedule Booking</button></div>
+						<!-- <div class="col-xs-2"><button onclick="rescheduleBooking()" class="btn btn-primary btn-xs">Reschedule Booking</button></div> -->
 					</div>
 					<div style="margin-top:10px">
 						<div class="col-sm-3 datediv1">
@@ -174,11 +174,11 @@ function loadData(selectedDate){
 				menuSeqs[k] = menu.menuseq
 	 		});
 			html += '<div class="col-xs-3 fairCol p-xs">' + fair + '</div>';
-			html += '<div class="col-lg-1 col-sm-2 col-xs-2 p-xs"><select class="form-control">';
+			//html += '<div class="col-lg-1 col-sm-2 col-xs-2 p-xs"><select class="form-control">';
 			for(i=0;i<=val.seatsAvailable;i++){
-				html += '<option>'+i+'</option>';
+				//html += '<option>'+i+'</option>';
 			}
-			html += "/<select></div>";
+			//html += "/<select></div>";
 			if(val.seatsAvailable == 0){
 				val.availableInPercent = 0;
 			}
@@ -292,7 +292,7 @@ function getHeaders(){
 	html += '<div class="col-xs-2 p-xs">Date</div>';
 	html += '<div class="col-xs-3 p-xs">Slot Time</div>';
 	html += '<div class="col-xs-3 p-xs">Fare</div>';
-	html += '<div class="col-xs-1 p-xs">Seats</div>'
+//	html += '<div class="col-xs-1 p-xs">Seats</div>'
 	html += '<div class="col-xs-3 p-xs text-center">Action</div>'
 	html += '</div>';
 	return html;
