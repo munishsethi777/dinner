@@ -183,7 +183,7 @@ function loadData(selectedDate){
 				val.availableInPercent = 0;
 			}
 			if(val.seatsAvailable == 0){
-				html += '<div class="col-lg-3 col-sm-2 col-xs-4 p-xs"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
+				html += '<div class="col-lg-3 col-sm-2 col-xs-4 p-xs text-center"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
 			}else{
 				html += '<div class="col-lg-3 col-sm-2 col-xs-4 p-xs text-center"><button class="btn btn-danger btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
 				html += val.msg + '</div>';
