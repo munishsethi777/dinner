@@ -344,23 +344,23 @@ function validateBooking(){
 				}else{
 					var menuDetail = bookingDetail.menuDetail
 					var html = '<div class="row">';
-		       			html += '<div class="col-xs-2">Booked On :</div>';
+		       			html += '<div class="col-lg-2 col-xs-5">Booked On :</div>';
 		   				html += '<div class="col-xs-6">'+bookingDetail.bookedon+'</div>';
 		   				html += '</div>';
 		   				html += '<div class="row">';
-		   				html += '<div class="col-xs-2">Booking Date :</div>';
+		   				html += '<div class="col-lg-2 col-xs-5">Booking Date :</div>';
 		   				html += '<div class="col-xs-6">'+bookingDetail.bookingdate+'</div>';
 		   				html += '</div>';
 		        		html += '<div class="row">';
-		   				html += '<div class="col-xs-2">Payment Id :</div>';
+		   				html += '<div class="col-lg-2 col-xs-5">Payment Id :</div>';
 		   				html += '<div class="col-xs-6">'+bookingDetail.transactionid+'</div>';
 		   				html += '</div>';
 		   				html += '<div class="row">';
-		   				html += '<div class="col-xs-2">Time Slot :</div>';
+		   				html += '<div class="col-lg-2 col-xs-5">Time Slot :</div>';
 		   				html += '<div class="col-xs-6">'+bookingDetail.title+'</div>';
 		   				html += '</div>'
 		   				html += '<div class="row">'
-		   				html += '<div class="col-xs-2">Menus :</div>'
+		   				html += '<div class="col-lg-2 col-xs-5">Menus :</div>'
 		   				html += '<div class="col-xs-6">';
 		   				var menuPrice = 0;
 		   				$.each( menuDetail, function( key, val ) {
@@ -375,16 +375,16 @@ function validateBooking(){
 		   				if(discountPercent != null && discountPercent != "" && discountPercent != 0){
 		   					var discount = (discountPercent / 100) * menuPrice;
 		   					html += '<div class="row">';
-		   	   				html += '<div class="col-xs-2">Total :</div>';
+		   	   				html += '<div class="col-lg-2 col-xs-5">Total :</div>';
 		   	   				html += '<div class="col-xs-6">Rs. '+menuPrice+'/-</div>';
 		   	   				html += '</div>';
 			   	   			html += '<div class="row">';
-			   				html += '<div class="col-xs-2 text-danger">Discount :</div>';
+			   				html += '<div class="col-lg-2 col-xs-5 text-danger">Discount :</div>';
 			   				html += '<div class="col-xs-6 text-danger">Rs. '+discount+'/-</div>';
 			   				html += '</div>';
 		   				}
 		   				html += '<div class="row">';
-		   				html += '<div class="col-xs-2 text-navy">Amount Already Paid :</div>';
+		   				html += '<div class="col-lg-2 col-xs-5 text-navy">Amount Already Paid :</div>';
 		   				html += '<div class="col-xs-2 text-navy">Rs. '+bookingDetail.amount+'/-</div>';
 		   				html += '</div>';
 		   				$("#amountPaid").val(bookingDetail.amount);
