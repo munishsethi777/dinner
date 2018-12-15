@@ -373,9 +373,9 @@ function validateBooking(){
 		   				var menuPrice = 0;
 		   				$.each( menuDetail, function( key, val ) {
 			   				var rate = val.rate;
-			   				var menuPrice = val.menuprice;
-			   				if(menuPrice != null && menuPrice != "null" && menuPrice != 0 && menuPrice != "0" ){
-			   					rate = val.menuprice;
+			   				var bookingDetailPrice = val.menuprice;
+			   				if(bookingDetailPrice != null && bookingDetailPrice != "null" && bookingDetailPrice != 0 && bookingDetailPrice != "0" ){
+			   					rate = bookingDetailPrice;
 			   				}
 		   	   				var price = val.members * parseInt(rate);
 		   	   				html += val.members + ' seats x ' + val.title + ' - Rs.' + price +'/-<br>';
