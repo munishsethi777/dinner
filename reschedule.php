@@ -371,7 +371,12 @@ function validateBooking(){
 		   				html += '<div class="col-xs-6">';
 		   				var menuPrice = 0;
 		   				$.each( menuDetail, function( key, val ) {
-		   	   				var price = val.members * parseInt(val.menuprice);
+			   				var rate = val.rate;
+			   				var menuPrice = val.menupric;
+			   				if(menuPrice != null && menuPrice != "null" && menuPrice != 0 && menuPrice != "0" ){
+			   					rate = val.menuprice;
+			   				}
+		   	   				var price = val.members * parseInt(rate);
 		   	   				html += val.members + ' seats x ' + val.title + ' - Rs.' + price +'/-<br>';
 		   	   				menuPrice += price;
 		   				});
