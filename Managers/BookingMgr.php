@@ -19,7 +19,7 @@ class BookingMgr{
 	
 	public function getAvailableSeats($date,$timeSlots){
 		$query = "SELECT sum(bookingdetails.members) as totalcount from bookings inner JOIN bookingdetails on bookings.seq = bookingdetails.bookingseq
-where bookingdate = '$date' and timeslot = $timeSlots";
+where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingdate = '$date' and timeslot = $timeSlots";
 		return self::$dataStore->executeCountQueryWithSql($query);
 	}
 	
