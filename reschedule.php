@@ -219,12 +219,19 @@ function loadData(selectedDate){
 	 	$("#dataDiv").html(html);
 	});	 	
 }
+function selectButton(menuSeq,count){
+	for($i=1;$i<=count;$i++){
+		buttonClassName = "#personCount"+ menuSeq +"-"+$i;
+		$(buttonClassName).addClass("btn-primary")	;
+	}
+}
 function setPersonCount(menuSeq,count){
 	$("."+menuSeq+"personButton").removeClass("btn-primary");
 	if($(".hiddenMenuSeq"+ menuSeq).val() != count){
 		buttonClassName = "#personCount"+ menuSeq +"-"+count;
 		$(buttonClassName).addClass("btn-primary");//set colored button
 		$(".hiddenMenuSeq"+ menuSeq).val(count);//set hidden prop count
+		selectButton(menuSeq,count);
 	}else{
 		$(".hiddenMenuSeq"+ menuSeq).val(0);
 	}

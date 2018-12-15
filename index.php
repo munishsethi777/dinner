@@ -174,11 +174,6 @@ function loadData(selectedDate){
 				menuSeqs[k] = menu.menuseq
 	 		});
 			html += '<div class="col-xs-3 fairCol p-xs">' + fair + '</div>';
-			html += '<div class="col-lg-1 col-sm-2 col-xs-2 p-xs"><select class="form-control">';
-			for(i=0;i<=val.seatsAvailable;i++){
-				html += '<option>'+i+'</option>';
-			}
-			html += "/<select></div>";
 			if(val.seatsAvailable == 0){
 				val.availableInPercent = 0;
 			}
@@ -199,10 +194,17 @@ function setPersonCount(menuSeq,count){
 		buttonClassName = "#personCount"+ menuSeq +"-"+count;
 		$(buttonClassName).addClass("btn-primary");//set colored button
 		$(".hiddenMenuSeq"+ menuSeq).val(count);//set hidden prop count
+		selectButton(menuSeq,count)
 	}else{
 		$(".hiddenMenuSeq"+ menuSeq).val(0);
 	}
-	
+}
+
+function selectButton(menuSeq,count){
+	for($i=1;$i<=count;$i++){
+		buttonClassName = "#personCount"+ menuSeq +"-"+$i;
+		$(buttonClassName).addClass("btn-primary")	;
+	}
 }
 function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	$("#timeslotseq").val(timeSlotSeq);
