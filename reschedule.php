@@ -373,7 +373,7 @@ function validateBooking(){
 		   				var menuPrice = 0;
 		   				$.each( menuDetail, function( key, val ) {
 			   				var rate = val.rate;
-			   				var menuPrice = val.menupric;
+			   				var menuPrice = val.menuprice;
 			   				if(menuPrice != null && menuPrice != "null" && menuPrice != 0 && menuPrice != "0" ){
 			   					rate = val.menuprice;
 			   				}
