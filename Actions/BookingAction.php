@@ -86,7 +86,7 @@ if($call == "saveBooking"){
 		if(!empty($rescheduleBookingId)){
 			$bookingMgr->updateBookingStatus(BookingStatus::rescheduled, $rescheduleBookingId);
 		}
-		//MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
+		MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
 		$message = "Booking Saved Successfully";
 		session_start();
 		$_SESSION["bookingid"] = $bookingId;
