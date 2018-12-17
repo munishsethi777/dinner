@@ -22,7 +22,9 @@ require_once('IConstants.inc');
 		.progressCol{
 			width: 16.66%;
 		}
-		
+		.xdsoft_datetimepicker .xdsoft_label{
+			z-index:999 !important;
+		}
 		
 		@media all  
 			and (max-width: 768px) {
