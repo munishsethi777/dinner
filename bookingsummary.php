@@ -5,6 +5,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DiscountCouponMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require('razorconfig.php');
 require('razorpay-php/Razorpay.php');
 use Razorpay\Api\Api;
@@ -16,11 +17,42 @@ $rescheduleBooking = array();
 $isReschedule = false;
 $rescheduleBookingId = 0;
 $reschedulingAmount = 0;
-if(isset($_POST["rescheduleBookingId"])){
+$name = "";
+$email = "";
+$dob = "";
+$country = "91";
+$mobile= "";
+$isfillGst = "";
+$gstNo = "";
+$companyName = "";
+$companyMobile = "";
+$companyState = "";
+$coupon = "";
+$couponError = "";
+$couponSuccess = "";
+$discount  = 0;
+$discountPercent = 0;
+$couponSeq = 0;
+$couponCode = "";
+if(isset($_POST["rescheduleBookingId"]) && !empty($_POST["rescheduleBookingId"])){
 	$rescheduleBookingId = $_POST["rescheduleBookingId"];
 	$bookingMgr = BookingMgr::getInstance();
 	$rescheduleBooking = $bookingMgr->getBookingDetail($rescheduleBookingId);
 	$reschedulingAmount = $rescheduleBooking["amount"];
+	$name = $rescheduleBooking["fullname"];
+	$email = $rescheduleBooking["emailid"];
+	$dob = $rescheduleBooking["dateofbirth"];
+	$dob = DateUtil::StringToDateByGivenFormat("Y-m-d", $dob);
+	$dob = $dob->format("d-m-Y");
+	$country = $rescheduleBooking["country"];
+	$mobile = $rescheduleBooking["mobilenumber"];
+	$gstNo = $rescheduleBooking["gstnumber"];
+	$companyName = $rescheduleBooking["companyname"];
+	$companyMobile = $rescheduleBooking["companymobile"];
+	$companyState =  $rescheduleBooking["gststate"];
+	if(!empty($gstNo)){
+		$isfillGst = "checked";
+	}
 	$isReschedule = true;
 }
 $timeSlotSeq = $_POST["timeslotseq"];
@@ -42,6 +74,7 @@ $menuImgVisible = array(1=>"none",2=>"none",3=>"none");
 $menusArr = array();
 $menuPriceArr = array();
 $menuPriceJson = "";
+$totalPerson = 0;
 foreach ($menuArr as $key=>$value){
 	if(empty($value)){
 		continue;
@@ -54,6 +87,7 @@ foreach ($menuArr as $key=>$value){
 	}
 	$menuHml .= $value . " " . $menu->getTitle() . " - " . $value . " X " . $rate . "<br/>";
 	$amount += $value * $rate;
+	$totalPerson += $value;
 	$totalAmount += $value * $rate;
 	$menuBtnVisible[$key] = "inline-table";
 	if(!in_array("inline-table", $menuImgVisible)){
@@ -65,25 +99,16 @@ foreach ($menuArr as $key=>$value){
 if(!empty($menuPriceArr)){
 	$menuPriceJson = json_encode($menuPriceArr);
 }
+if($totalPerson >= 10){
+	if($totalPerson == 10){
+		$discountPercent = 10;
+	}elseif($totalPerson > 10){
+		$discountPercent = 15;
+	}
+	$discount = ($discountPercent / 100) * $amount;
+	$totalAmount = $amount - $discount;
+}
 
-
-$name = "";
-$email = "";
-$dob = "";
-$country = "91";
-$mobile= "";
-$isfillGst = "";
-$gstNo = "";
-$companyName = "";
-$companyMobile = "";
-$companyState = "";
-$coupon = "";
-$couponError = "";
-$couponSuccess = "";
-$discount  = 0;
-$discountPercent = 0;
-$couponSeq = 0;
-$couponCode = "";
 if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
 	$name = $_POST["fullName"];
 	$email = $_POST["email"];
@@ -405,6 +430,7 @@ $( document ).ready(function() {
 	 $('#dateofbirth').datetimepicker({
          timepicker:false,
          format:'d-m-Y',
+         maxDate:new Date()
      });
      currDate = getCurrentDate();
 	<?php foreach($menusArr as $menu){?>
@@ -548,7 +574,12 @@ function getAge(birthDateString) {
 
 
 function back(){
-	location.href = "index.php";
+	var isRescheudle = "<?php echo $isReschedule?>"
+	if(isRescheudle == "1"){
+		location.href = "reschedule.php";		
+	}else{
+		location.href = "index.php";
+	}
 }
 function saveBooking(){
 	$("#amount").val("<?php echo $totalAmountInPaise?>");
