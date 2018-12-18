@@ -346,9 +346,14 @@ function validateBooking(){
 			if(success == 1){
 				var bookingDetail = data.bookingDetail;
 				var status = bookingDetail.status;
+				var isPast = bookingDetail.isPast;
 				if(status == "Rescheduled"){
 					var html = '<div class="row">';
 	       			html += '<div class="col-xs-4"><h2>Booking is already rescheduled!</h2></div>';
+	   				html += '</div>';
+				}else if(isPast){
+					var html = '<div class="row">';
+	       			html += '<div class="col-xs-4"><h2>Booking not valid for Reschedule!</h2></div>';
 	   				html += '</div>';
 				}else{
 					var menuDetail = bookingDetail.menuDetail
