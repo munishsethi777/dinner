@@ -99,7 +99,7 @@ foreach ($menuArr as $key=>$value){
 if(!empty($menuPriceArr)){
 	$menuPriceJson = json_encode($menuPriceArr);
 }
-if($totalPerson >= 10){
+if($totalPerson >= 10 && !$isReschedule){
 	if($totalPerson == 10){
 		$discountPercent = 10;
 	}elseif($totalPerson > 10){
@@ -248,7 +248,7 @@ if(!empty($totalAmountInPaise)){
 		                       				<div style="color:red" class="col-xs-4 text-right">- Rs. <?php echo $reschedulingAmount?></div>
 		                       			</div>
 	                       			<?php }?>
-	                       			<?php if(!empty($discount)){ ?>
+	                       			<?php if(!empty($discount) && !$isReschedule){ ?>
 		                       			<div class="row m-b-sm">	
 		                       				<div class="col-xs-8">
 		                       					<small class="text-muted">
@@ -269,6 +269,7 @@ if(!empty($totalAmountInPaise)){
 	                       				<div class="col-xs-4 text-right">Rs <?php //echo $formatedTotalAmount?></div>
 	                       			</div> -->
 	                       			<form id="userInfoForm" name="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-xs">
+	                       			<?php if(!$isReschedule){ ?>
 		                       			<div class="row bg-muted p-h-sm">	
 		                       				<div class="col-xs-4">
 		                       					Discount Coupon
@@ -280,6 +281,7 @@ if(!empty($totalAmountInPaise)){
 		                       					<button type="button" onclick="javascript:applyCoupon()" class="btn btn-danger btn-xs">Apply</button>
 		                       				</div>
 		                       			</div>
+		                       		<?php }?>
 		                       			<?php if(!empty($couponError)){ ?>
 			                       			<div class="row bg-danger p-h-sm m-b-xs">
 			                       				<div class="col-xs-12 text-center">
