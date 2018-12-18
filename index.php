@@ -163,13 +163,14 @@ function loadData(selectedDate){
 			var menuArr = [];
 			var menuSeqs = [];
 			$.each( menuList, function( k, menu ) {
-				fair = "Rs. " + menu.rate;
-				if(menu.discountedRate != null){
-					fair = "<label style='text-decoration: line-through;font-weight:normal'>Rs. " + menu.rate + "</label>";
+				if(menu.discountedRate == null){
+					fair += "Rs. " + menu.rate;
+				}else{	
+					fair += "<label style='text-decoration: line-through;font-weight:normal'>Rs. " + menu.rate + "</label>";
 					fair += " <label class='text-danger' style='font-weight:normal;font-size:15px;'> Rs. "+menu.discountedRate+"</label>";
 				}	
 				
-				fair +="<br><small class='text-muted'> ("+menu.menutitle+")</small><br>";	
+				fair +="<p><small class='text-muted'> ("+menu.menutitle+")</small></p>";	
 				menuArr[k] = menu.menutitle;
 				menuSeqs[k] = menu.menuseq
 	 		});
