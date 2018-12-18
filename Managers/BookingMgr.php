@@ -188,6 +188,10 @@ where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingd
 			$bookingDate = $booking["bookingdate"];
 			$bookedOn = $booking["bookedon"];
 			$bookingDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $bookingDate);
+			$isPast = false;
+			$now = new DateTime();
+			$now->setTime(0, 0);
+			$isPast = $bookingDate <= $now;
 			$bookedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s", $bookedOn);
 			$bookingDateStr = $bookingDate->format("jS F Y");
 			$bookedOnStr = $bookedOn->format("jS F Y H:i a");
@@ -196,6 +200,7 @@ where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingd
 			$bookingDtailMgr = BookingDetailMgr::getInstance();
 			$bookingDetails = $bookingDtailMgr->getBookingDetailAndMenu($booking["seq"]);
 			$booking["menuDetail"] = $bookingDetails;
+			$booking["isPast"] = $isPast;
 			$discountPercent = $booking["discountpercent"];
 			$amount = $booking["amount"] / 100;
 			$booking["amount"] = $amount;
