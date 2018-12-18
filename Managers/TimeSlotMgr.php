@@ -138,6 +138,11 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$randomNumbers[$i] = $i;
 		}
 		
+		$randomSeats = array();
+		for($i=3;$i<=7;$i++){
+			$randomSeats[$i] = $i;
+		}
+		
 		$str1 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Booked '.array_rand($randomNumbers,1) .' times in last 24 hrs</small></h4>';
 		$str2 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Latest Booking: Yesterday</small></h4>';
 		$str3 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Latest Booking: 10mins ago</small></h4>';
@@ -146,8 +151,9 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 		$str6 = '<br><h4 class="text-danger"><i class="fa fa-clock-o" aria-hidden="true"></i><small class="text-danger"> High in demand</small></h4>';
 		$str7 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> '.array_rand($randomNumbers,1) .' people watching</small></h4>';
 		$str8 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> '.array_rand($randomNumbers,1) .' people watching</small></h4>';
-		$str9= "";
-		$str10= "";
+		$str9 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Selling Fast '.array_rand($randomSeats,1) .' seats left</small></h4>';
+		$str10 = '<br><h4><i class="fa fa-clock-o" aria-hidden="true"></i><small> Selling Fast '.array_rand($randomSeats,1) .' seats left</small></h4>';
+		
 		$arr = array($str1,$str2,$str3,$str4,$str5,$str6,$str7,$str8,$str9,$str10);
 		$random_keys=array_rand($arr,1);
 		return $arr[$random_keys];

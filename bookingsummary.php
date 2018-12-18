@@ -253,6 +253,10 @@ if(!empty($totalAmountInPaise)){
 		                       				<div class="col-xs-8">
 		                       					<small class="text-muted">
 		                       						Discount
+		                       						<?php if(!empty($couponCode)){ ?>
+		                       							 (<?php echo $couponCode?>)
+		                       						<?php }?>
+		                       						
 		                       					</small>
 		                       				</div>
 		                       				<div style="color:red" class="col-xs-4 text-right">- Rs. <?php echo $discount?></div>
