@@ -352,7 +352,7 @@ function validateBooking(){
 	   				html += '</div>';
 				}else if(isPast){
 					var html = '<div class="row">';
-	       			html += '<div class="col-xs-4"><h2>Booking not valid for Rechedule!</h2></div>';
+	       			html += '<div class="col-xs-4"><h2>Booking not valid for Reschedule!</h2></div>';
 	   				html += '</div>';
 				}else{
 					var menuDetail = bookingDetail.menuDetail
