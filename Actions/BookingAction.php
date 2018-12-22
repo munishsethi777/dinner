@@ -1,7 +1,9 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Enums/BookingStatus.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/BookingAddOnType.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
@@ -56,6 +58,12 @@ if($call == "saveBooking"){
 			$gst = $_POST["gst"];
 			$gstState = $_POST["companyState"];
 		}
+		$isAddCake = false;
+		$notes = $_POST["notes"];
+		$cakePrice = $_POST["cakePrice"];
+		if(isset($_POST["isAddCake"])){
+			$isAddCake = true;
+		}
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$menuPriceArr = json_decode($menuPriceStr);
 		$booking = new Booking();
@@ -83,10 +91,20 @@ if($call == "saveBooking"){
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
 		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj,$menuPriceArr);
+		$bookingAddOn = null;
+		if($isAddCake){
+			$bookingAddOnMgr = BookingAddOnMgr::getInstance();
+			$bookingAddOn = new BookingAddOn();
+			$bookingAddOn->setAddOnType(BookingAddOnType::cake);
+			$bookingAddOn->setBookingSeq($bookingId);
+			$bookingAddOn->setNotes($notes);
+			$bookingAddOn->setPrice($cakePrice);
+			$bookingAddOnMgr->saveBookingAddOn($bookingAddOn);
+		}
 		if(!empty($rescheduleBookingId)){
 			$bookingMgr->updateBookingStatus(BookingStatus::rescheduled, $rescheduleBookingId);
 		}
-		MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr);
+		//MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn);
 		$message = "Booking Saved Successfully";
 		session_start();
 		$_SESSION["bookingid"] = $bookingId;
@@ -142,6 +160,13 @@ if($call == "saveBookingsFromAdmins"){
 		foreach ($amount as $amt){
 			$totalAmount += $amt;
 		}
+		$totalAmount = $totalAmount * 100;
+		$isAddCake = false;
+		$notes = $_POST["notes"];
+		$cakePrice = $_POST["cakePrice"];
+		if(isset($_POST["isAddCake"])){
+			$isAddCake = true;
+		}
 		$bookingStatus = $_POST["status"];
 		$parentBookingSeq = $_POST["parentbookingseq"];
 		$booking = new Booking();
@@ -168,8 +193,17 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setParentBookingSeq($parentBookingSeq);
 		$bookingId = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingId);
-		
 		$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson,$amount);
+		$bookingAddOnMgr = BookingAddOnMgr::getInstance();
+		$bookingAddOnMgr->deleteByBookingSeq($bookingId);
+		if($isAddCake){
+			$bookingAddOn = new BookingAddOn();
+			$bookingAddOn->setAddOnType(BookingAddOnType::cake);
+			$bookingAddOn->setBookingSeq($bookingId);
+			$bookingAddOn->setNotes($notes);
+			$bookingAddOn->setPrice($cakePrice);
+			$bookingAddOnMgr->saveBookingAddOn($bookingAddOn);
+		}
 		$message = "Booking Saved Successfully";
 	}catch(Exception $e){
 		$success = 0;

@@ -2,6 +2,7 @@
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/TimeSlotMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingMgr.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingAddOnMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingDetailMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/DiscountCouponMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
@@ -16,6 +17,9 @@ $bookedOn = "";
 $disabled = "";
 $bithDate = "";
 $discountCoupons = array();
+$isfillCake = "";
+$notes = "";
+$cakePrice = "500";
 if(isset($_POST["isView"])){
 	$isView = $_POST["isView"];
 	if(!empty($isView)){
@@ -24,6 +28,7 @@ if(isset($_POST["isView"])){
 }
 $bookingStatus = "";
 $parentBookingSeq = 0;
+$bookingAddOn = new BookingAddOn();
 if(isset($_POST["seq"])){
 	$bookingSeq = $_POST["seq"];
 	$bookingManager = BookingMgr::getInstance();
@@ -48,6 +53,13 @@ if(isset($_POST["seq"])){
 	$bookingDetailMgr = BookingDetailMgr::getInstance();
 	$bookingDetail = $bookingDetailMgr->getDetailByBookingSeqAndTimeSlot($bookingSeq, $booking->getTimeSlot());
 	$bookingDetailJson = json_encode($bookingDetail);
+	$bookingAddOnMgr = BookingAddOnMgr::getInstance();
+	$bookingAddOn = $bookingAddOnMgr->findByBookingSeq($bookingSeq);
+	if(!empty($bookingAddOn)){
+		$isfillCake = "checked";
+		$notes = $bookingAddOn->getNotes();
+		$cakePrice = $bookingAddOn->getPrice();
+	}
 }
 $discountCouponMgr = DiscountCouponMgr::getInstance();
 $discountCoupons = $discountCouponMgr->getAll();
@@ -81,6 +93,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 	                        <form id="bookingForm" method="post" action="Actions/BookingAction.php" class="m-t-lg">
 	                        		<input type="hidden" id ="call" name="call"  value="saveBookingsFromAdmins"/>
 	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $booking->getSeq() ?>"/>
+	                        		<input type="hidden" id ="cakePrice" name="cakePrice"  value="<?php echo $cakePrice?>"/>
 	                        		<input type="hidden" id ="status" name="status"  value="<?php echo $bookingStatus ?>"/>
 	                        		<input type="hidden" id ="parentbookingseq" name="parentbookingseq"  value="<?php echo $parentBookingSeq ?>"/>
 	                        		<input type="hidden" id ="availableSeats" name="availableSeats"/>
@@ -200,7 +213,20 @@ $discountCoupons = $discountCouponMgr->getAll();
 										    		
 									    		<?php }?>
                                			</div>	
-                               			
+                               			<div class="form-group row">
+                               			    <label class="col-lg-2 col-form-label">Add On</label>
+		                                	<div class="col-lg-4" >
+		                                	   	<input class="i-checks" <?php echo $isfillCake?> type="checkbox"  name="isAddCake" id="isAddCake" >  Add Cake <small>(Rs. 500/-)</small>
+		                                       </div>
+		                                 </div>
+		                                 <div id="addOnDiv" style="display:block">
+		                                	<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Notes</label>
+			                                    <div class="col-lg-4">
+			                                    	<textarea maxLength="500" name="notes" placeholder="Add Notes" class="form-control" ><?php echo $notes?></textarea>
+			                                    </div>
+		                                	</div>
+		                                </div>
                                			<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Final Amount</label>
 			                                    <div class="col-lg-4 finalAmount"></div>
@@ -256,7 +282,10 @@ $discountCoupons = $discountCouponMgr->getAll();
 	 	var totalAmount = 0;
 		var discountPercent = "<?php echo $booking->getDiscountPercent()?>";
         $(document).ready(function(){
-          
+        	$('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
            $('#bookingDate').datetimepicker({
                timepicker:false,
                format:'d-m-Y',
@@ -275,6 +304,15 @@ $discountCoupons = $discountCouponMgr->getAll();
 	       loadData();
 	       $('#companyState').val("<?php echo $booking->getGstState()?>");
 	       $('#country').val("<?php echo $booking->getCountry()?>");
+	       $('#isAddCake').on('ifChanged', function(event){
+		   		var flag  = $("#isAddCake").is(':checked');
+		   		if(flag){
+		   			$('#addOnDiv').show();
+		   		}else{
+		   		   $('#addOnDiv').hide();
+		   		}
+		   		applyDiscount()
+	   		});
         });
         
         function loadData(){
@@ -353,6 +391,11 @@ $discountCoupons = $discountCouponMgr->getAll();
         			var discount = (discountPercent / 100) * totalAmount
 					totalAmount = totalAmount - discount;
             	}
+        		var isAddCake = $('#isAddCake').is(":checked")
+     	        if(isAddCake){
+            		var cakePrice = $("#cakePrice").val()
+            		totalAmount += parseInt(cakePrice);
+     	        }
             	$(".finalAmount").html("Rs. "+ totalAmount);
       		});
       		
@@ -474,6 +517,10 @@ $discountCoupons = $discountCouponMgr->getAll();
 			    var discount = (percent / 100) * totalAmount;
 			    totalAmount = totalAmount - discount;
 			    $("#discountPercent").val(percent + "%");
+	        }
+	        var isAddCake = $('#isAddCake').is(":checked")
+	        if(isAddCake){
+	        	totalAmount += 500;    
 	        }
 	        $(".finalAmount").html("Rs. "+ totalAmount);
         }
