@@ -3,6 +3,7 @@ require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Booking.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/BookingDetail.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
 class BookingMgr{
 	private static  $bookingMgr;
 	private static $dataStore;
@@ -199,11 +200,14 @@ where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingd
 			$booking["bookedon"] = $bookedOnStr;
 			$bookingDtailMgr = BookingDetailMgr::getInstance();
 			$bookingDetails = $bookingDtailMgr->getBookingDetailAndMenu($booking["seq"]);
+			$bookingAddOnMgr = BookingAddOnMgr::getInstance();
+			$bookingAddOn = $bookingAddOnMgr->FindArrByBookingSeq($booking["seq"]);
 			$booking["menuDetail"] = $bookingDetails;
 			$booking["isPast"] = $isPast;
 			$discountPercent = $booking["discountpercent"];
 			$amount = $booking["amount"] / 100;
 			$booking["amount"] = $amount;
+			$booking["bookingAddOn"] = $bookingAddOn;
 		}
 		return $booking;
 	}

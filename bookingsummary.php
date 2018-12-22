@@ -4,6 +4,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DiscountCouponMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require('razorconfig.php');
@@ -23,6 +24,8 @@ $dob = "";
 $country = "91";
 $mobile= "";
 $isfillGst = "";
+$isfillCake = "";
+$notes = "";
 $gstNo = "";
 $companyName = "";
 $companyMobile = "";
@@ -34,11 +37,20 @@ $discount  = 0;
 $discountPercent = 0;
 $couponSeq = 0;
 $couponCode = "";
+$cakeAmount = 0;
+
 if(isset($_POST["rescheduleBookingId"]) && !empty($_POST["rescheduleBookingId"])){
 	$rescheduleBookingId = $_POST["rescheduleBookingId"];
 	$bookingMgr = BookingMgr::getInstance();
 	$rescheduleBooking = $bookingMgr->getBookingDetail($rescheduleBookingId);
-	$reschedulingAmount = $rescheduleBooking["amount"];
+	$bookingAddOnMgr = BookingAddOnMgr::getInstance();
+	$bookingAddOn = $bookingAddOnMgr->findByBookingSeq($rescheduleBookingId);
+	if(!empty($bookingAddOn)){
+		$isfillCake = "checked";
+		$notes = $bookingAddOn->getNotes();
+		$cakeAmount = $bookingAddOn->getPrice();
+	}
+	$reschedulingAmount = $rescheduleBooking["amount"] + $cakeAmount;
 	$name = $rescheduleBooking["fullname"];
 	$email = $rescheduleBooking["emailid"];
 	$dob = $rescheduleBooking["dateofbirth"];
@@ -75,6 +87,7 @@ $menusArr = array();
 $menuPriceArr = array();
 $menuPriceJson = "";
 $totalPerson = 0;
+
 foreach ($menuArr as $key=>$value){
 	if(empty($value)){
 		continue;
@@ -109,7 +122,7 @@ if($totalPerson >= 10 && !$isReschedule){
 	$totalAmount = $amount - $discount;
 }
 
-if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
+if(isset($_POST["call"]) && (isset($_POST["call"]) == "applyCoupon" || isset($_POST["call"]) == "addCake")){
 	$name = $_POST["fullName"];
 	$email = $_POST["email"];
 	$dob = $_POST["dateofbirth"];
@@ -117,10 +130,20 @@ if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
 	if(isset($_POST["companyInfo"])){
 		$isfillGst = "checked";
 	}
+	if(isset($_POST["isAddCake"])){
+		$isfillCake = "checked";
+	}else{
+		$isfillCake = "";
+		$cakeAmount = 0;
+	}
+	$notes = $_POST["notes"];
 	$gstNo = $_POST["gst"];
 	$companyName = $_POST["companyName"];
 	$companyMobile = $_POST["companyNumber"];
-	$couponCode = $_POST["couponCode"];
+	$couponCode = ""; 
+	if(isset($_POST["couponCode"])){
+		$couponCode = $_POST["couponCode"];
+	}
 	$country = $_POST["country"];
 	$companyState = $_POST["companyState"];
 	$discountCoupnMgr = DiscountCouponMgr::getInstance();
@@ -138,7 +161,11 @@ if(isset($_POST["call"]) && $_POST["call"] == "applyCoupon"){
 			$couponSuccess = "Coupon Applied Successfully!";
 		}
 	}
+	if(isset($_POST["isAddCake"])){
+		$cakeAmount = 500;
+	}
 }
+$totalAmount += $cakeAmount;
 if(!empty($reschedulingAmount) && !empty($totalAmount)){
 	if($totalAmount < $reschedulingAmount){
 		$totalAmount = 0;
@@ -148,11 +175,14 @@ if(!empty($reschedulingAmount) && !empty($totalAmount)){
 	
 	$reschedulingAmount = number_format($reschedulingAmount,2);
 }
+$amountInPaiseWithouAddOn = $totalAmount;
 if(!empty($amount)){
 	$amount = number_format($amount,2);
 	$totalAmount +=  $handlingCharges;
+	$amountWithouAddOn = $totalAmount;
 	$formatedTotalAmount = number_format($totalAmount,2);
 	$totalAmountInPaise = $totalAmount * 100;
+	$amountInPaiseWithouAddOn = $amountInPaiseWithouAddOn * 100;
 }
 $buttonLabel = "Make Payment of Rs " . $formatedTotalAmount;
 if(!empty($discount)){
@@ -262,6 +292,16 @@ if(!empty($totalAmountInPaise)){
 		                       				<div style="color:red" class="col-xs-4 text-right">- Rs. <?php echo $discount?></div>
 		                       			</div>
 	                       			<?php }?>
+	                       			<?php if(!empty($cakeAmount)){ ?>
+		                       			<div class="row m-b-sm">	
+		                       				<div class="col-xs-8">
+		                       					<small class="text-muted">
+		                       						Cake Charges
+		                       					</small>
+		                       				</div>
+		                       				<div class="col-xs-4 text-right">Rs 500.00</div>
+		                       			</div>
+	                       			<?php }?>
 	                       			<!-- <div class="row bg-muted p-h-sm">	
 	                       				<div class="col-xs-8">
 	                       					Sub Total
@@ -305,6 +345,7 @@ if(!empty($totalAmountInPaise)){
 	                       				<input type="hidden" id ="call" name="call" value="saveBooking"/>
 	                       				<input type="hidden" id ="transactionId" name="transactionId"/>
 	                       				<input type="hidden" id ="amount" name="amount"/>
+	                       				<input type="hidden" id ="cakePrice" name="cakePrice" value="<?php echo $cakeAmount?>"/>
 	                       				<input type="hidden" id ="timeslotseq" name="timeslotseq" value="<?php echo $timeSlotSeq?>" />
 	                       				<input type="hidden" id ="rescheduleBookingId" name="rescheduleBookingId" value="<?php echo $rescheduleBookingId?>" />
 	                       				<input type="hidden" id ="selectedDate" name="selectedDate" value="<?php echo $selectedDate?>" />
@@ -342,7 +383,19 @@ if(!empty($totalAmountInPaise)){
 		                                    	<input type="text" id="mobile" value="<?php echo $mobile?>" maxLength="20" name="mobile" required placeholder="Mobile" class="form-control">
 		                                    </div>
 	                                	</div>
-	                                	
+	                                	<div class="form-group row">
+		                                	<div class="col-lg-10" >
+		                                       	<label> <input class="i-checks" <?php echo $isfillCake?> type="checkbox"  name="isAddCake" id="isAddCake" >  Add Cake <small>(Rs. 500/-)</small></label>
+		                                       </div>
+		                                 </div>
+		                                 <div id="addOnDiv" style="display:none">
+		                                	<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Notes</label>
+			                                    <div class="col-lg-10">
+			                                    	<textarea maxLength="500" name="notes" placeholder="Pls enter notes for the cake ordered" class="form-control" ><?php echo $notes?></textarea>
+			                                    </div>
+		                                	</div>
+		                                </div>
 	                                	<div class="form-group row">
 		                                	<div class="col-lg-10" >
 		                                       	<label> <input class="i-checks" <?php echo $isfillGst?> type="checkbox"  name="companyInfo" id="companyInfo" >  Fill GST Information</label>
@@ -476,6 +529,9 @@ $( document ).ready(function() {
 	<?php if(!empty($isfillGst)){?>
 		$('#companyDiv').show();
 	<?php }?>
+	<?php if(!empty($isfillCake)){?>
+		$('#addOnDiv').show();
+	<?php }?>
 	$('#companyInfo').on('ifChanged', function(event){
 		var flag  = $("#companyInfo").is(':checked');
 		if(flag){
@@ -484,8 +540,32 @@ $( document ).ready(function() {
 			$('#companyDiv').hide();
 		}
 	});
+	$('#isAddCake').on('ifChanged', function(event){
+		var flag  = $("#isAddCake").is(':checked');
+		if(flag){
+			addCake();
+			$('#addOnDiv').show();
+		}else{
+		   $('#call').val("addCake");
+       	   $('#userInfoForm')[0].action = "bookingsummary.php";
+       	   $('#userInfoForm')[0].submit();	
+		   $('#addOnDiv').hide();
+		}
+	});
 });
-
+function addCake(){
+	 bootbox.confirm("Do you realy want to add cake to your booking?", function(result) {
+         if(result){
+        	 $('#call').val("addCake");
+        	 $('#userInfoForm')[0].action = "bookingsummary.php";
+        	 $('#userInfoForm')[0].submit();	    
+         }else{
+        	 $("#isAddCake").iCheck('uncheck');
+        	 $("#isAddCake").prop("checked", false);
+        	 $('#addOnDiv').hide();
+         }
+	 });
+}
 function applyCoupon(){
 	$('#call').val("applyCoupon");
 	$('#userInfoForm')[0].action = "bookingsummary.php";
@@ -501,8 +581,8 @@ document.getElementById('rzp-button').onclick = function(e){
 			    return;
 			}
 		   $("#amount").val("<?php echo $totalAmountInPaise?>");
-		   // saveBooking();
-		   //return;
+		   saveBooking();
+		   return;
 			var fullName = $("#fullName").val();
 			var email = $("#email").val();
 			var mobile = $("#mobile").val();
@@ -539,7 +619,7 @@ document.getElementById('rzp-button').onclick = function(e){
 			} 
 			options.handler = function (response){
 				$("#transactionId").val(response.razorpay_payment_id);
-				    $("#amount").val("<?php echo $totalAmountInPaise?>");
+				    $("#amount").val("<?php echo $amountInPaiseWithouAddOn?>");
 				     document.userInfoForm.submit();
 				};
 	
@@ -588,7 +668,7 @@ function back(){
 	}
 }
 function saveBooking(){
-	$("#amount").val("<?php echo $totalAmountInPaise?>");
+	$("#amount").val("<?php echo $amountInPaiseWithouAddOn?>");
     document.userInfoForm.submit();
 } 
 </script> 
