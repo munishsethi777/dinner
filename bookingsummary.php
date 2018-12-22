@@ -392,7 +392,7 @@ if(!empty($totalAmountInPaise)){
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Notes</label>
 			                                    <div class="col-lg-10">
-			                                    	<textarea maxLength="500" name="notes" placeholder="Pls enter notes for the cake ordered" class="form-control" ><?php echo $notes?></textarea>
+			                                    	<textarea maxLength="500" id="notes" name="notes" placeholder="Pls enter notes for the cake ordered" class="form-control" ><?php echo $notes?></textarea>
 			                                    </div>
 		                                	</div>
 		                                </div>
@@ -580,9 +580,9 @@ document.getElementById('rzp-button').onclick = function(e){
 			    alert("You have to be more than 12 years old!");
 			    return;
 			}
-		   $("#amount").val("<?php echo $totalAmountInPaise?>");
-		   saveBooking();
-		   return;
+		   //$("#amount").val("<?php //echo $totalAmountInPaise?>");
+		   //saveBooking();
+		   //return;
 			var fullName = $("#fullName").val();
 			var email = $("#email").val();
 			var mobile = $("#mobile").val();
@@ -611,6 +611,11 @@ document.getElementById('rzp-button').onclick = function(e){
 			options.notes["Country"] = $("#country").val();
 			options.notes["DOB"] = $("#dateofbirth").val();
 			options.notes["DiscountCoupon"] = $("#couponCode").val();
+			options.notes["RescheduleBookingId"] = $("#rescheduleBookingId").val();
+			if($("#isAddCake").prop('checked') == true){
+				options.notes["CakePrice"] = $("#cakePrice").val();	
+				options.notes["Notes"] = $("#notes").val();	
+			}
 			if($("#companyInfo").prop('checked') == true){
 				options.notes["GSTNo"] = $("#gst").val();
 				options.notes["CompanyName"] = $("#companyName").val();
