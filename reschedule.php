@@ -347,6 +347,7 @@ function validateBooking(){
 				var bookingDetail = data.bookingDetail;
 				var status = bookingDetail.status;
 				var isPast = bookingDetail.isPast;
+				var bookingAddOn = bookingDetail.bookingAddOn;
 				if(status == "Rescheduled"){
 					var html = '<div class="row">';
 	       			html += '<div class="col-xs-4"><h2>Booking is already rescheduled!</h2></div>';
@@ -402,11 +403,22 @@ function validateBooking(){
 			   				html += '<div class="col-xs-6 text-danger">Rs. '+discount+'/-</div>';
 			   				html += '</div>';
 		   				}
+		   				var addOnPrice = 0;
+		   				var totalAmount = parseInt(bookingDetail.amount);
+		   				if(bookingAddOn != null && bookingAddOn != ""){
+		   					addOnPrice = parseInt(bookingAddOn.price);
+			   				var adOnType = bookingAddOn.addontype;
+		   					html += '<div class="row">';
+		   	   				html += '<div class="col-lg-2 col-xs-5">'+adOnType+' Charges</div>';
+		   	   				html += '<div class="col-xs-6">Rs. '+addOnPrice+'/-</div>';
+		   	   				html += '</div>';	
+		   				}
+		   				totalAmount = totalAmount + addOnPrice;
 		   				html += '<div class="row">';
 		   				html += '<div class="col-lg-2 col-xs-5 text-navy">Amount Already Paid :</div>';
-		   				html += '<div class="col-xs-2 text-navy">Rs. '+bookingDetail.amount+'/-</div>';
+		   				html += '<div class="col-xs-2 text-navy">Rs. '+totalAmount +'/-</div>';
 		   				html += '</div>';
-		   				$("#amountPaid").val(bookingDetail.amount);
+		   				$("#amountPaid").val(totalAmount);
 		   				$("#rescheduleBookingId").val(bookingDetail.seq);
 						$("#timeSlotDiv").show();	
 				}
