@@ -396,11 +396,11 @@ function validateBooking(){
 		   					var discount = (discountPercent / 100) * menuPrice;
 		   					html += '<div class="row">';
 		   	   				html += '<div class="col-lg-2 col-xs-5">Total :</div>';
-		   	   				html += '<div class="col-xs-6">Rs. '+menuPrice+'/-</div>';
+		   	   				html += '<div class="col-xs-6">Rs. '+menuPrice.toFixed(2)+'/-</div>';
 		   	   				html += '</div>';
 			   	   			html += '<div class="row">';
 			   				html += '<div class="col-lg-2 col-xs-5 text-danger">Discount :</div>';
-			   				html += '<div class="col-xs-6 text-danger">Rs. '+discount+'/-</div>';
+			   				html += '<div class="col-xs-6 text-danger">Rs. '+ discount.toFixed(2) +'/-</div>';
 			   				html += '</div>';
 		   				}
 		   				var addOnPrice = 0;
@@ -410,13 +410,13 @@ function validateBooking(){
 			   				var adOnType = bookingAddOn.addontype;
 		   					html += '<div class="row">';
 		   	   				html += '<div class="col-lg-2 col-xs-5">'+adOnType+' Charges</div>';
-		   	   				html += '<div class="col-xs-6">Rs. '+addOnPrice+'/-</div>';
+		   	   				html += '<div class="col-xs-6">Rs. '+addOnPrice.toFixed(2)+'/-</div>';
 		   	   				html += '</div>';	
 		   				}
 		   				totalAmount = totalAmount + addOnPrice;
 		   				html += '<div class="row">';
 		   				html += '<div class="col-lg-2 col-xs-5 text-navy">Amount Already Paid :</div>';
-		   				html += '<div class="col-xs-2 text-navy">Rs. '+totalAmount +'/-</div>';
+		   				html += '<div class="col-xs-2 text-navy">Rs. '+totalAmount.toFixed(2) +'/-</div>';
 		   				html += '</div>';
 		   				$("#amountPaid").val(totalAmount);
 		   				$("#rescheduleBookingId").val(bookingDetail.seq);
