@@ -65,7 +65,6 @@ require_once('IConstants.inc');
 						<!-- <div class="col-xs-2"><button onclick="rescheduleBooking()" class="btn btn-primary btn-xs">Reschedule Booking</button></div> -->
 					</div>
 					<div class="ibox-content mainDiv">
-						<?php include 'progress.php';?>
 						<div style="margin-top:10px">
 							
 							<div class="col-sm-3 datediv1">
@@ -133,8 +132,7 @@ $(document).ready(function(){
         defaultDate:currDate,
         minDate:minDate,
         maxDate:bookingEndDate
-    }).change(dateChanged)
-    	.on('changeDate', dateChanged);
+    })
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
 });
@@ -145,7 +143,6 @@ function exampleFunction(){
 	alert("test");
 }
 function loadData(selectedDate){
-	showHideProgress();
 	var from = selectedDate.split("-")
 	var d = new Date(from[2], from[1] - 1, from[0])
 	
@@ -204,12 +201,9 @@ function loadData(selectedDate){
 			html += '</div>';
 		});
 	 	$("#dataDiv").html(html);
-	 	showHideProgress();
 	});	 	
 }
-function showHideProgress(){
-	$('.ibox').children('.mainDiv').toggleClass('sk-loading');	
-}
+
 function setPersonCount(menuSeq,count){
 	$("."+menuSeq+"personButton").removeClass("btn-primary");
 	if($(".hiddenMenuSeq"+ menuSeq).val() != count){
