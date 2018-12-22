@@ -57,29 +57,32 @@ require_once('IConstants.inc');
        <div class="row">
 			<div class="col-lg-12">
 				<div class="ibox float-e-margins ">
+					
 					<div class="ibox-title">
 						<h5>
 							FLY DINING<small> select your bookings</small>
 						</h5>
 						<!-- <div class="col-xs-2"><button onclick="rescheduleBooking()" class="btn btn-primary btn-xs">Reschedule Booking</button></div> -->
 					</div>
-					<div style="margin-top:10px">
-						<div class="col-sm-3 datediv1">
-                       		<input type="text" onchange="javascript:loadData(this.value)" 
-                       		name="bookingDate" id="bookingDate" class="form-control bookingDate" style="width:100%"> 	
-                    	</div>
-						
-                    	<div class="col-sm-9" id="dataDiv">
-                       		
-                    	</div>
-
-                    	<div class="col-sm-3 datediv2" >
-                       		<input type="text" onchange="javascript:loadData(this.value)" 
-                       		name="bookingDate" id="bookingDate" class="form-control bookingDate" style="width:100%"> 	
-                    	</div>
-
+					<div class="ibox-content mainDiv">
+						<?php include 'progress.php';?>
+						<div style="margin-top:10px">
+							
+							<div class="col-sm-3 datediv1">
+	                       		
+	                    	</div>
+							
+	                    	<div class="col-sm-9" id="dataDiv">
+	                       		
+	                    	</div>
+	
+	                    	<div class="col-sm-3 datediv2" >
+	                       		<input type="text" onchange="javascript:loadData(this.value)" 
+	                       		name="bookingDate" id="bookingDate" class="form-control bookingDate" style="width:100%"> 	
+	                    	</div>
+	
+	                    </div>
                     </div>
-                    
 				</div>
 			</div>
 		</div>
@@ -129,12 +132,20 @@ $(document).ready(function(){
         useCurrent:false,
         defaultDate:currDate,
         minDate:minDate,
-        maxDate:bookingEndDate,
-    });
+        maxDate:bookingEndDate
+    }).change(dateChanged)
+    	.on('changeDate', dateChanged);
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
 });
+function dateChanged(ev) {
+    alert("test");
+}
+function exampleFunction(){
+	alert("test");
+}
 function loadData(selectedDate){
+	showHideProgress();
 	var from = selectedDate.split("-")
 	var d = new Date(from[2], from[1] - 1, from[0])
 	
@@ -150,12 +161,12 @@ function loadData(selectedDate){
 	
 	$.getJSON("Actions/TimeSlotAction.php?call=getTimeSlots&selectedDate="+selectedDate, function(data){
 		   var html = getHeaders();
-			if(data.length == 0){
+		   if(data.length == 0){
 				html += "<center style='margin-top:10px;'>No Timeslots available for booking, please select some other date</center>";
-			}
+		   }
 		 $.each( data, function( key, val ) {
 	 		html += '<div class="row ibox-content">';
-			html += '<div class="col-xs-2 dateCol p-xs">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
+	 		html += '<div class="col-xs-2 dateCol p-xs">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
 			html += '<div class="col-lg-3 col-sm-3 col-xs-4 timeslotCol p-xs">'+val.timeslot;
 			html += '<br/><small class="text-muted">'+ val.description  +'</small></div>';
 			var fair = "";
@@ -193,7 +204,11 @@ function loadData(selectedDate){
 			html += '</div>';
 		});
 	 	$("#dataDiv").html(html);
+	 	showHideProgress();
 	});	 	
+}
+function showHideProgress(){
+	$('.ibox').children('.mainDiv').toggleClass('sk-loading');	
 }
 function setPersonCount(menuSeq,count){
 	$("."+menuSeq+"personButton").removeClass("btn-primary");
