@@ -3,6 +3,7 @@ require_once('class.phpmailer.php');
 //require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."vendor/autoload.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/html2PdfUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
@@ -11,12 +12,11 @@ require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SMSUtil.php");
 class MailUtil{
 	private static $logger;
-	public static function sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr){
+	public static function sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn){
 		self::$logger = Logger::getLogger ( "logger" );
 		self::$logger->info("sending sendOrderEmailClient email... ");
 		$timeSlotMgr = TimeSlotMgr::getInstance();
 		$menuMgr = MenuMgr::getInstance();
-		
 		$timeSlot = $timeSlotMgr->findBySeq($booking->getTimeSlot());
 		$menus = $menuMgr->findAll();
 		$menuPersonArr = array();
@@ -148,6 +148,19 @@ class MailUtil{
 							</div>
 						</div>';
 					}
+					if(!empty($bookingAddOn)){
+						$cakePrice = $bookingAddOn->getPrice();
+						$netAmount = $netAmount + $cakePrice;
+						$cakePrice = number_format($cakePrice,2,'.','');
+						$html .='<div style="display:flex;width:100%">
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+							<p style="color: #000; font-size: 16px; margin: 0px;">Cake Charges</p>
+						</div>
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+							<p style="color: #000; font-size: 16px; text-align: right; margin: 0px;">'.$cakePrice.'/-</p>
+						</div>
+					</div>';
+					}
 					$netAmount = number_format($netAmount,2,'.','');
 					$html .='<div style="display:flex;width:100%">
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
@@ -238,7 +251,7 @@ class MailUtil{
 			</html>';
 			$subject = "YOUR FLY DINING BOOKING CONFIRMATION.";
 			$emails = array(0=>$booking->getEmailId());
-			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot);
+			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn);
 			MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP,$attachments);
 			$emails = StringConstants::EMAIL_IDS;
 			if(!empty($emails)){
@@ -257,14 +270,14 @@ class MailUtil{
 		$smsUtil->sendSMS($booking->getMobileNumber(), $msg);
 	}
 	
-	private static function getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot){
-		$invoiceAttachment = self::getInvoiceAttachments($booking, $menuPersonArr, $menuPriceArr);
+	private static function getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn){
+		$invoiceAttachment = self::getInvoiceAttachments($booking, $menuPersonArr, $menuPriceArr,$bookingAddOn);
 		//$confimrationAttachment = self::getBookingConfirmationAttahment($booking, $menuPersonArr,$timeSlot);
 		$attachemtns = array("Invoice"=>$invoiceAttachment);
 		return $attachemtns;
 	}
 	
-	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr){
+	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr,$bookingAddOn){
 		$bookingDate = $booking->getBookedOn()->format('M d, Y, h:i:s a');
 		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:0px;font-family:arial;
 				line-height:20px" >
@@ -343,6 +356,15 @@ class MailUtil{
 				<tr style="font-size:13px">
 					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">DISCOUNT</td>
 					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;"><font color="red">'.$discount.'/-</font></td>
+				</tr>';
+			}
+			if(!empty($bookingAddOn)){
+				$cakePrice = $bookingAddOn->getPrice();
+				$netAmount = $netAmount + $cakePrice;
+				$cakePrice = number_format($cakePrice,2,'.','');
+				$html .= '<tr style="font-size:13px">
+					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">Cake Charges</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;">'.$cakePrice.'/-</td>
 				</tr>';
 			}
 			$netAmount = number_format($netAmount,2,'.','');
