@@ -188,7 +188,7 @@ $buttonLabel = "Make Payment of Rs " . $formatedTotalAmount;
 if(!empty($discount)){
 	$discount = number_format($discount,2);
 }
-//$totalAmountInPaise = 100;]
+//$totalAmountInPaise = 100;
 $razorpayOrderId = "";
 if(!empty($totalAmountInPaise)){
 	$api = new Api($keyId, $keySecret);

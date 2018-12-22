@@ -243,7 +243,7 @@ class MailUtil{
 				style="background: #DAA520; margin-top: 1 0px; color: #000; padding: 10px;"
 				align="center">
 				For any further assistance, mail to blr@flydining.com<br>or call:<b>769
-					81 81 333, 8130 540 906</b>
+					81 81 000, 8130 540 906</b>
 			</p>
 					</div>
 				</div>
