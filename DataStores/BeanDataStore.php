@@ -63,7 +63,7 @@ class BeanDataStore {
 									$methodName 
 							) );
 							if ($value instanceof DateTime) {
-								if($column == "createdon" && $id > 0){
+								if(($column == "bookedon" || $column == "createdon") && $id > 0){
 									continue;
 								}
 								$value = $value->format ( 'Y-m-d H:i:s' );
