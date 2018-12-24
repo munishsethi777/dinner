@@ -37,6 +37,10 @@ class BookingAddOnMgr{
 		}
 		return null;
 	}
+	public function deleteBookingAddOnInList($bookingSeqs){
+		$query = "delete from bookingaddons where bookingseq in ($bookingSeqs)";
+		self::$dataStore->executeQuery($query);
+	}
 	
 	public function deleteByBookingSeq($bookingSeq){
 		$colVal["bookingseq"] = $bookingSeq;

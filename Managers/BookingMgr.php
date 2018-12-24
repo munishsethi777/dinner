@@ -153,6 +153,8 @@ where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingd
 		if($flag){
 			$bookingDetailMgr = BookingDetailMgr::getInstance();
 			$bookingDetailMgr->deleteBookingDetailInList($bookingSeqs);
+			$bookingAddOnMgr = BookingAddOnMgr::getInstance();
+			$bookingAddOnMgr->deleteBookingAddOnInList($bookingSeqs);
 		}
 		return $flag;
 	}
