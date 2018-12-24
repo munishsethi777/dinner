@@ -38,7 +38,8 @@ $discountPercent = 0;
 $couponSeq = 0;
 $couponCode = "";
 $cakeAmount = 0;
-
+$inconvenienceCharges = 0;
+$inconveniencePercent = 40;
 if(isset($_POST["rescheduleBookingId"]) && !empty($_POST["rescheduleBookingId"])){
 	$rescheduleBookingId = $_POST["rescheduleBookingId"];
 	$bookingMgr = BookingMgr::getInstance();
@@ -51,6 +52,9 @@ if(isset($_POST["rescheduleBookingId"]) && !empty($_POST["rescheduleBookingId"])
 		$cakeAmount = $bookingAddOn->getPrice();
 	}
 	$reschedulingAmount = $rescheduleBooking["amount"] + $cakeAmount;
+	if($reschedulingAmount > 0){
+		$inconvenienceCharges = ($inconveniencePercent / 100) * $reschedulingAmount;
+	}
 	$name = $rescheduleBooking["fullname"];
 	$email = $rescheduleBooking["emailid"];
 	$dob = $rescheduleBooking["dateofbirth"];
@@ -112,11 +116,11 @@ foreach ($menuArr as $key=>$value){
 if(!empty($menuPriceArr)){
 	$menuPriceJson = json_encode($menuPriceArr);
 }
-if($totalPerson >= 10 && !$isReschedule){
-	if($totalPerson == 10){
+if($totalPerson >= 11 && !$isReschedule){
+	if($totalPerson <= 15){
 		$discountPercent = 10;
-	}elseif($totalPerson > 10){
-		$discountPercent = 15;
+	}elseif($totalPerson > 15){
+		$discountPercent = 20;
 	}
 	$discount = ($discountPercent / 100) * $amount;
 	$totalAmount = $amount - $discount;
@@ -179,8 +183,10 @@ $amountInPaiseWithouAddOn = $totalAmount;
 if(!empty($amount)){
 	$amount = number_format($amount,2);
 	$totalAmount +=  $handlingCharges;
+	$totalAmount += $inconvenienceCharges;
 	$amountWithouAddOn = $totalAmount;
 	$formatedTotalAmount = number_format($totalAmount,2);
+	$inconvenienceCharges = number_format($inconvenienceCharges,2);
 	$totalAmountInPaise = $totalAmount * 100;
 	$amountInPaiseWithouAddOn = $amountInPaiseWithouAddOn * 100;
 }
@@ -269,13 +275,21 @@ if(!empty($totalAmountInPaise)){
 	                       				<div class="col-xs-4 text-right">Rs 0.00</div>
 	                       			</div>
 	                       			<?php if(!empty($isReschedule)){ ?>
+	                       				<div class="row m-b-sm">	
+		                       				<div class="col-xs-8">
+		                       					<small class="text-muted">
+		                       						Inconvenience Charges
+		                       					</small>
+		                       				</div>
+		                       				<div style="color:red" class="col-xs-4 text-right"><?php echo "Rs " . $inconvenienceCharges?></div>
+	                       				</div>
 		                       			<div class="row m-b-sm">	
 		                       				<div class="col-xs-8">
 		                       					<small class="text-muted">
 		                       						Earlier Paid Amount
 		                       					</small>
 		                       				</div>
-		                       				<div style="color:red" class="col-xs-4 text-right">- Rs. <?php echo $reschedulingAmount?></div>
+		                       				<div style="color:green" class="col-xs-4 text-right">- Rs. <?php echo $reschedulingAmount?></div>
 		                       			</div>
 	                       			<?php }?>
 	                       			<?php if(!empty($discount) && !$isReschedule){ ?>
