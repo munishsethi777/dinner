@@ -68,7 +68,9 @@ require_once('IConstants.inc');
 						<div style="margin-top:10px">
 							
 							<div class="col-sm-3 datediv1">
-	                       		
+	                       		<input type="text" onchange="javascript:loadData(this.value)" 
+                       		name="bookingDate" id="bookingDate" class="form-control bookingDate" style="width:100%"> 	
+                    	
 	                    	</div>
 							
 	                    	<div class="col-sm-9" id="dataDiv">
