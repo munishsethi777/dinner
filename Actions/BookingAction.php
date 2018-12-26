@@ -88,15 +88,19 @@ if($call == "saveBooking"){
 		$booking->setCountry($country);
 		$booking->setDateOfBirth($dateOfBirth);
 		$booking->setParentBookingSeq($rescheduleBookingId);
-		$bookingId = $bookingMgr->saveBooking($booking);
-		$booking->setSeq($bookingId);
-		$bookingDetailMgr->saveBookingDetails($bookingId, $menuPersonsObj,$menuPriceArr);
+		$menuPersonsArr = json_decode($menuPersonsStr,true);
+		$totalMembers = array_sum($menuPersonsArr);
+		$bookingSeq = $bookingMgr->saveBooking($booking);
+		$booking->setSeq($bookingSeq);
+		$bookingId = $bookingMgr->updateBookingId($booking, $totalMembers);
+		$booking->setBookingId($bookingId);
+		$bookingDetailMgr->saveBookingDetails($bookingSeq, $menuPersonsObj,$menuPriceArr);
 		$bookingAddOn = null;
 		if($isAddCake){
 			$bookingAddOnMgr = BookingAddOnMgr::getInstance();
 			$bookingAddOn = new BookingAddOn();
 			$bookingAddOn->setAddOnType(BookingAddOnType::cake);
-			$bookingAddOn->setBookingSeq($bookingId);
+			$bookingAddOn->setBookingSeq($bookingSeq);
 			$bookingAddOn->setNotes($notes);
 			$bookingAddOn->setPrice($cakePrice);
 			$bookingAddOnMgr->saveBookingAddOn($bookingAddOn);
@@ -104,10 +108,10 @@ if($call == "saveBooking"){
 		if(!empty($rescheduleBookingId)){
 			$bookingMgr->updateBookingStatus(BookingStatus::rescheduled, $rescheduleBookingId);
 		}
-		//MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn);
+		MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn);
 		$message = "Booking Saved Successfully";
 		session_start();
-		$_SESSION["bookingid"] = $bookingId;
+		$_SESSION["bookingid"] = $bookingSeq;
 		}catch(Exception $e){
 			$success = 0;
 			$message  = $e->getMessage();
@@ -191,15 +195,21 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setDiscountPercent($couponPercent);
 		$booking->setStatus($bookingStatus);
 		$booking->setParentBookingSeq($parentBookingSeq);
-		$bookingId = $bookingMgr->saveBooking($booking);
-		$booking->setSeq($bookingId);
-		$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson,$amount);
+		$bookingId = $_POST["bookingid"];
+		$booking->setBookingId($bookingId);
+		$bookingSeq = $bookingMgr->saveBooking($booking);
+		$booking->setSeq($bookingSeq);
+		if(empty($seq)){
+			$bookingId = $bookingMgr->updateBookingId($booking, $sum);
+		}
+		$booking->setBookingId($bookingId);
+		$bookingDetailMgr->saveBookingDetail($bookingSeq, $menuPerson,$amount);
 		$bookingAddOnMgr = BookingAddOnMgr::getInstance();
-		$bookingAddOnMgr->deleteByBookingSeq($bookingId);
+		$bookingAddOnMgr->deleteByBookingSeq($bookingSeq);
 		if($isAddCake){
 			$bookingAddOn = new BookingAddOn();
 			$bookingAddOn->setAddOnType(BookingAddOnType::cake);
-			$bookingAddOn->setBookingSeq($bookingId);
+			$bookingAddOn->setBookingSeq($bookingSeq);
 			$bookingAddOn->setNotes($notes);
 			$bookingAddOn->setPrice($cakePrice);
 			$bookingAddOnMgr->saveBookingAddOn($bookingAddOn);
@@ -251,11 +261,11 @@ if($call == "saveBookingsFromAdmins"){
 // 			$booking->setAmount($totalAmount);
 // 			$booking->setTransactionId($tansactionId);
 // 			$booking->setGSTNumber($gstNo);
-// 			$bookingId = $bookingMgr->saveBooking($booking);
-// 			$booking->setSeq($bookingId);
+// 			$bookingSeq = $bookingMgr->saveBooking($booking);
+// 			$booking->setSeq($bookingSeq);
 				
 				
-// 			$bookingDetailMgr->saveBookingDetail($bookingId, $menuPerson);
+// 			$bookingDetailMgr->saveBookingDetail($bookingSeq, $menuPerson);
 // 			$message = "Booking Saved Successfully";
 // 		}
 
@@ -295,9 +305,9 @@ if($call == "deleteBooking"){
 if($call == "getBookingDetail"){
 	$bookingDetail = array();
 	try{
-		$bookingId = $_GET["id"];
+		$bookingId= $_GET["id"];
 		$bookingMgr = BookingMgr::getInstance();
-		$bookingDetail = $bookingMgr->getBookingDetail($bookingId);
+		$bookingDetail = $bookingMgr->getBookingDetailById($bookingId);
 		if(empty($bookingDetail)){
 			$success = 0;
 			$message = "Booking Not Found";
