@@ -278,7 +278,7 @@ if(!empty($totalAmountInPaise)){
 	                       				<div class="row m-b-sm">	
 		                       				<div class="col-xs-8">
 		                       					<small class="text-muted">
-		                       						Inconvenience Charges
+		                       						Inconvenience Charges(40%)
 		                       					</small>
 		                       				</div>
 		                       				<div style="color:red" class="col-xs-4 text-right"><?php echo "Rs " . $inconvenienceCharges?></div>
