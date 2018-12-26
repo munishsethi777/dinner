@@ -256,7 +256,7 @@ class MailUtil{
 			$emails = StringConstants::EMAIL_IDS;
 			if(!empty($emails)){
 				$emails = explode(",", $emails);
-				//MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
+				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
 			}
 			MailUtil::sendBookingConfirmSMS($booking, $timeSlot);
 	}
@@ -438,10 +438,10 @@ class MailUtil{
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->SMTPAuth   = true;                  // enable SMTP authentication
 			$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-			$mail->Host       = "mail.satyainfopages.in";      // sets GMAIL as the SMTP server
+			$mail->Host       = "xxxxxxxx";      // sets GMAIL as the SMTP server
 			$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-			$mail->Username   = "noreply@satyainfopages.in";  // GMAIL username
-			$mail->Password   = "tomzo1-wosmus-hUhvep";           // GMAIL password
+			$mail->Username   = "xxxxxxxxx";  // GMAIL username
+			$mail->Password   = "xxxxxxxxxx";           // GMAIL password
 		}
 		$mail->SetFrom('noreply@flydining.com', 'FlyDining');
 		$mail->Subject = $subject;
