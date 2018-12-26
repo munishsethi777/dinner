@@ -29,6 +29,7 @@ if(isset($_POST["isView"])){
 $bookingStatus = "";
 $parentBookingSeq = 0;
 $bookingAddOn = new BookingAddOn();
+$allBookingStatus = BookingStatus::getAll();
 if(isset($_POST["seq"])){
 	$bookingSeq = $_POST["seq"];
 	$bookingManager = BookingMgr::getInstance();
@@ -94,7 +95,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 	                        		<input type="hidden" id ="call" name="call"  value="saveBookingsFromAdmins"/>
 	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $booking->getSeq() ?>"/>
 	                        		<input type="hidden" id ="cakePrice" name="cakePrice"  value="<?php echo $cakePrice?>"/>
-	                        		<input type="hidden" id ="status" name="status"  value="<?php echo $bookingStatus ?>"/>
+	                        		<input type="hidden" id ="bookingid" name="bookingid"  value="<?php echo $booking->getBookingId() ?>"/>
 	                        		<input type="hidden" id ="parentbookingseq" name="parentbookingseq"  value="<?php echo $parentBookingSeq ?>"/>
 	                        		<input type="hidden" id ="availableSeats" name="availableSeats"/>
 	                       			<div class="form-group row">
@@ -213,6 +214,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 										    		
 									    		<?php }?>
                                			</div>	
+                               			
                                			<div class="form-group row">
                                			    <label class="col-lg-2 col-form-label">Add On</label>
 		                                	<div class="col-lg-4" >
@@ -232,7 +234,30 @@ $discountCoupons = $discountCouponMgr->getAll();
 			                                    <div class="col-lg-4 finalAmount"></div>
 									    		
                                			</div>	
-	                                
+	                                <?php if(!empty($booking->getSeq())){?>
+                               			<div class="form-group row">
+                               			    <label class="col-lg-2 col-form-label">Booking Id</label>
+		                                	<span class="col-lg-4"><?php echo $booking->getBookingId()?></span>
+		                                       
+		                                 </div>
+		                             	<div class="form-group row">
+			                       				<label class="col-lg-2 col-form-label">Status</label>
+			                                    <div class="col-lg-4">
+			                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="status" name="status">
+														<option value="0">Select Status</option>
+														<?php foreach ($allBookingStatus as $key=>$bookingStatus){
+															$selected = "";
+															if($booking->getStatus() == $bookingStatus){
+																$selected = "selected";
+															}
+															?>
+															<option <?php echo $selected ?> value="<?php echo $bookingStatus?>"><?php echo $bookingStatus?></option>
+														<?php }?>
+													</select>
+									    		</div>
+									   </div>	
+                               			    
+		                             <?php }?>
 	                                <?php if(!empty($relatedBooking)){ 
 	                                		$status = "";
 	                                		if($isRecheduled){
