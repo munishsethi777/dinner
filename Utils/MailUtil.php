@@ -52,7 +52,7 @@ class MailUtil{
 						booking!</p>
 					<p
 						style="font-size: 24px; font-weight: bold; margin: 0px; color: #000;">Order
-						Id: '.$booking->getSeq().'</p>
+						Id: '.$booking->getBookingId().'</p>
 				</div>
 			</div><div style="margin: 20px 0 0;display:flex">
 				<div style="border-right: 1px solid #f1f1f1;max-width:50%;padding:0px 15px;">
@@ -256,14 +256,14 @@ class MailUtil{
 			$emails = StringConstants::EMAIL_IDS;
 			if(!empty($emails)){
 				$emails = explode(",", $emails);
-				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
+				//MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
 			}
 			MailUtil::sendBookingConfirmSMS($booking, $timeSlot);
 	}
 	
 	private static function sendBookingConfirmSMS($booking,$timeSlot){
 		$bookingDate = $booking->getBookingDate()->format('M d, Y');
-		$bookingId = $booking->getSeq();
+		$bookingId = $booking->getBookingId();
 		$timeSlotTitle = $timeSlot->getTitle();
 		$msg = "Your FlyDining booking ID - $bookingId for $bookingDate @ $timeSlotTitle is confirmed. Pls reach 30 minutes before your timeslot. Route & Location - https://goo.gl/rwzvQ8";
 		$smsUtil = SMSUtil::getInstance();
@@ -287,7 +287,7 @@ class MailUtil{
 					Bengaluru, Karnataka - 560024, INDIA <br>
 					<b>Phone :</b> +91-81325-40906<br>
 					<b>Email :</b> nivedika@flydining.com<br>
-					<b>Bill No :</b> '.$booking->getSeq().'<br>
+					<b>Bill No :</b> '.$booking->getBookingId().'<br>
 					<b>Date :</b> '.$bookingDate .'<br>
 					
 					<b>GST No :</b> 29ADHFS4111J1ZY<br>
@@ -390,7 +390,7 @@ class MailUtil{
 					<p>
 						<b>BOOKING CONFIRMATION</b><br>
 						Dear'. $booking->getFullName()
-						.'Please find attached your booking <b>"'.$booking->getSeq().'"</b> Confirmation in the Flydining on date <b>"'.$booking->getBookingDate()->format('M d, Y').'"</b> at <b>"('.$timeSlot->getTitle().')"</b>.
+						.'Please find attached your booking <b>"'.$booking->getBookingId().'"</b> Confirmation in the Flydining on date <b>"'.$booking->getBookingDate()->format('M d, Y').'"</b> at <b>"('.$timeSlot->getTitle().')"</b>.
 						Please print this confirmation and bring it with you. Do not hesitate to contact our customer support at hello@flydining.com in regards to
 						your booking.
 					</p>
@@ -438,10 +438,10 @@ class MailUtil{
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->SMTPAuth   = true;                  // enable SMTP authentication
 			$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-			$mail->Host       = "mail.virsacouture.in";      // sets GMAIL as the SMTP server
+			$mail->Host       = "mail.satyainfopages.in";      // sets GMAIL as the SMTP server
 			$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-			$mail->Username   = "info@virsacouture.com";  // GMAIL username
-			$mail->Password   = "xxx";           // GMAIL password
+			$mail->Username   = "noreply@satyainfopages.in";  // GMAIL username
+			$mail->Password   = "tomzo1-wosmus-hUhvep";           // GMAIL password
 		}
 		$mail->SetFrom('noreply@flydining.com', 'FlyDining');
 		$mail->Subject = $subject;
@@ -450,7 +450,7 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
-        $mail->AddBCC(StringConstants::BCC_EMAIL);
+        //$mail->AddBCC(StringConstants::BCC_EMAIL);
         
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";
