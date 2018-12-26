@@ -4,6 +4,7 @@ require_once('class.phpmailer.php');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."vendor/autoload.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/html2PdfUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
@@ -20,7 +21,24 @@ class MailUtil{
 		$timeSlot = $timeSlotMgr->findBySeq($booking->getTimeSlot());
 		$menus = $menuMgr->findAll();
 		$menuPersonArr = array();
-		
+		$parentBookingSeq = $booking->getParentBookingSeq();
+		$isRescheduled = false;
+		$earlierPaidAmount = 0;
+		$inconvenienceCharges = 0;
+		$inconveniencePercent = 20;
+		if(!empty($parentBookingSeq)){
+			$bookingMgr = BookingMgr::getInstance();
+			$rescheduleBooking = $bookingMgr->getBookingDetail($parentBookingSeq);
+			$bookingAddOnMgr = BookingAddOnMgr::getInstance();
+			$bookingAddOn = $bookingAddOnMgr->findByBookingSeq($parentBookingSeq);
+			if(!empty($bookingAddOn)){
+				$cakeAmount = $bookingAddOn->getPrice();
+			}
+			$earlierPaidAmount = $rescheduleBooking["amount"] + $cakeAmount;
+			if($earlierPaidAmount > 0){
+				$inconvenienceCharges = ($inconveniencePercent / 100) * $earlierPaidAmount;
+			}
+		}
 		foreach($menus as $menu){
 			$menuSeq = $menu->getSeq();
 			foreach($menuPersonsObj as $key=>$value){
@@ -148,6 +166,27 @@ class MailUtil{
 							</div>
 						</div>';
 					}
+					if(!empty($earlierPaidAmount)){
+						$netAmount = $netAmount + $inconvenienceCharges;
+						$netAmount = $netAmount - $earlierPaidAmount;
+						$inconvenienceCharges = number_format($inconvenienceCharges,2,'.','');
+						$earlierPaidAmount = number_format($earlierPaidAmount,2,'.','');
+						$html .='<div style="display:flex;width:100%">
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+							<p style="color: red; font-size: 16px; margin: 0px;">Inconvenience Charges(20%)</p>
+						</div>
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+							<p style="color: red; font-size: 16px; text-align: right; margin: 0px;">'.$inconvenienceCharges.'/-</p>
+						</div>
+					</div><div style="display:flex;width:100%;border-bottom:1px silver solid;padding-bottom:10px;">
+							<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+								<p style="color:green; font-size: 16px; margin: 0px;">Earlier Paid Amount</p>
+							</div>
+							<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+								<p style="color:green; font-size: 16px; text-align: right; margin: 0px;">'.$earlierPaidAmount.'/-</p>
+							</div>
+						</div>';
+					}
 					if(!empty($bookingAddOn)){
 						$cakePrice = $bookingAddOn->getPrice();
 						$netAmount = $netAmount + $cakePrice;
@@ -165,7 +204,7 @@ class MailUtil{
 					$html .='<div style="display:flex;width:100%">
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
 							<p
-								style="font-weight: bold; color: #000; font-size: 21px; margin: 0px;">Net Amount</p>
+								style="font-weight: bold; color: #000; font-size: 21px; margin: 0px;">Net Payable Amount</p>
 						</div>
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
 							<p style="font-weight: bold; color: #000; font-size: 21px; text-align: right; margin: 0px;">Rs.'.$netAmount.'/-</p>
@@ -252,7 +291,7 @@ class MailUtil{
 			</html>';
 			$subject = "YOUR FLY DINING BOOKING CONFIRMATION.";
 			$emails = array(0=>$booking->getEmailId());
-			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn);
+			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount);
 			MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP,$attachments);
 			$emails = StringConstants::EMAIL_IDS;
 			if(!empty($emails)){
@@ -271,14 +310,14 @@ class MailUtil{
 		$smsUtil->sendSMS($booking->getMobileNumber(), $msg);
 	}
 	
-	private static function getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn){
-		$invoiceAttachment = self::getInvoiceAttachments($booking, $menuPersonArr, $menuPriceArr,$bookingAddOn);
+	private static function getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount){
+		$invoiceAttachment = self::getInvoiceAttachments($booking, $menuPersonArr, $menuPriceArr,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount);
 		//$confimrationAttachment = self::getBookingConfirmationAttahment($booking, $menuPersonArr,$timeSlot);
 		$attachemtns = array("Invoice"=>$invoiceAttachment);
 		return $attachemtns;
 	}
 	
-	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr,$bookingAddOn){
+	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount){
 		$bookingDate = $booking->getBookedOn()->format('M d, Y, h:i:s a');
 		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:0px;font-family:arial;
 				line-height:20px" >
@@ -359,6 +398,20 @@ class MailUtil{
 					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;"><font color="red">'.$discount.'/-</font></td>
 				</tr>';
 			}
+			if(!empty($earlierPaidAmount)){
+				$netAmount = $netAmount + $inconvenienceCharges;
+				$netAmount = $netAmount - $earlierPaidAmount;
+				$inconvenienceCharges = number_format($inconvenienceCharges,2,'.','');
+				$earlierPaidAmount = number_format($earlierPaidAmount,2,'.','');
+				$html .= '<tr style="font-size:13px">
+					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">INCONVENIENCE CHARGES(20%)</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;"><font color="red">'.$inconvenienceCharges.'/-</font></td>
+				</tr>
+				<tr style="font-size:13px">
+					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">EARLIER PAID AMOUNT</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;"><font color="green">'.$earlierPaidAmount.'/-</font></td>
+				</tr>';
+			}
 			if(!empty($bookingAddOn)){
 				$cakePrice = $bookingAddOn->getPrice();
 				$netAmount = $netAmount + $cakePrice;
@@ -370,7 +423,7 @@ class MailUtil{
 			}
 			$netAmount = number_format($netAmount,2,'.','');
 			$html .='<tr style="font-size:13px">
-				<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">NET AMOUNT</td>
+				<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">NET PAYABLE AMOUNT</td>
 				<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;">Rs. '.$netAmount.'/-</td>
 			</tr>
 			<tr style="font-size:13px">
@@ -439,10 +492,10 @@ class MailUtil{
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->SMTPAuth   = true;                  // enable SMTP authentication
 			$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-			$mail->Host       = "xxxxxxxx";      // sets GMAIL as the SMTP server
+			$mail->Host       = "mail.satyainfopages.in";      // sets GMAIL as the SMTP server
 			$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-			$mail->Username   = "xxxxxxxxx";  // GMAIL username
-			$mail->Password   = "xxxxxxxxxx";           // GMAIL password
+			$mail->Username   = "noreply@satyainfopages.in";  // GMAIL username
+			$mail->Password   = "tomzo1-wosmus-hUhvep";           // GMAIL password
 		}
 		$mail->SetFrom('noreply@flydining.com', 'FlyDining');
 		$mail->Subject = $subject;

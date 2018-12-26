@@ -39,7 +39,7 @@ $couponSeq = 0;
 $couponCode = "";
 $cakeAmount = 0;
 $inconvenienceCharges = 0;
-$inconveniencePercent = 40;
+$inconveniencePercent = 20;
 if(isset($_POST["rescheduleBookingId"]) && !empty($_POST["rescheduleBookingId"])){
 	$rescheduleBookingId = $_POST["rescheduleBookingId"];
 	$bookingMgr = BookingMgr::getInstance();
@@ -278,7 +278,7 @@ if(!empty($totalAmountInPaise)){
 	                       				<div class="row m-b-sm">	
 		                       				<div class="col-xs-8">
 		                       					<small class="text-muted">
-		                       						Inconvenience Charges(40%)
+		                       						Inconvenience Charges(20%)
 		                       					</small>
 		                       				</div>
 		                       				<div style="color:red" class="col-xs-4 text-right"><?php echo "Rs " . $inconvenienceCharges?></div>
@@ -595,8 +595,8 @@ document.getElementById('rzp-button').onclick = function(e){
 			    return;
 			}
 		   //$("#amount").val("<?php //echo $totalAmountInPaise?>");
-		   //saveBooking();
-		   //return;
+		   saveBooking();
+		   return;
 			var fullName = $("#fullName").val();
 			var email = $("#email").val();
 			var mobile = $("#mobile").val();
