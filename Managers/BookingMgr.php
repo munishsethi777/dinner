@@ -20,7 +20,7 @@ class BookingMgr{
 	
 	public function getAvailableSeats($date,$timeSlots){
 		$query = "SELECT sum(bookingdetails.members) as totalcount from bookings inner JOIN bookingdetails on bookings.seq = bookingdetails.bookingseq
-where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingdate = '$date' and timeslot = $timeSlots";
+where ((bookings.status != 'Rescheduled' and bookings.status != 'Cancelled') or bookings.status is NULL) and bookingdate = '$date' and timeslot = $timeSlots";
 		return self::$dataStore->executeCountQueryWithSql($query);
 	}
 	
@@ -36,8 +36,30 @@ where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingd
 		return $id;
 	}
 	
+	public function getBookingId($booking,$totalMembers){
+		$location = "BLR";
+		$sessionId = $booking->getTimeSlot();
+		$date = new DateTime();
+		$dateStr = $date->format("dmY");
+		$bookingId = $location . "-" . $dateStr ."-". $sessionId ."-". $totalMembers . "-".$booking->getSeq();
+		return $bookingId;
+	}
+	
+	public function updateBookingId($booking,$totalMembers){
+		$bookingId = $this->getBookingId($booking, $totalMembers);
+		$colVal["bookingid"] = $bookingId;
+		$condition["seq"] = $booking->getSeq();
+		$flag = self::$dataStore->updateByAttributesWithBindParams($colVal,$condition);
+		if($flag){
+			return $bookingId;
+		}
+		return null;
+	}
+	
+	
+	
 	public function getBookingJsonForGrid(){
-		$query = "select bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,timeslots.title as timeslot from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
+		$query = "select bookings.bookingid,bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,timeslots.title as timeslot from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
 		$bookings =  self::$dataStore->executeQuery($query,true,false,true);
 		$bookingArr = array();
 		$bookingMainArr = array();
@@ -55,7 +77,7 @@ where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingd
 			$bookedDate = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookedDate);
 			$bookedDate = $bookedDate->format("d-m-Y");
 			$arr = array();
-			$arr["bookings.seq"] = $bookingSeq;
+			$arr["bookingid"] = $booking["bookingid"];
 			$arr["seq"] = $bookingSeq;
 			$timeSlot = $booking["timeslot"];
 			$arr["timeslots.title"] = $timeSlot;
@@ -178,6 +200,14 @@ where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingd
 		}
 		return null;
 	}
+	private function getBookingWithTimeSlotById($bookingId){
+		$query = "select bookings.*,timeslots.title from bookings inner join timeslots on bookings.timeslot = timeslots.seq where bookings.bookingid = '$bookingId'";
+		$bookings = self::$dataStore->executeQuery($query);
+		if(!empty($bookings)){
+			return $bookings[0];
+		}
+		return null;
+	}
 	
 	public function updateBookingStatus($status,$bookigId){
 		$colVal["status"] = $status;
@@ -187,6 +217,17 @@ where (bookings.status != 'Rescheduled' or bookings.status is NULL) and bookingd
 	
 	public function getBookingDetail($bookingId){
 		$booking = $this->getBookingWithTimeSlot($bookingId);
+		$booking = $this->getBookingDetailArr($booking);
+		return $booking;
+	}
+	
+	public function getBookingDetailById($bookingId){
+		$booking = $this->getBookingWithTimeSlotById($bookingId);
+		$booking = $this->getBookingDetailArr($booking);
+		return $booking;
+	}
+	
+	private function getBookingDetailArr($booking){
 		if(!empty($booking)){
 			$bookingDate = $booking["bookingdate"];
 			$bookedOn = $booking["bookedon"];
