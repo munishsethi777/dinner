@@ -1,0 +1,1 @@
+ALTER TABLE `bookings` ADD `bookingid` VARCHAR NULL AFTER `status`;
