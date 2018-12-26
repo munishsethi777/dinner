@@ -106,7 +106,7 @@
         function loadGrid(menus){
             
             var columns = [
-			  { text: 'ID', datafield: 'bookings.seq',width:"5%"},
+			  { text: 'ID', datafield: 'bookingid',width:"14%"},
 			  { text: 'seq', datafield: 'seq',hidden:true},
 			  { text: 'Payment ID', datafield: 'transactionid', width:"10%"}, 			
 			  { text: 'Booked On', datafield: 'bookedon',filtertype: 'date' ,cellsformat: 'd-M-yyyy',width:"12%",cellsalign: 'right'},
@@ -125,7 +125,7 @@
                 pagesize: 20,
                 sortcolumn: 'bookedon',
                 sortdirection: 'desc',
-                datafields: [{ name: 'bookings.seq', type: 'integer' },
+                datafields: [{ name: 'bookingid', type: 'string' },
                              { name: 'seq', type: 'integer' },
                             { name: 'bookedon', type: 'datetime' },
                             { name: 'bookingdate', type: 'date' },
@@ -227,7 +227,7 @@
                             return item !== value
                         })
                         if(indexes.length != 1){
-                            bootbox.alert("Please Select single row for edit.", function() {});
+                            bootbox.alert("Please Select single row for view.", function() {});
                             return;    
                         }
                         var row = $('#bookingsgrid').jqxGrid('getrowdata', indexes);
