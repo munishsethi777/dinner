@@ -54,7 +54,7 @@ if(!empty($bookingId)){
 										<img src="http://www.flydining.com/booking/images/icontick.png" 
 										width="125" height="120" style="border:0px">
 									<p class="m-t-lg">	
-										Your Booking id is  <h1 class="text-info"><?php echo $booking->getSeq()?></h1>
+										Your Booking id is  <h1 class="text-info"><?php echo $booking->getBookingId()?></h1>
 									</p>
 									<p class="m-t-lg">Booking Details</p>
 									<div class="row">
