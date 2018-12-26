@@ -451,7 +451,7 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
-        //$mail->AddBCC(StringConstants::BCC_EMAIL);
+        $mail->AddBCC(StringConstants::BCC_EMAIL);
         
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";
