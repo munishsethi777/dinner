@@ -198,7 +198,7 @@ class MailUtil{
 						+91-769-81-81-000. Kindly take note that we are unable to delay
 						the experience for you if you call or message us on this number so
 						please do not be late.</li>
-					<li>You may reschedule your booking, but 40% of the booking amount will be charged as inconvenience fees. <a href="http://www.flydining.com/booking/reschedule.php">Click here</a> to reschedule.</li>
+					<li>You may reschedule your booking, 20% of the booking amount will be charged as inconvenience fees. <a href="http://www.flydining.com/booking/reschedule.php">Click here</a> to reschedule.</li>
 				</ul>
 			</div>
 			<p align="center" style="color: #ff0000;">
