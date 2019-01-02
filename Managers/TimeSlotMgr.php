@@ -28,7 +28,7 @@ class TimeSlotMgr{
 		$selectedDate .= " 00:00:00";
 		$date = DateUtil::StringToDateByGivenFormat("d-m-Y H:i:s",$selectedDate);
 		$dateStr = $date->format("Y-m-d H:i:s");
-		$query = "select timeslots.starton,timeslots.endon,timeslots.bookingavailabletill, timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle from timeslots
+		$query = "select timeslots.starton,timeslots.endon,timeslots.bookingavailabletill, timeslots.description as description,timeslots.seq as timeslotseq , timeslots.title as timeslot , timeslots.time, timeslots.seats ,menus.seq as menuseq ,menus.rate,menus.seq as menuseq, menus.title as menutitle,menus.imagename from timeslots
 inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner join menus on menutimeslots.menuseq = menus.seq where timeslots.seq not in (select slotdetails.slotseq from slotdetails where date = '$dateStr')";
 		$timeSlots = self::$dataStore->executeQuery($query);
 		$slotArr = array();
@@ -91,6 +91,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			
 			$menu = array();
 			$menu["menutitle"] = $timeSlot["menutitle"];
+			$menu["menuimage"] = $timeSlot["imagename"];
 			$dayName =  $date->format('D');
 			//if($dayName == "Fri" || $dayName == "Sat" || $dayName == "Sun"){
 				//$timeSlot["rate"] += 1000;
