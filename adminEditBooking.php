@@ -42,6 +42,8 @@ if(isset($_POST["seq"])){
 	$parentBookingSeq = $booking->getParentBookingSeq();
 	if(!empty($parentBookingSeq)){
 		$relatedBooking = $bookingManager->findBySeq($parentBookingSeq);
+	}else{
+		$parentBookingSeq = 0;
 	}
 	$bookingDate = $booking->getBookingDate();
 	$bookedOn = DateUtil::StringToDateByGivenFormat("Y-m-d H:i:s",$bookingDate);
