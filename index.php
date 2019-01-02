@@ -64,7 +64,7 @@ require_once('IConstants.inc');
 						</h5>
 						<!-- <div class="col-xs-2"><button onclick="rescheduleBooking()" class="btn btn-primary btn-xs">Reschedule Booking</button></div> -->
 					</div>
-					<div class="ibox-content mainDiv">
+					
 						<div style="margin-top:10px">
 							
 							<div class="col-sm-3 datediv1">
@@ -83,7 +83,7 @@ require_once('IConstants.inc');
 	                    	</div>
 	
 	                    </div>
-                    </div>
+                   
 				</div>
 			</div>
 		</div>
@@ -151,12 +151,6 @@ $(document).ready(function(){
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
 });
-function dateChanged(ev) {
-    alert("test");
-}
-function exampleFunction(){
-	alert("test");
-}
 function loadData(selectedDate){
 	var from = selectedDate.split("-")
 	var d = new Date(from[2], from[1] - 1, from[0])
