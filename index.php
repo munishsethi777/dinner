@@ -114,12 +114,10 @@ require_once('IConstants.inc');
                             </form>
                             
                             <div class="modal inmodal" id="myModal5" tabindex="-1" role="dialog"  aria-hidden="true">
-							    <div class="modal-dialog">
+							    <div class="modal-dialog modal-lg">
                                    	<div class="modal-content animated fadeIn">
-	                                   <div class="modal-header">
-	                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	                                    </div>
-	                                   	<div class="modal-body">
+	                                   
+	                                       	<div class="modal-body">
 	                                    		<div align="center" id="menuImageDiv"><img src="images/dummy.jpg"></img></div>
 	                        	    	</div>
 	                                 </div>
@@ -333,7 +331,7 @@ function rescheduleBooking(){
 	location.href = "reschedule.php"
 }
 function showMenuImage(imagePath){
-	var imgHtml = "<img src='"+imagePath+"'></img>"
+	var imgHtml = "<img width='100%' height ='auto' src='"+imagePath+"'></img>"
 	$("#menuImageDiv").html(imgHtml);
 	$('#myModal5').modal('show');
 }
