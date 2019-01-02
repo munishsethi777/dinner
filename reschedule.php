@@ -128,6 +128,19 @@ require('razorpay-php/Razorpay.php');
 	                                </div>
 	                            </div>
                             </form>
+                            
+                            <div class="modal inmodal" id="myModal5" tabindex="-1" role="dialog"  aria-hidden="true">
+							    <div class="modal-dialog">
+                                   	<div class="modal-content animated fadeIn">
+	                                   <div class="modal-header">
+	                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	                                    </div>
+	                                   	<div class="modal-body">
+	                                    		<div align="center" id="menuImageDiv"><img src="images/dummy.jpg"></img></div>
+	                        	    	</div>
+	                                 </div>
+	                             </div>
+	                       </div>
 </body>
 </html>
  <script src="scripts/FormValidators/BookingFormValidations.js"></script> 
@@ -196,7 +209,13 @@ function loadData(selectedDate){
 					fair += " <label class='text-danger' style='font-weight:normal;font-size:15px;'> Rs. "+menu.discountedRate+"</label>";
 				}	
 				
-				fair +="<p><small class='text-muted'> ("+menu.menutitle+")</small></p>";	
+				var menuImage = menu.menuimage;
+				if(menuImage != null && menuImage != ""){
+					var imagePath = "images/menuImages/"+menu.menuseq + "." + menuImage
+					fair +='<p><a href="#" onClick="showMenuImage(\'' +  imagePath + '\')"><small class="text-muted"> ('+menu.menutitle+')</small></a></p>';
+				}else{
+					fair +="<p><small class='text-muted'> ("+menu.menutitle+")</small></p>";
+				}	
 				menuArr[k] = menu.menutitle;
 				menuSeqs[k] = menu.menuseq
 	 		});
@@ -433,6 +452,11 @@ function validateBooking(){
 	}else{
 		$("#validateForm")[0].reportValidity();
 	}
+}
+function showMenuImage(imagePath){
+	var imgHtml = "<img src='"+imagePath+"'></img>"
+	$("#menuImageDiv").html(imgHtml);
+	$('#myModal5').modal('show');
 }
 
 </script> 
