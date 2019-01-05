@@ -51,13 +51,14 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 					continue;
 				}
 			}
+			$isBookingPast = false;
 			$bookingTill = $timeSlot["bookingavailabletill"];
 			$currentDate = new DateTime();
 			if(!empty($bookingTill) && $date < $currentDate){
 				$currentTime = time();
 				$bookingTillTime = strtotime($bookingTill);
 				if ($currentTime > $bookingTillTime) {
-					continue;
+					$isBookingPast = true;
 				}
 			}
 			$timeSlotSeq = $timeSlot["timeslotseq"];
@@ -65,6 +66,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$bookedSeats = $bookingMgr->getAvailableSeats($dateStr, $timeSlotSeq);
 			$arr = array();
 			$arr["seq"] = $timeSlotSeq;
+			$arr["isbookingpast"] = $isBookingPast;
 			$arr["timeslot"] = $timeSlot["timeslot"];
 			$arr["time"] = $timeSlot["time"];
 			$totalSeats = $timeSlot["seats"];

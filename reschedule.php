@@ -199,6 +199,7 @@ function loadData(selectedDate){
 			var menuList = val.menu; 
 			var menuArr = [];
 			var menuSeqs = [];
+			var isBookingPast = val.isbookingpast;
 			$.each( menuList, function( k, menu ) {
 				if(menu.discountedRate == null){
 					fair += "Rs. " + menu.rate;
@@ -230,8 +231,13 @@ function loadData(selectedDate){
 			if(val.seatsAvailable == 0){
 				html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
 			}else{
-				html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-danger btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
-				html += val.msg + '</div>';
+				if(isBookingPast){
+					html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-muted btn-xs">Book Now</button>';
+					html += '<h4><small class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Booking Closed For Today </small></h4></div>'		
+				}else{
+					html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-danger btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
+					html += val.msg + '</div>';	
+				}
 			}
 			html += '</div>';
 		});
