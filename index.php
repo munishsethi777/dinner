@@ -56,8 +56,8 @@ require_once('IConstants.inc');
 	<div class="wrapper wrapper-content animated fadeIn">
        <div class="row">
 			<div class="col-lg-12">
+				<?php include 'header.php';?>
 				<div class="ibox float-e-margins ">
-					
 					<div class="ibox-title">
 						<h5>
 							FLY DINING<small> select your bookings</small>
