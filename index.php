@@ -50,6 +50,35 @@ require_once('IConstants.inc');
 		}
 	</style>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<!-- conversion tracking code -->
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-22899782-19"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-22899782-19');
+</script>
+
+<!-- Global site tag (gtag.js) - Google Ads: 1052641146 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1052641146"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-1052641146');
+</script>
+
+
+
+<!-- end of conversion tracking code -->
+
+
 </head>
 <body>
  <div id="wrapper">
@@ -147,7 +176,7 @@ $(document).ready(function(){
         defaultDate:currDate,
         minDate:minDate,
         maxDate:bookingEndDate
-    })
+    });
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
 });
