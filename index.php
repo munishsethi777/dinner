@@ -209,7 +209,7 @@ function loadData(selectedDate){
 				html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
 			}else{
 				if(isBookingPast){
-					html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-muted btn-xs">Book Now</button>';
+					html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-muted btn-xs">Booking Closed</button>';
 					html += '<h4><small class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Booking Closed For Today </small></h4></div>'		
 				}else{
 					html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-danger btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
