@@ -56,7 +56,7 @@ class MailUtil{
 		$html ='<html><head><link rel="stylesheet" type="text/css"href="1https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"></head>
 		<body><divstyle="background-color: grey; width: 100%; color: #676a6c; font-family: open sans, Helvetica Neue, Helvetica, Arial, sans-serif">
 		<div style="background-color: white; margin: auto; max-width: 600px; padding: 0px 15px 0px 15px">
-		<div style="padding: 15px; background-color: #DAA520; color: white; margin: 0px -15px 0px -15px;">
+		<div style="padding: 15px; background-color: #025e9c; color: white; margin: 0px -15px 0px -15px;">
 		<h1 style="margin-top: 0px; margin-bottom: 20px;"><img src="https://1ceipl3l02ez252khj15lgak-wpengine.netdna-ssl.com/wp-content/uploads/2018/10/logo-white-small.png" style="float: left;">
 		</h1><p align="right" style="margin: 0px;"><a href="https://www.flydining.com/" style="color: #fff; text-decoration: none;">www.flydining.com</a>
 		</p></div><div style="margin-top: 20px;display:flex;padding:15px;">
@@ -280,7 +280,7 @@ class MailUtil{
 
 
 			<p
-				style="background: #DAA520; margin-top: 1 0px; color: #000; padding: 10px;"
+				style="background: #025e9c; margin-top: 1 0px; color: #fff; padding: 10px;"
 				align="center">
 				For any further assistance, mail to blr@flydining.com<br>or call:<b>769
 					81 81 000, 8130 540 906</b>
