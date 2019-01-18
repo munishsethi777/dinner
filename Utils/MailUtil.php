@@ -1,6 +1,7 @@
 <?php
 require_once('class.phpmailer.php');
 //require_once('../IConstants.inc');
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
@@ -299,6 +300,7 @@ class MailUtil{
 				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
 			}
 			MailUtil::sendBookingConfirmSMS($booking, $timeSlot);
+			MailUtil::sendNotificationToCakeVendor($booking, $bookingAddOn, $timeSlot, $menuPersonArr);
 	}
 	
 	private static function sendBookingConfirmSMS($booking,$timeSlot){
@@ -315,6 +317,38 @@ class MailUtil{
 		//$confimrationAttachment = self::getBookingConfirmationAttahment($booking, $menuPersonArr,$timeSlot);
 		$attachemtns = array("Invoice"=>$invoiceAttachment);
 		return $attachemtns;
+	}
+	
+	
+	private static function sendNotificationToCakeVendor($booking,$bookingAddOn,$timeSlot,$menuPersonArr){
+		if(!empty($bookingAddOn)){
+			$configurationMgr = ConfigurationMgr::getInstance();
+			$emails = $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_EMAIL);
+			$mobiles =  $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_MOBILE);
+			$Content =  $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_MESSAGE);
+			$bookingDate = $booking->getBookingDate()->format('M d, Y');
+			$cakeDetail = $bookingAddOn->getNotes();
+			$timeSlotTitle = $timeSlot->getTitle();
+			if(!empty($emails)){
+				$html = "<p>".$Content."</p>";
+				$html .= "<p><b>Cake Details : </b>$cakeDetail</p>";
+				$html .= "<p><b>Booking For Date : </b>$bookingDate</p>";
+				$html .= "<p><b>Booking TimeSlot : </b>$timeSlotTitle</p>";
+				$members = 0;
+				foreach($menuPersonArr as $key=>$titleAndMembers){
+						$members += intval($titleAndMembers["members"]);
+				}
+				$html .="<p><b>Total Members : </b>$members</p>";
+				$emails = explode(",", $emails);
+				$subject = "CAKE BOOKING FOR FLY DINING BOOKING";
+				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
+			}
+			if(!empty($mobiles)){
+				$msg = "Cake booking for $bookingDate for timeslot $timeSlotTitle. Total Members -$members .  Details: $cakeDetail";
+				$smsUtil = SMSUtil::getInstance();
+				$smsUtil->sendSMS($mobiles, $msg);
+			}
+		}
 	}
 	
 	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount){

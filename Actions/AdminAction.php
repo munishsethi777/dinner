@@ -1,9 +1,12 @@
 <?php
 require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/AdminMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SessionUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Admin.php");
+require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Configuration.php");
 $success = 1;
+$message = "";
 $call = "";
 $response = new ArrayObject();
 if(isset($_GET["call"])){
@@ -46,6 +49,23 @@ if($call == "changePassword"){
 		$message  = $e->getMessage();
 	}
 }
+if($call == "saveSettings"){
+	$cakeVendorEmail = $_GET["cakeVendorEmail"];
+	$cakeVendorMobile = $_GET["cakeVendorMobile"];
+	$cakeVendorMessage = $_GET["cakeVendorMessage"];
+	try{
+		$configurationMgr = ConfigurationMgr::getInstance();
+		$configurationMgr->saveConfiguration(Configuration::$CAKE_VENDOR_EMAIL, $cakeVendorEmail);
+		$configurationMgr->saveConfiguration(Configuration::$CAKE_VENDOR_MOBILE, $cakeVendorMobile);
+		$configurationMgr->saveConfiguration(Configuration::$CAKE_VENDOR_MESSAGE, $cakeVendorMessage);
+		$message = "Admin Settings Saved Successfully";
+	}catch(Exception $e){
+		$success = 0;
+		$message  = $e->getMessage();
+	}
+}
+
+
 $response["success"] = $success;
 $response["message"] = $message;
 echo json_encode($response);
