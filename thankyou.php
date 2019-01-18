@@ -12,6 +12,7 @@ $booking = new Booking();
 $bookingDetails = array();
 $timeSlot = new TimeSlot();
 $bookingDate = "";
+$bookingId = 300;
 if(!empty($bookingId)){
 	$bookingMgr = BookingMgr::getInstance();
 	$bookingDetailMgr = BookingDetailMgr::getInstance();
