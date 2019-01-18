@@ -151,7 +151,6 @@ if(isset($_POST["call"]) && (isset($_POST["call"]) == "applyCoupon" || isset($_P
 	$country = $_POST["country"];
 	$companyState = $_POST["companyState"];
 	$discountCoupnMgr = DiscountCouponMgr::getInstance();
-	
 	if(!empty($couponCode)){
 		$couponInfo = $discountCoupnMgr->applyCoupon($couponCode,$amount);
 		if(empty($couponInfo)){
@@ -299,7 +298,7 @@ if(!empty($totalAmountInPaise)){
 		                       					<small class="text-muted">
 		                       						Discount
 		                       						<?php if(!empty($couponCode)){ ?>
-		                       							 (<?php echo $couponCode?>)
+		                       							 (<?php echo $couponCode . " " . $discountPercent . "%"?>)
 		                       						<?php }?>
 		                       						
 		                       					</small>
@@ -469,6 +468,7 @@ if(!empty($totalAmountInPaise)){
                     
 				</div>
 			</div>
+			<?php include 'phoneInclude.php';?>
 		</div>
    	</div>
  </div>
