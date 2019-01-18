@@ -81,12 +81,14 @@ require_once('IConstants.inc');
 	                       		<input type="text" onchange="javascript:loadData(this.value)" 
 	                       		name="bookingDate" id="bookingDate" class="form-control bookingDate" style="width:100%"> 	
 	                    	</div>
-	
-	                    </div>
+							
                    
 				</div>
+					
 			</div>
+			
 		</div>
+		<?php include 'phoneInclude.php';?>
    	</div>
  </div>	
 
