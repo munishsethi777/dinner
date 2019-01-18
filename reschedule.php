@@ -101,6 +101,7 @@ require('razorpay-php/Razorpay.php');
                     
 				</div>
 			</div>
+			<?php include 'phoneInclude.php';?>
 		</div>
    	</div>
  </div>	

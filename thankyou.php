@@ -85,6 +85,7 @@ if(!empty($bookingId)){
 					</div>
 				</div>
 			</div>
+			<?php include 'phoneInclude.php';?>
 		</div>
    	</div>
  </div>	
