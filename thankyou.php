@@ -12,7 +12,6 @@ $booking = new Booking();
 $bookingDetails = array();
 $timeSlot = new TimeSlot();
 $bookingDate = "";
-$bookingId = 300;
 if(!empty($bookingId)){
 	$bookingMgr = BookingMgr::getInstance();
 	$bookingDetailMgr = BookingDetailMgr::getInstance();
@@ -60,21 +59,21 @@ if(!empty($bookingId)){
 									</p>
 									<p class="m-t-lg">Booking Details</p>
 									<div class="row">
-										<div class="col-lg-6 text-right">Payment id :</div>
-										<div class="col-lg-6 text-left"><?php echo $booking->getTransactionId()?></div>
+										<div class="col-lg-6 col-xs-6 text-right">Payment id :</div>
+										<div class="col-lg-6 col-xs-6 text-left"><?php echo $booking->getTransactionId()?></div>
 									</div>
 									<div class="row">
-										<div class="col-lg-6 text-right">Booking Date :</div>
-										<div class="col-lg-6 text-left"><?php echo $bookingDate?></div>
+										<div class="col-lg-6 col-xs-6 text-right">Booking Date :</div>
+										<div class="col-lg-6 col-xs-6 text-left"><?php echo $bookingDate?></div>
 									</div>
 									<div class="row">
-										<div class="col-lg-6 text-right">Booking TimeSlot :</div>
-										<div class="col-lg-6 text-left"><?php echo $timeSlot->getTitle()?></div>
+										<div class="col-lg-6 col-xs-6 text-right">Booking TimeSlot :</div>
+										<div class="col-lg-6 col-xs-6 text-left"><?php echo $timeSlot->getTitle()?></div>
 									</div>
 									
 									<div class="row">
-										<div class="col-lg-6 text-right">Booking Details :</div>
-											<div class="col-lg-6 text-left">
+										<div class="col-lg-6 col-xs-6 text-right">Booking Details :</div>
+											<div class="col-lg-6 col-xs-6 text-left">
 											<?php foreach ($bookingDetails as $bookingDetail){
 												echo $bookingDetail["members"]?> seats x <?php echo $bookingDetail["title"]?><br>
 											<?php }?>
