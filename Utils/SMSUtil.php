@@ -27,8 +27,17 @@ class SMSUtil{
 		curl_setopt($ch,CURLOPT_URL,  $apiUrl);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$buffer = curl_exec($ch);
+		$errorMessage = null;
+		if(empty($buffer)){
+			$response = json_decode($buffer,true);
+			$errorCode = $response["ErrorCode"];
+			if($errorCode != "000"){
+				$errorMessage = $response["ErrorMessage"];
+			}
+		}
 		curl_close($ch);
 		self::$logger->info($buffer."<br>".$receipientno . "<br> " . $msg);
+		return $errorMessage;
 	}
 }
 ?>
