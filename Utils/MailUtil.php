@@ -2,6 +2,7 @@
 require_once('class.phpmailer.php');
 //require_once('../IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/NotificationMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
@@ -471,6 +472,30 @@ class MailUtil{
 		return $attachment;
 	}
 	
+	public static function sendBookingClosurNotification($html,$msg,$subject,$emails,$mobiles,$timeSlot){
+		self::$logger = Logger::getLogger ( "logger" );
+		$emailResponse = "";
+		$smsResponse = "";
+		if(!empty($emails)){
+			$emails = explode(",", $emails);
+		 	$emailResponse = MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
+		}
+		if(!empty($mobiles)){
+			$smsUtil = SMSUtil::getInstance();
+			$smsResponse = $smsUtil->sendSMS($mobiles, $msg);
+		}
+		$notification = New Notification();
+		$notification->setEmailErrorDetail($emailResponse);
+		$notification->setSmsErrorDetail($smsResponse);
+		$emails = implode(",", $emails);
+		$notification->setEmailId($emails);
+		$notification->setMobileNo($mobiles);
+		$notification->setSentOn(new DateTime());
+		$notification->setTimeSlotSeq($timeSlot->getSeq());
+		$notificationMgr = NotificationMgr::getInstance();
+		$notificationMgr->saveNotification($notification);
+	}
+	
 	private static function getBookingConfirmationAttahment($booking,$menuPersonArr,$timeSlot){
 		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:10px;font-family:arial;line-height:30px;font-size:13px;color:#666666;" >
 		 	<tr>
@@ -526,10 +551,10 @@ class MailUtil{
 			$mail->IsSMTP(); // telling the class to use SMTP
 			$mail->SMTPAuth   = true;                  // enable SMTP authentication
 			$mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-			$mail->Host       = "xxxxx";      // sets GMAIL as the SMTP server
+			$mail->Host       = "mail.satyainfopages.in";      // sets GMAIL as the SMTP server
 			$mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-			$mail->Username   = "xxxxx";  // GMAIL username
-			$mail->Password   = "xxxxx";           // GMAIL password
+			$mail->Username   = "noreply@satyainfopages.in";  // GMAIL username
+			$mail->Password   = "tomzo1-wosmus-hUhvep";           // GMAIL password
 		}
 		$mail->SetFrom('noreply@flydining.com', 'FlyDining');
 		$mail->Subject = $subject;
@@ -538,7 +563,7 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
-        $mail->AddBCC(StringConstants::BCC_EMAIL);
+       // $mail->AddBCC(StringConstants::BCC_EMAIL);
         
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";
@@ -546,8 +571,10 @@ class MailUtil{
 		}
 		if(!$mail->Send()) {
 			self::$logger->info("Mailer Error: " . $mail->ErrorInfo . " for sending email ". $subject);
+			return $mail->ErrorInfo;
 		} else {
 			self::$logger->info("Email Sent for " . $subject);
+			return null;
 		}
 	}	
 }
