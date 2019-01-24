@@ -6,6 +6,9 @@ class Configuration{
 	public static $CAKE_VENDOR_MOBILE = "cakevendormobile";
 	public static $CAKE_VENDOR_MESSAGE = "cakevendormessage";
 	
+	public static $BOOKING_CLOSUR_EMAIL = "bookingclosuremail";
+	public static $BOOKING_CLOSUR_MOBILE = "bookingclosurmobile";
+	
 	public static $tableName = "configurations";
 	public static $className = "configuration";
 
