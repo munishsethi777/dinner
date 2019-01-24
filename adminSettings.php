@@ -5,6 +5,8 @@ $configurationMgr = ConfigurationMgr::getInstance();
 $cakeVendorEmail = $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_EMAIL);
 $cakeVendorMobile = $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_MOBILE);
 $cakeVendorMessage = $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_MESSAGE);
+$bookingClosurEmail = $configurationMgr->getConfiguration(Configuration::$BOOKING_CLOSUR_EMAIL);
+$bookingClosurMobile = $configurationMgr->getConfiguration(Configuration::$BOOKING_CLOSUR_MOBILE);
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,8 +34,8 @@ $cakeVendorMessage = $configurationMgr->getConfiguration(Configuration::$CAKE_VE
 	                    </div>
 	                     <div class="ibox-content">
 	                     		<h5>Cake Vendor Settings</h5>
-	                        	<form id="settingForm" action="Actions/AdminAction.php" class="m-t-lg">
-	                        		<input type="hidden" id ="call" name="call"   value="saveSettings"/>
+	                        	<form id="cakeSettingForm" action="Actions/AdminAction.php" class="m-t-lg">
+	                        		<input type="hidden" id ="call" name="call"   value="saveCakeVendorSettings"/>
 		                        		<div id="cakeSettingDiv">
 			                        		<div class="form-group row">
 			                       				<label class="col-lg-1 col-form-label">Email</label>
@@ -55,7 +57,33 @@ $cakeVendorMessage = $configurationMgr->getConfiguration(Configuration::$CAKE_VE
 			                            	</div>
 			                         	</div>
 		                            	<div>
-		                                     <button class="btn btn-primary ladda-button" data-style="expand-right" id="saveBtn" type="button">
+		                                     <button class="btn btn-primary ladda-button" data-style="expand-right" id="saveCakeSettingBtn" type="button">
+		                                        <span class="ladda-label">Save</span>
+		                                    </button>
+	                               		</div>  
+	                       		 </form>
+	                     </div>
+	                     
+	                     <div class="ibox-content">
+	                     		<h5>Booking Summary at Closure</h5>
+	                        	<form id="bookingClosureSettingForm" action="Actions/AdminAction.php" class="m-t-lg">
+	                        		<input type="hidden" id ="call" name="call"   value="saveBookingClosurSettings"/>
+		                        		<div id="cakeSettingDiv">
+			                        		<div class="form-group row">
+			                       				<label class="col-lg-1 col-form-label">Email</label>
+			                                  	<div class="col-lg-8">
+			                                  		<input type="text" required placeholder="Email" value="<?php echo $bookingClosurEmail?>" name="bookingClosurEmail" class="form-control">
+			                            		</div>
+			                            	</div>
+			                            	<div class="form-group row">
+			                       				<label class="col-lg-1 col-form-label">Mobile</label>
+			                                  	<div class="col-lg-8">
+			                                  		 <input type="text" required placeholder="Mobile" value="<?php echo $bookingClosurMobile?>" name="bookingClosurMobile" class="form-control">
+			                            		</div>
+			                            	</div>		
+			                           </div>
+		                            	<div>
+		                                     <button class="btn btn-primary ladda-button" data-style="expand-right" id="saveBookingClosurSettingBtn" type="button">
 		                                        <span class="ladda-label">Save</span>
 		                                    </button>
 	                               		</div>  
@@ -70,16 +98,23 @@ $cakeVendorMessage = $configurationMgr->getConfiguration(Configuration::$CAKE_VE
  </html>
 <script type="text/javascript">
 $(document).ready(function(){ 
-    $("#saveBtn").click(function(e){
-    	if($("#settingForm")[0].checkValidity()) {
-        	saveSettings();
+    $("#saveCakeSettingBtn").click(function(e){
+    	if($("#cakeSettingForm")[0].checkValidity()) {
+        	saveSettings("cakeSettingForm");
     	}else{
-    		$("#changePasswordForm")[0].reportValidity(); 
+    		$("#cakeSettingForm")[0].reportValidity(); 
+    	}
+    })
+    $("#saveBookingClosurSettingBtn").click(function(e){
+    	if($("#bookingClosureSettingForm")[0].checkValidity()) {
+        	saveSettings("bookingClosureSettingForm");
+    	}else{
+    		$("#bookingClosureSettingForm")[0].reportValidity(); 
     	}
     })
 });
-function saveSettings(){
-    $('#settingForm').ajaxSubmit(function( data ){
+function saveSettings(formId){
+    $('#'+formId).ajaxSubmit(function( data ){
         showResponseToastr(data,null,null,"mainDiv");
     })
 } 
