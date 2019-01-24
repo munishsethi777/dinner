@@ -227,6 +227,12 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 		return $timeSlots;
 	}
 	
+	public function getTimeSlotSeqsForNotification(){
+		$query = "select timeslots.seq from timeslots where seq not in (SELECT timeslotseq from notifications where notifications.senton = CURRENT_DATE ) and timeslots.bookingavailabletill  < DATE_FORMAT( NOW() , '%H:%i' ) ";
+		$timeSlotsSeqs = self::$dataStore->executeQuery($query);
+		return $timeSlotsSeqs;
+	}
+	
 	
 
 }
