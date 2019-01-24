@@ -263,4 +263,10 @@ where ((bookings.status != 'Rescheduled' and bookings.status != 'Cancelled') or 
 		}
 		return null;
 	}
+	
+	public function getBookingForClosurNotification($timeSlots){
+		$query = "select * from bookings where timeslot in ($timeSlots) and bookingdate = CURRENT_DATE";
+		$bookings = self::$dataStore->executeQuery($query);
+		return $bookings;
+	}
 }
