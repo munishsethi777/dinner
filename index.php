@@ -345,3 +345,8 @@ function showMenuImage(imagePath){
 	$('#myModal5').modal('show');
 }
 </script> 
+<script>
+  fbq('track', 'ViewContent', {
+    content_ids: 'Booking_first_page',
+  });
+</script>
