@@ -1,13 +1,17 @@
 <?php
-require_once('../IConstants.inc');
+$docroot1 = $_SERVER["DOCUMENT_ROOT"] ."/booking_old/";
+require_once($docroot1."IConstants.inc");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Notification.php");
-require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
-function runCron(){
+require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
+function runDinnerCron(){
+    date_default_timezone_set("Asia/Kolkata");
 	$logger = Logger::getLogger ( "logger" );
+    $currentDate = new DateTime();
+    $logger->info("Cron Run On - " . $currentDate->format("d-m-y H:i"));
 	$configurationMgr = ConfigurationMgr::getInstance();
 	$emails = $configurationMgr->getConfiguration(Configuration::$BOOKING_CLOSUR_EMAIL);
 	$mobiles =  $configurationMgr->getConfiguration(Configuration::$BOOKING_CLOSUR_MOBILE); 
@@ -63,6 +67,8 @@ function runCron(){
 				$sms = "Booked $menuHtml for $bookingDate - $timeSlotTitle ";
 				$subject = "Booking summary for $bookingDate -  $timeSlotTitle";
 				MailUtil::sendBookingClosurNotification($html, $sms, $subject,$emails,$mobiles,$timeSlot);
+                $logger->info("Notification Sent Successfully to - " . $emails);
+                
 			}
 		}
 	}else{

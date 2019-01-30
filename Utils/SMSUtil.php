@@ -1,5 +1,5 @@
 <?php
-require_once('../IConstants.inc');
+//require_once('../IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "StringConstants.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
