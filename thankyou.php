@@ -29,13 +29,46 @@ if(!empty($bookingId)){
 <title>Thankyou for your Booking</title>
 	<?include "ScriptsInclude.php"?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- conversion tracking code -->
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-22899782-19"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-22899782-19');
+</script>
+
+
+<!-- Global site tag (gtag.js) - Google Ads: 1052641146 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-1052641146"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-1052641146');
+</script>
+
+<!-- Event snippet for Flydining_Conversion_tracking conversion page -->
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-1052641146/e6HlCLecxJIBEPqO-PUD',
+      'transaction_id': ''
+  });
+</script>
+
+<!-- end of conversion tracking code -->
 </head>
 <body>
  <div id="wrapper">
 	<div class="wrapper wrapper-content animated fadeIn">
        <div class="row">
 			<div class="col-lg-12">
-				<?php include 'header.php';?>
+				<?php //include 'header.php';?>
 				<div class="ibox float-e-margins ">
 					<div class="ibox-title">
 						<h5>
