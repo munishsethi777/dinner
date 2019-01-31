@@ -25,6 +25,9 @@ require_once('IConstants.inc');
 		.xdsoft_datetimepicker .xdsoft_label{
 			z-index:999 !important;
 		}
+		.buttonDivMob{
+			display:none;
+		}
 		
 		@media all  
 			and (max-width: 768px) {
@@ -46,6 +49,15 @@ require_once('IConstants.inc');
 			}
 			.inmodal .modal-title {
 				font-size: 20px;
+			}
+			.buttonDivMob{
+				display:block;
+			}
+			.buttonDiv{
+				display:none;
+			}
+			.timeslotBox{
+				padding-bottom:50px;
 			}
 		}
 	</style>
@@ -102,7 +114,7 @@ require_once('IConstants.inc');
                     	
 	                    	</div>
 							
-	                    	<div class="col-sm-9" id="dataDiv">
+	                    	<div class="col-sm-9 p-xxs" id="dataDiv">
 	                       		
 	                    	</div>
 	
@@ -180,6 +192,17 @@ $(document).ready(function(){
 	currDate = getCurrentDate(currDate);
 	loadData(currDate);
 });
+function getHeaders(){
+	var html = '<div class="row ibox-content tableheaders p-xs">'
+	html += '<div class="col-xs-1 p-xs">Date</div>';
+	html += '<div class="col-xs-2 p-xs">Slot Time</div>';
+	html += '<div class="col-xs-3 p-xs">Fare</div>';
+	html += '<div class="col-xs-2 p-xs">Occassion</div>'
+	html += '<div class="col-xs-2 p-xs">Package</div>'
+	html += '<div class="col-lg-2 col-xs-1 p-xs text-center">Action</div>'
+	html += '</div>';
+	return html;
+}
 function loadData(selectedDate){
 	var from = selectedDate.split("-")
 	var d = new Date(from[2], from[1] - 1, from[0])
@@ -200,9 +223,9 @@ function loadData(selectedDate){
 				html += "<center style='margin-top:10px;'>No Timeslots available for booking, please select some other date</center>";
 		   }
 		 $.each( data, function( key, val ) {
-	 		html += '<div class="row ibox-content">';
-	 		html += '<div class="col-xs-2 dateCol p-xs">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
-			html += '<div class="col-lg-3 col-sm-3 col-xs-4 timeslotCol p-xs">'+val.timeslot;
+	 		html += '<div class="row ibox-content p-xs timeslotBox">';
+	 		html += '<div class="col-lg-1 col-sm-1 col-xs-0 dateCol p-xs">'+selectedDate+ '<br><small class="text-muted">'+n+'</small>' +'</div>';
+			html += '<div class="col-lg-2 col-sm-2 col-xs-5 timeslotCol p-xs">'+val.timeslot;
 			html += '<br/><small class="text-muted">'+ val.description  +'</small></div>';
 			var fair = "";
 			var menuList = val.menu; 
@@ -227,28 +250,55 @@ function loadData(selectedDate){
 				menuSeqs[k] = menu.menuseq
 	 		});
 
-			html += '<div class="col-lg-4 col-xs-4 fairCol p-xs">' + fair + '</div>';
-			//html += '<div class="col-lg-1 col-sm-2 col-xs-2 p-xs"><select class="form-control">';
-			//for(i=0;i<=val.seatsAvailable;i++){
-				//html += '<option>'+i+'</option>';
-			//}
-			//html += "/<select></div>";
+			html += '<div class="col-lg-3 col-sm-3 col-xs-4 fairCol p-xs">' + fair + '</div>';
+
+			//Mobile View Only starts
+			html += '<div class="buttonDivMob col-lg-2 col-sm-2 col-xs-3 p-xs text-center">';
+			if(val.seatsAvailable == 0){
+				html += '<button class="btn btn-muted btn-xs">Sold out</button>';	
+			}else{
+				if(isBookingPast){
+					html += '<button class="btn btn-muted btn-xs">Booking Closed</button>';
+					html += '<h4><small class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Booking Closed For Today </small></h4>'		
+				}else{
+					html += '<button class="btn btn-danger btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
+					html += val.msg;	
+				}
+			}
+			html += '</div>';
+			//Mobile view only ends
+			
+			//Occassions
+			html += '<div class="col-lg-2 col-sm-2 col-xs-6 p-xs"><select class="form-control">';
+			html += '<option>Choose Occassion</option>';
+			html += "/<select></div>";
+			//packages
+			html += '<div class="col-lg-2 col-sm-2 col-xs-6 p-xs"><select class="form-control">';
+			html += '<option>Choose Package</option>';
+			html += "/<select></div>";
+			
 			if(val.seatsAvailable == 0){
 				val.availableInPercent = 0;
 			}
-			if(val.seatsAvailable == 0){
-				html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-muted btn-xs">Sold out</button></div>';	
-			}else{
-				if(isBookingPast){
-					html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-muted btn-xs">Booking Closed</button>';
-					html += '<h4><small class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Booking Closed For Today </small></h4></div>'		
+
+			html += '<div class="buttonDiv col-lg-2 col-sm-2 col-xs-3 p-xs text-center">';
+				if(val.seatsAvailable == 0){
+					html += '<button class="btn btn-muted btn-xs">Sold out</button>';	
 				}else{
-					html += '<div class="col-lg-3 col-sm-3 col-xs-4 p-xs text-center"><button class="btn btn-danger btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
-					html += val.msg + '</div>';	
+					if(isBookingPast){
+						html += '<button class="btn btn-muted btn-xs">Booking Closed</button>';
+						html += '<h4><small class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Booking Closed For Today </small></h4>'		
+					}else{
+						html += '<button class="btn btn-danger btn-xs" onclick="bookNow('+val.seq+ ',' + val.seatsAvailable+',\'' +  menuSeqs + '\',\'' +  menuArr + '\',\'' +  selectedDate + '\')">Book Now</button>';
+						html += val.msg;	
+					}
+					
 				}
-				
-			}
 			html += '</div>';
+
+			
+			
+		html += '</div>';
 		});
 	 	$("#dataDiv").html(html);
 	});	 	
@@ -355,16 +405,7 @@ function getCurrentDate(dateObj){
 	today = dd + '-' + mm + '-' + yyyy;
 	return today;
 }
-function getHeaders(){
-	var html = '<div class="row ibox-content tableheaders">'
-	html += '<div class="col-xs-2 p-xs">Date</div>';
-	html += '<div class="col-xs-3 p-xs">Slot Time</div>';
-	html += '<div class="col-xs-4 p-xs">Fare</div>';
-	//html += '<div class="col-xs-1 p-xs">Seats</div>'
-	html += '<div class="col-lg-3 col-xs-2 p-xs text-center">Action</div>'
-	html += '</div>';
-	return html;
-}
+
 function rescheduleBooking(){
 	location.href = "reschedule.php"
 }
