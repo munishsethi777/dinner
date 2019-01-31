@@ -13,6 +13,8 @@ Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 require_once($ConstantsArray['dbServerUrl'] ."StringConstants.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/SMSUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationStatus.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationType.php");
 class MailUtil{
 	private static $logger;
 	public static function sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn){
@@ -301,7 +303,7 @@ class MailUtil{
 				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
 			}
 			MailUtil::sendBookingConfirmSMS($booking, $timeSlot);
-			MailUtil::sendNotificationToCakeVendor($booking, $bookingAddOn, $timeSlot, $menuPersonArr);
+			MailUtil::saveCakeOrderNotification($booking, $bookingAddOn, $timeSlot, $menuPersonArr);
 	}
 	
 	private static function sendBookingConfirmSMS($booking,$timeSlot){
@@ -321,39 +323,7 @@ class MailUtil{
 	}
 	
 	
-// 	private static function sendNotificationToCakeVendor($booking,$bookingAddOn,$timeSlot,$menuPersonArr){
-// 		if(!empty($bookingAddOn)){
-// 			$configurationMgr = ConfigurationMgr::getInstance();
-// 			$emails = $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_EMAIL);
-// 			$mobiles =  $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_MOBILE);
-// 			$Content =  $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_MESSAGE);
-// 			$bookingDate = $booking->getBookingDate()->format('M d, Y');
-// 			$cakeDetail = $bookingAddOn->getNotes();
-// 			$timeSlotTitle = $timeSlot->getTitle();
-// 			if(!empty($emails)){
-// 				$html = "<p>".$Content."</p>";
-// 				$html .= "<p><b>Cake Details : </b>$cakeDetail</p>";
-// 				$html .= "<p><b>Booking For Date : </b>$bookingDate</p>";
-// 				$html .= "<p><b>Booking TimeSlot : </b>$timeSlotTitle</p>";
-// 				$members = 0;
-// 				foreach($menuPersonArr as $key=>$titleAndMembers){
-// 						$members += intval($titleAndMembers["members"]);
-// 				}
-// 				$html .="<p><b>Total Members : </b>$members</p>";
-// 				$emails = explode(",", $emails);
-// 				$subject = "CAKE BOOKING FOR FLY DINING BOOKING";
-// 				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
-// 			}
-// 			if(!empty($mobiles)){
-// 				$msg = "Cake booking for $bookingDate for timeslot $timeSlotTitle. Total Members -$members .  Details: $cakeDetail";
-// 				$smsUtil = SMSUtil::getInstance();
-// 				$smsUtil->sendSMS($mobiles, $msg);
-// 			}
-// 		}
-// 	}
-
-	
-	private static function saveCakeOrderNotification($booking,$bookingAddOn,$timeSlot,$menuPersonArr){
+	private static function sendNotificationToCakeVendor($booking,$bookingAddOn,$timeSlot,$menuPersonArr){
 		if(!empty($bookingAddOn)){
 			$configurationMgr = ConfigurationMgr::getInstance();
 			$emails = $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_EMAIL);
@@ -362,7 +332,42 @@ class MailUtil{
 			$bookingDate = $booking->getBookingDate()->format('M d, Y');
 			$cakeDetail = $bookingAddOn->getNotes();
 			$timeSlotTitle = $timeSlot->getTitle();
-			$notification = new Notification();
+			if(!empty($emails)){
+				$html = "<p>".$Content."</p>";
+				$html .= "<p><b>Cake Details : </b>$cakeDetail</p>";
+				$html .= "<p><b>Booking For Date : </b>$bookingDate</p>";
+				$html .= "<p><b>Booking TimeSlot : </b>$timeSlotTitle</p>";
+				$members = 0;
+				foreach($menuPersonArr as $key=>$titleAndMembers){
+						$members += intval($titleAndMembers["members"]);
+				}
+				$html .="<p><b>Total Members : </b>$members</p>";
+				$emails = explode(",", $emails);
+				$subject = "CAKE BOOKING FOR FLY DINING BOOKING";
+				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
+			}
+			if(!empty($mobiles)){
+				$msg = "Cake booking for $bookingDate for timeslot $timeSlotTitle. Total Members -$members .  Details: $cakeDetail";
+				$smsUtil = SMSUtil::getInstance();
+				$smsUtil->sendSMS($mobiles, $msg);
+			}
+		}
+	}
+
+	
+	public static function saveCakeOrderNotification($booking,$bookingAddOn,$timeSlot,$menuPersonArr){
+		if(!empty($bookingAddOn)){
+			$configurationMgr = ConfigurationMgr::getInstance();
+			$emails = $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_EMAIL);
+			$mobiles =  $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_MOBILE);
+			$Content =  $configurationMgr->getConfiguration(Configuration::$CAKE_VENDOR_MESSAGE);
+			$bookingDate = $booking->getBookingDate()->format('M d, Y');
+			$cakeDetail = $bookingAddOn->getNotes();
+			$timeSlotTitle = $timeSlot->getTitle();
+			$notification = null;
+			if(!empty($emails) || !empty($mobiles) ){
+				$notification = new Notification();
+			}
 			if(!empty($emails)){
 				$html = "<p>".$Content."</p>";
 				$html .= "<p><b>Cake Details : </b>$cakeDetail</p>";
@@ -375,7 +380,6 @@ class MailUtil{
 				$html .="<p><b>Total Members : </b>$members</p>";
 				$subject = "CAKE BOOKING FOR FLY DINING BOOKING";
 				$notification->setEmailId($emails);
-				$notification->setMobileNo($mobiles);
 				$notification->setSentOn(new DateTime());
 				$notification->setTimeSlotSeq($timeSlot->getSeq());
 				$notification->setBookingSeq(0);
@@ -383,16 +387,15 @@ class MailUtil{
 				$notification->setNotificationType(NotificationType::cakeOrder);
 				$notification->setEmailHtml($html);
 				$notification->setEmailSubject($subject);
-				$notificationMgr = NotificationMgr::getInstance();
-				$id = $notificationMgr->saveNotification($notification);
-				MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
 			}
 			if(!empty($mobiles)){
 				$msg = "Cake booking for $bookingDate for timeslot $timeSlotTitle. Total Members -$members .  Details: $cakeDetail";
-				$smsUtil = SMSUtil::getInstance();
-				$notification->setSMSText($sms);
+				$notification->setMobileNo($mobiles);
+				$notification->setSMSText($msg);
 				//$smsUtil->sendSMS($mobiles, $msg);
 			}
+			$notificationMgr = NotificationMgr::getInstance();
+			$id = $notificationMgr->saveNotification($notification);
 		}
 	}
 	
@@ -542,6 +545,37 @@ class MailUtil{
 		$notificationMgr->saveNotification($notification);
 	}
 	
+	
+	public static function sendEmailFromNotification($notification){
+		$type = $notification->getNotificationType();
+		$html = $notification->getEmailHtml();
+		$subject = $notification->getEmailSubject();
+		$emails = $notification->getEmailId();
+		$emails = explode(",", $emails);
+		$mobiles = $notification->getMobileNo();
+		$smsText = $notification->getSMSText();
+		$emailResponse = null;
+		$smsResponse = null;
+		if(!empty($emails)){
+			$emailResponse = MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP);
+			if(!empty($emailResponse)){
+				$notification->setEmailErrorDetail($emailResponse);
+			}
+			$notification->setStatus(NotificationStatus::sent);
+		}
+		if(!empty($mobiles)){
+			$smsUtil = SMSUtil::getInstance();
+			$smsResponse = $smsUtil->sendSMS($mobiles, $smsText);
+			if(!empty($smsResponse)){
+				$notification->setSmsErrorDetail($smsResponse);
+			}
+			$notification->setStatus(NotificationStatus::sent);
+		}
+		$notificationMgr = NotificationMgr::getInstance();
+		$notificationMgr->saveNotification($notification);
+		
+	}
+	
 	private static function getBookingConfirmationAttahment($booking,$menuPersonArr,$timeSlot){
 		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:10px;font-family:arial;line-height:30px;font-size:13px;color:#666666;" >
 		 	<tr>
@@ -590,6 +624,9 @@ class MailUtil{
 	}
 	
 	public static function sendSmtpMail($subject,$body,$toEmails,$isSmtp,$attachments = array()){
+		if(empty(self::$logger)){
+			self::$logger = self::$logger = Logger::getLogger ( "logger" );
+		}
 		$mail = new PHPMailer();
 		//$body = eregi_replace("[\]",'',$body);
 		if($isSmtp){
