@@ -10,7 +10,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
-//function runDinnerCron(){
+function runDinnerCron(){
     date_default_timezone_set("Asia/Kolkata");
 	$logger = Logger::getLogger ( "logger" );
     $currentDate = new DateTime();
@@ -92,11 +92,22 @@ require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
 		$logger->info("Time Slot Seqs Not Found for notifications");
 		return;
 	}
-//}
+	sendNotifications();
+}
 
 function sendNotifications(){
-	MailUtil::sendBookingClosurNotification($html, $sms, $subject,$emails,$mobiles,$timeSlot);
-	$logger->info("Notification Sent Successfully to - " . $emails);
+	$logger = Logger::getLogger ( "logger" );
+	$notificationMgr = NotificationMgr::getInstance();
+	$pendingNotifications = $notificationMgr->getPendingNotifications();
+	foreach ($pendingNotifications as $notification){
+		try{
+			$emails = $notification->getEmailId();
+			MailUtil::sendEmailFromNotification($notification);
+			$logger->info("Notification Sent Successfully to - " . $emails);
+		}catch (Exception $e){
+			$logger->error($e->getMessage(),$e);
+		}	
+	}
 }
 function _group_by($array, $key) {
 	$return = array();

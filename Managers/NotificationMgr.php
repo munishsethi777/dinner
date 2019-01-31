@@ -20,5 +20,11 @@ class NotificationMgr{
 		return $id;
 	}
 	
+	public function getPendingNotifications(){
+		$colval["status"] = NotificationStatus::pending;
+		$pendingNotifications = self::$dataStore->executeConditionQuery($colval);
+		return $pendingNotifications;
+	}
+	
 	
 }
