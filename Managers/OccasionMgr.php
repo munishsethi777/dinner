@@ -50,4 +50,9 @@ class OccasionMgr{
 		$occasions = self::$dataStore->findAll();
 		return $occasions;
 	}
+	public function findAllArrEnabled(){
+		$query = "select * from occasions where isenabled = 1";
+		$occasions = self::$dataStore->executeQuery($query);
+		return $occasions;
+	}
 }

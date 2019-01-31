@@ -7,6 +7,9 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/DiscountCouponMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/PackageMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/OccasionMgr.php");
+
 require('razorconfig.php');
 require('razorpay-php/Razorpay.php');
 use Razorpay\Api\Api;
@@ -91,6 +94,20 @@ $menusArr = array();
 $menuPriceArr = array();
 $menuPriceJson = "";
 $totalPerson = 0;
+
+$packageCharge = number_format(0,2);
+$packageName = "";
+$selectedPackageSeq = $_POST["selectedPackage"];
+//$selectedOccassionSeq = $_POST["selectedOccassion"];
+if(!empty($selectedPackageSeq)){
+	$packageMgr = PackageMgr::getInstance();
+	$package = $packageMgr->findBySeq($selectedPackageSeq);
+	$packageCharge = $package->getPrice();
+	$packageName = $package->getTitle();
+}
+//$occassionMgr = OccasionMgr::getInstance();
+//$occassion = $occassionMgr->findBySeq($selectedOccassionSeq);
+
 
 foreach ($menuArr as $key=>$value){
 	if(empty($value)){
@@ -178,6 +195,7 @@ if(!empty($reschedulingAmount) && !empty($totalAmount)){
 	
 	$reschedulingAmount = number_format($reschedulingAmount,2);
 }
+$totalAmount += $packageCharge;
 $amountInPaiseWithouAddOn = $totalAmount;
 if(!empty($amount)){
 	$amount = number_format($amount,2);
@@ -193,7 +211,11 @@ $buttonLabel = "Make Payment of Rs " . $formatedTotalAmount;
 if(!empty($discount)){
 	$discount = number_format($discount,2);
 }
-//$totalAmountInPaise = 100;
+
+
+$totalAmountInPaise = 00;
+
+
 $razorpayOrderId = "";
 if(!empty($totalAmountInPaise)){
 	$api = new Api($keyId, $keySecret);
@@ -208,6 +230,7 @@ if(!empty($totalAmountInPaise)){
 }else{
 	$buttonLabel = "Save Booking";
 }
+
 ?>
 <html>
 <head>
@@ -274,6 +297,16 @@ if(!empty($totalAmountInPaise)){
 	                       				</div>
 	                       				<div class="col-xs-4 text-right">Rs 0.00</div>
 	                       			</div>
+	                       			<?if(!empty($selectedPackageSeq)){ ?>
+	                       			<div class="row m-b-sm">	
+	                       				<div class="col-xs-8">
+	                       					<small class="text-muted">
+	                       						Package Charges (<?php echo $packageName?>)
+	                       					</small>
+	                       				</div>
+	                       				<div class="col-xs-4 text-right">Rs <?php echo number_format($packageCharge,2);?></div>
+	                       			</div>
+	                       			<?php }?>
 	                       			<?php if(!empty($isReschedule)){ ?>
 	                       				<div class="row m-b-sm">	
 		                       				<div class="col-xs-8">
@@ -380,6 +413,11 @@ if(!empty($totalAmountInPaise)){
 	                       				<input type="hidden" id ="menuPrice" name="menuPrice" value='<?php echo $menuPriceJson?>' />
 	                       				<input type="hidden" id ="discountPercent" name="discountPercent" value='<?php echo $discountPercent?>' />
 	                       				<input type="hidden" id ="couponSeq" name="couponSeq" value='<?php echo $couponSeq?>' />
+	                       				<input type="hidden" id ="selectedPackage" name="selectedPackage" value='<?php echo $selectedPackageSeq?>' />
+	                       				<input type="hidden" id ="packagePrice" name="packagePrice" value='<?php echo $packageCharge?>' />
+	                       				
+	                       				
+	                       				
 		                       			<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Name</label>
 		                                    <div class="col-lg-10">

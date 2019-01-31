@@ -28,6 +28,9 @@ require_once('IConstants.inc');
 		.buttonDivMob{
 			display:none;
 		}
+		select{
+			font-size:12px !important;
+		}
 		
 		@media all  
 			and (max-width: 768px) {
@@ -139,6 +142,9 @@ require_once('IConstants.inc');
 							<input type="hidden" id ="selectedDate" name="selectedDate" />
 							<input type="hidden" id ="menuMembers" name="menuMembers" />
 							<input type="hidden" id ="isTestMode" name="isTestMode" value="1"/>
+							<input type="hidden" id ="selectedOccassion" name="selectedOccassion"/>
+							<input type="hidden" id ="selectedPackage" name="selectedPackage"/>
+							
 							<div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog"  aria-hidden="true">
 							    <div class="modal-dialog">
                                     <div class="modal-content animated fadeIn">
@@ -249,9 +255,7 @@ function loadData(selectedDate){
 				menuArr[k] = menu.menutitle;
 				menuSeqs[k] = menu.menuseq
 	 		});
-
 			html += '<div class="col-lg-3 col-sm-3 col-xs-4 fairCol p-xs">' + fair + '</div>';
-
 			//Mobile View Only starts
 			html += '<div class="buttonDivMob col-lg-2 col-sm-2 col-xs-3 p-xs text-center">';
 			if(val.seatsAvailable == 0){
@@ -269,12 +273,18 @@ function loadData(selectedDate){
 			//Mobile view only ends
 			
 			//Occassions
-			html += '<div class="col-lg-2 col-sm-2 col-xs-6 p-xs"><select class="form-control">';
-			html += '<option>Choose Occassion</option>';
+			html += '<div class="col-lg-2 col-sm-2 col-xs-6 p-xs"><select class="form-control occasionSelect" id="occassion'+ val.seq +'">';
+			html += '<option value="">Choose Occassion</option>';
+			$.each(val.occasions, function(key,occasion){
+				html += '<option value="'+occasion[0]+'">'+ occasion[1] +'</option>';
+			});
 			html += "/<select></div>";
 			//packages
-			html += '<div class="col-lg-2 col-sm-2 col-xs-6 p-xs"><select class="form-control">';
-			html += '<option>Choose Package</option>';
+			html += '<div class="col-lg-2 col-sm-2 col-xs-6 p-xs"><select class="form-control packageSelect" id="package'+ val.seq +'">';
+			html += '<option value="">Choose Package</option>';
+			//$.each(val.packages, function(key,package_){
+				//html += '<option value="'+package_[0]+'">'+ package_[1] +' Rs.'+ package_[3] +'</option>';
+			//});
 			html += "/<select></div>";
 			
 			if(val.seatsAvailable == 0){
@@ -301,6 +311,19 @@ function loadData(selectedDate){
 		html += '</div>';
 		});
 	 	$("#dataDiv").html(html);
+	 	$(".occasionSelect").change(function() {
+		 	id = this.id.substr(9);
+		 	$.getJSON("Actions/PackageAction.php?call=getPackagesByOccasionSeq&selectedOccasion="+this.value, function(data){
+	 			$('#package'+id).empty();
+	 			$.each(data.packages, function(key, value) {   
+	 			     $('#package'+id)
+	 			         .append($("<option></option>")
+	 			                    .attr("value",value[0])
+	 			                    .text(value[2]+'- Rs.'+value[4])); 
+	 			});
+	 		});
+		    
+		});
 	});	 	
 }
 
@@ -329,6 +352,13 @@ function bookNow(timeSlotSeq,seats,menuSeqs,menuTitles,selectedDate){
 	var menuTitleArr = menuTitles.split(",");
 	$("#personCounts").html("");
 	$("#footerDiv").html("");
+
+	selectedOccassion = $("#occassion"+timeSlotSeq).val();
+	selectedPackage = $("#package"+timeSlotSeq).val();
+	$("#selectedOccassion").val(selectedOccassion);
+	$("#selectedPackage").val(selectedPackage);
+	
+	
 	var html = "";
 
 	$.each( menuSeqArr, function( key, seq ) {

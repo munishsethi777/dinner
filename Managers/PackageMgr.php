@@ -25,11 +25,15 @@ class PackageMgr{
 		$package = self::$dataStore->findBySeq($seq);
 		return $package;
 	}
-	
+	public function findByOccasionSeq($seq){
+		$packages = self::$dataStore->executeQuery("select * from packages where occasionseq = ".$seq);
+		return $packages;
+	}
 	public function getAllForGrid(){
-		$query = "select * from packages";
-		$coupons = self::$dataStore->executeQuery($query,true);
-		$mainArr["Rows"] = $coupons;
+		//$query = "select * from packages";
+		$query = "select occasions.title occasion,packages.* from packages left join occasions on occasions.seq = packages.occasionseq";
+		$packages = self::$dataStore->executeQuery($query,true);
+		$mainArr["Rows"] = $packages;
 		$mainArr["TotalRows"] = $this->getAllCount();
 		return json_encode($mainArr);
 	}
@@ -39,6 +43,11 @@ class PackageMgr{
 		return $packages;
 	}
 	
+	public function findAllArrEnabled(){
+		$query = "select * from packages where isenabled = 1";
+		$packages = self::$dataStore->executeQuery($query);
+		return $packages;
+	}
 	
 	public function getAllCount(){
 		$query = "select count(*) from packages";

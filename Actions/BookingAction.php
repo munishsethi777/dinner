@@ -64,6 +64,9 @@ if($call == "saveBooking"){
 		if(isset($_POST["isAddCake"])){
 			$isAddCake = true;
 		}
+		$packageseq = $_POST["selectedPackage"];
+		$packagePrice = $_POST["packagePrice"];
+		
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$menuPriceArr = json_decode($menuPriceStr);
 		$booking = new Booking();
@@ -87,6 +90,8 @@ if($call == "saveBooking"){
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);
 		$booking->setDateOfBirth($dateOfBirth);
+		$booking->setPackageSeq($packageseq);
+		$booking->setPackagePrice($packagePrice);
 		$booking->setParentBookingSeq($rescheduleBookingId);
 		$menuPersonsArr = json_decode($menuPersonsStr,true);
 		$totalMembers = array_sum($menuPersonsArr);
@@ -108,7 +113,7 @@ if($call == "saveBooking"){
 		if(!empty($rescheduleBookingId)){
 			$bookingMgr->updateBookingStatus(BookingStatus::rescheduled, $rescheduleBookingId);
 		}
-		MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn);
+		//MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn);
 		$message = "Booking Saved Successfully";
 		session_start();
 		$_SESSION["bookingid"] = $bookingSeq;
@@ -118,11 +123,6 @@ if($call == "saveBooking"){
 			$logger->error ( "Error occured in BookingAction during Action - saveBooking:" . $e );
 		}
 		header("Location: ../thankyou.php");
-		//$response = new ArrayObject();
-		//$response["success"]  = $success;
-		//$response["message"]  = $message;
-		//echo json_encode($response);
-		//return;
 }
 if($call == "saveBookingsFromAdmins"){
 	try{

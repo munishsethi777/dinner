@@ -6,16 +6,17 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/DateUtil.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/PackageMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/OccasionMgr.php");
+
 class TimeSlotMgr{
 	private static $timeSlotMgr;
 	private static $dataStore;
 	private static $menuTimeSlotDataStore;
 	private static $sessionUtil;
 	
-	public static function getInstance()
-	{
-		if (!self::$timeSlotMgr)
-		{
+	public static function getInstance(){
+		if (!self::$timeSlotMgr){
 			self::$timeSlotMgr = new TimeSlotMgr();
 			self::$dataStore = new BeanDataStore(TimeSlot::$className, TimeSlot::$tableName);
 			self::$menuTimeSlotDataStore = new BeanDataStore(MenuTimeSlot::$className, MenuTimeSlot::$tableName);
@@ -35,6 +36,12 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 		$bookingMgr = BookingMgr::getInstance();
 		$menuPricingMgr = MenuPricingMgr::getInstance();
 		$menuPricings = $menuPricingMgr->getAllMenuPricingArr();
+		
+		$packageMgr = PackageMgr::getInstance();
+		$occasionMgr = OccasionMgr::getInstance();
+		//$packages = $packageMgr->findAllArrEnabled();
+		$occassions = $occasionMgr->findAllArrEnabled();
+		
 		foreach ($timeSlots as $timeSlot){
 			
 			$startOn = $timeSlot["starton"];
@@ -89,7 +96,8 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 				$arr = $slotArr[$timeSlotSeq];
 				$mainMenuArr = $arr["menu"];
 			}
-			
+			//$arr["packages"] = $packages;
+			$arr["occasions"] = $occassions;
 			
 			$menu = array();
 			$menu["menutitle"] = $timeSlot["menutitle"];

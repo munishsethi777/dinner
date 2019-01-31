@@ -61,7 +61,21 @@ if($call == "getPackagePrice"){
 	echo json_encode($response);
 	return;
 }
-
+if($call == "getPackagesByOccasionSeq"){
+	$occassionSeq = $_REQUEST["selectedOccasion"];
+	$response = new ArrayObject();
+	try{
+		$packages = $packageMgr->findByOccasionSeq($occassionSeq);
+		$response["packages"] = $packages;
+	}catch(Exception $e){
+		$success = 0;
+		$message = $e->getMessage();
+	}
+	$response["success"]  = $success;
+	$response["message"]  = $message;
+	echo json_encode($response);
+	return;
+}
 
 
 $response = new ArrayObject();

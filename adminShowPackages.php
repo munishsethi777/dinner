@@ -84,12 +84,13 @@
 		
 		var columns = [
 		  { text: 'id', datafield: 'seq' , hidden:true},
-		  { text: 'Title', datafield: 'title', width:"21%"}, 			
+		  { text: 'Occasion', datafield: 'occasion', width:"10%"}, 			
+		  { text: 'Title', datafield: 'title', width:"15%"}, 			
 		  { text: 'Description', datafield: 'description',width:"30%"},
-	      { text: 'Price', datafield: 'price',width:"10%"},
+	      { text: 'Price', datafield: 'price',width:"8%"},
 	      { text: 'LastModified', datafield: 'lastmodifiedon', filtertype: 'date',cellsformat: 'd-M-yyyy h:m tt',width:"14%"},
 	      { text: 'Created On', datafield: 'createdon', filtertype: 'date',cellsformat: 'd-M-yyyy h:m tt',width:"14%"},
-	      { text: 'Enabled', datafield: 'isenabled',columntype: 'checkbox',width:"8%",cellsalign: 'center'},
+	      { text: 'Enabled', datafield: 'isenabled',columntype: 'checkbox',width:"6%",cellsalign: 'center'},
 	    ]
 	   
 	    var source =
@@ -100,6 +101,7 @@
 	        sortcolumn: 'seq',
 	        sortdirection: 'desc',
 	        datafields: [{ name: 'seq', type: 'integer' },
+	                     { name: 'occasion', type: 'string' },
 	                    { name: 'title', type: 'string' },
 	                    { name: 'description', type: 'string'},
 	                    { name: 'price', type: 'string' },

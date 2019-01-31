@@ -1,6 +1,6 @@
 <?php
 class Package{
-	private $seq,$title,$description,$price,$createdon,$lastmodifiedon,$isenabled;
+	private $seq,$occasionseq,$title,$description,$price,$createdon,$lastmodifiedon,$isenabled;
 	public static $tableName = "packages";
 	public static $className = "Package";
 	public function setSeq($seq_){
@@ -9,7 +9,12 @@ class Package{
 	public function getSeq(){
 		return $this->seq;
 	}
-	
+	public function setOccasionSeq($seq_){
+		$this->occasionseq = $seq_;
+	}
+	public function getOccasionSeq(){
+		return $this->occasionseq;
+	}
 	public function setTitle($title_){
 		$this->title = $title_;
 	}

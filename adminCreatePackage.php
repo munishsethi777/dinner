@@ -3,6 +3,8 @@ include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/PackageMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "BusinessObjects/Package.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/OccasionMgr.php");
+
 $package = new Package();
 $isEnableChecked = "checked";
 if(isset($_POST["seq"])){
@@ -15,7 +17,8 @@ if(isset($_POST["seq"])){
 		$isEnableChecked = "";
 	}
 }
-?>
+$occasionMgr = OccasionMgr::getInstance();
+$occasions = $occasionMgr->findAllArrEnabled();
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,6 +48,16 @@ if(isset($_POST["seq"])){
 		                	<form id="packageForm" method="post" enctype="multipart/form-data" action="Actions/PackageAction.php" class="m-t-lg">
 	                        		<input type="hidden" id ="call" name="call"  value="savePackage"/>
 	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $package->getSeq()?>"/>
+	                        		<div class="form-group row">
+	                       				<label class="col-lg-2 col-form-label">Occassion</label>
+	                                    <div class="col-lg-4">
+	                                    	<select class="form-control occasionSelect" name="occasionseq">
+	                                    		<?php foreach($occasions as $key => $value){
+	                                    			echo "<option value='".$value[0]."'>".$value[1]."</option>";
+	                                    		}?>
+	                                    	</select>
+	                                    </div>
+	                               </div>
 	                        		<div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Title</label>
 	                                    <div class="col-lg-4">
@@ -91,8 +104,10 @@ if(isset($_POST["seq"])){
 			checkboxClass: 'icheckbox_square-green',
 		   	radioClass: 'iradio_square-green',
 		});
-  });
+		$(".occasionSelect").val(<?php echo $package->getOccasionSeq()?>);
 
+  });
+ 
 function submitPackageForm(){
 	if($("#packageForm")[0].checkValidity()) {
   	 $('#packageForm').ajaxSubmit(function( data ){
