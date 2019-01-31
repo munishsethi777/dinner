@@ -22,14 +22,16 @@ class DiscountCouponMgr{
 	}
 	
 	public function getAllForGrid(){
-		$coupons = self::$dataStore->findAllArr(true);
+		$query = "select dc.*,count(bookings.seq) as usedtimes from discountcoupons dc left JOIN bookings on dc.seq = bookings.couponseq group by dc.seq";
+		$coupons = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $coupons;
 		$mainArr["TotalRows"] = $this->getAllCount();
 		return json_encode($mainArr);
 	}
 	
 	public function getAllCount(){
-		$query = "select count(*) from discountcoupons";
+		//$query = "select count(*) from discountcoupons";
+		$query = "select count(*) from (select dc.*,count(bookings.seq) as usedtimes from discountcoupons dc left JOIN bookings on dc.seq = bookings.couponseq group by dc.seq) as c";
 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}
