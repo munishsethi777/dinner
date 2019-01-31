@@ -1,14 +1,21 @@
 <?include("SessionCheck.php");
 require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/TimeSlotMgr.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/PackageMgr.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/OccasionMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingAddOnMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/BookingDetailMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/DiscountCouponMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BookingStatus.php");
+
 $timeSlotMgr = TimeSlotMgr::getInstance();
 $timeSlots = $timeSlotMgr->findAll();
+$packagesMgr = PackageMgr::getInstance();
+$packages = $packagesMgr->findAll();
+$ocassionMgr = OccasionMgr::getInstance();
+$occasions = $ocassionMgr->findAll();
 $booking = New Booking();
 $relatedBooking = null;
 $isRecheduled = false;
@@ -231,6 +238,45 @@ $discountCoupons = $discountCouponMgr->getAll();
 			                                    </div>
 		                                	</div>
 		                                </div>
+		                                <div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">Package</label>
+		                                    <div class="col-lg-4">
+		                                    	<select class="form-control" <?php echo $disabled?> onchange="addPackage(this.value)"  required id="packageseq" name="packageseq">
+		                                    		<option value="0">Select Package</option>
+													<?php foreach ($packages as $package){
+														$seq = $package->getSeq();
+														$selected = "";
+														if($seq == $booking->getPackageSeq()){
+															$selected = "selected";
+														}
+														?>
+														<option <?php echo $selected ?> value="<?php echo $package->getSeq()?>"><?php echo $package->getTitle()?></option>
+														
+													<?php }?>
+												</select> <label class="jqx-validator-error-label" id="lpError"></label>
+								    		</div>
+								    		 <div class="col-lg-2">
+								    		 	<input type="text" id="packageprice" placeholder="Package Price" value="<?php echo $booking->getPackagePrice()?>" class="form-control">	
+								    		 </div>
+                               			</div>
+                               			<div class="form-group row">
+		                       				<label class="col-lg-2 col-form-label">Occasion</label>
+		                                    <div class="col-lg-4">
+		                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="occasionseq" name="occasionseq">
+		                                    		<option value="0">Select Occasion</option>
+														<?php foreach ($occasions as $occasion){
+															$seq = $occasion->getSeq();
+															$selected = "";
+															if($seq == $booking->getOccasionSeq()){
+																$selected = "selected";
+															}
+														  ?>
+														<option <?php echo $selected ?> value="<?php echo $seq?>"><?php echo $occasion->getTitle()?></option>
+														
+													<?php }?>
+												</select> <label class="jqx-validator-error-label" id="lpError"></label>
+								    		</div>
+                               			</div>
                                			<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Final Amount</label>
 			                                    <div class="col-lg-4 finalAmount"></div>
@@ -341,7 +387,16 @@ $discountCoupons = $discountCouponMgr->getAll();
 		   		applyDiscount()
 	   		});
         });
-        
+        function addPackage(packageSeq){
+        	$.getJSON("Actions/PackageAction.php?call=getPackagePrice&id="+packageSeq, function(data){
+            	var success = data.success;
+            	if(success == 1){
+                	$("#packageprice").val(data.price);	
+            	}else{
+                	alert(data.message);
+            	}		 
+        	});  
+        }
         function loadData(){
             var selectedBookingDetail = '<?php echo $bookingDetailJson?>';
             var bookingDetailJsonObject;

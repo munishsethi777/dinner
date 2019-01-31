@@ -85,10 +85,11 @@
 		var columns = [
 		  { text: 'id', datafield: 'seq' , hidden:true},
 		  { text: 'Code', datafield: 'code', width:"15%"}, 			
-		  { text: 'Description', datafield: 'description',width:"42%"},
+		  { text: 'Description', datafield: 'description',width:"30%"},
 	      { text: 'Percent', datafield: 'percent',width:"10%"},
 	      { text: 'Valid Till Date', datafield: 'validtilldate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"10%"},
 	      { text: 'Usage Times', datafield: 'usagetimes',width:"12%",cellsalign: 'center'},
+	      { text: 'Used (Times)', datafield: 'usedtimes',width:"10%",filterable:false,cellsalign: 'center'},
 	      { text: 'Enabled', datafield: 'isenabled',columntype: 'checkbox',width:"8%",cellsalign: 'center'},
 	    ]
 	   
@@ -105,6 +106,7 @@
 	                    { name: 'usagetimes', type: 'string'},
 	                    { name: 'percent', type: 'string' },
 	                    { name: 'isenabled', type: 'boolean' },
+	                    { name: 'usedtimes', type: 'integer' },
 	                    { name: 'validtilldate', type: 'date' }
 	                    ],                          
 	        url: 'Actions/DiscountCouponAction.php?call=getAllCoupons',
