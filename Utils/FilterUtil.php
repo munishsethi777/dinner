@@ -43,7 +43,7 @@
         if ($sortfield != NULL)
         {
         	
-        	if($sortfield == "menus.title"){
+        	if($sortfield == "menus.title" || $sortfield == "usedtimes"){
         		$wherePos = strpos(strtolower ($query),'where');
         		$where = "";
         		if ($wherePos !== false) {
@@ -57,10 +57,12 @@
         			$groupBy = substr($query,$groupByPos) ;
         			$query = $q;
         		}
-        		$joinPos = strpos(strtolower ($query),'inner join bookingdetails');
-        		if($joinPos !== false){
-        		}else{
-        			$query .= " inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join menus on bookingdetails.menuseq = menus.seq";
+        		if($sortfield == "menus.title"){
+	        		$joinPos = strpos(strtolower ($query),'inner join bookingdetails');
+	        		if($joinPos !== false){
+	        		}else{
+	        			$query .= " inner join bookingdetails on bookings.seq = bookingdetails.bookingseq inner join menus on bookingdetails.menuseq = menus.seq";
+	        		}
         		}
         	}
         	$query .= $where . " " . $groupBy;
