@@ -1,0 +1,1 @@
+ALTER TABLE `bookings` ADD `packageseq` INT NULL AFTER `bookingid`, ADD `packageprice` DOUBLE NULL AFTER `packageseq`, ADD `occasionseq` INT NULL AFTER `packageprice`;

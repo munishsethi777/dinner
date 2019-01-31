@@ -1,0 +1,5 @@
+ALTER TABLE `notifications` ADD `bookingseq` INT NULL AFTER `smserrordetail`, ADD `status` VARCHAR(20) NULL AFTER `bookingseq`, ADD `notificationtype` VARCHAR(20) NULL AFTER `status`;
+
+ALTER TABLE `notifications` ADD `emailsubject` VARCHAR(100) NULL AFTER `notificationtype`, ADD `emailhtml` TEXT NULL AFTER `emailsubject`;
+
+ALTER TABLE `notifications` ADD `smstext` VARCHAR(500) NULL AFTER `emailhtml`;
