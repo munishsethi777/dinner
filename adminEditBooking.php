@@ -13,7 +13,8 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Enums/BookingStatus.php");
 $timeSlotMgr = TimeSlotMgr::getInstance();
 $timeSlots = $timeSlotMgr->findAll();
 $packagesMgr = PackageMgr::getInstance();
-$packages = $packagesMgr->findAll();
+$packages = $packagesMgr->getAllWithOccasions();
+
 $ocassionMgr = OccasionMgr::getInstance();
 $occasions = $ocassionMgr->findAll();
 $booking = New Booking();
@@ -241,42 +242,45 @@ $discountCoupons = $discountCouponMgr->getAll();
 		                                <div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Package</label>
 		                                    <div class="col-lg-4">
-		                                    	<select class="form-control" <?php echo $disabled?> onchange="addPackage(this.value)"  required id="packageseq" name="packageseq">
+		                                    	<select class="form-control" <?php echo $disabled?> onchange="addPackage(this.value)"  required id="packageSeq" name="packageSeq">
 		                                    		<option value="0">Select Package</option>
-													<?php foreach ($packages as $package){
-														$seq = $package->getSeq();
-														$selected = "";
-														if($seq == $booking->getPackageSeq()){
-															$selected = "selected";
+													<?php 
+														foreach ($packages as $package){
+															$seq = $package[1];
+															$selected = "";
+															if($seq == $booking->getPackageSeq()){
+																$selected = "selected";
 														}
-														?>
-														<option <?php echo $selected ?> value="<?php echo $package->getSeq()?>"><?php echo $package->getTitle()?></option>
+													?>
+														<option <?php echo $selected ?> value="<?php echo $package[1]?>">
+																<?php echo $package['occasion'] ." - ".$package['title']?>
+														</option>
 														
 													<?php }?>
 												</select> <label class="jqx-validator-error-label" id="lpError"></label>
 								    		</div>
 								    		 <div class="col-lg-2">
-								    		 	<input type="text" id="packageprice" placeholder="Package Price" value="<?php echo $booking->getPackagePrice()?>" class="form-control">	
+								    		 	<input type="text" name="packagePrice" id="packageprice" placeholder="Package Price" value="<?php echo $booking->getPackagePrice()?>" class="form-control">	
 								    		 </div>
                                			</div>
-                               			<div class="form-group row">
+                               			<!-- <div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">Occasion</label>
 		                                    <div class="col-lg-4">
-		                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="occasionseq" name="occasionseq">
+		                                    	<select class="form-control chosen-select" <?php //echo $disabled?> required id="occasionseq" name="occasionseq">
 		                                    		<option value="0">Select Occasion</option>
-														<?php foreach ($occasions as $occasion){
-															$seq = $occasion->getSeq();
-															$selected = "";
-															if($seq == $booking->getOccasionSeq()){
-																$selected = "selected";
-															}
+														<?php //foreach ($occasions as $occasion){
+															//$seq = $occasion->getSeq();
+															//$selected = "";
+															//if($seq == $booking->getOccasionSeq()){
+																//$selected = "selected";
+															//}
 														  ?>
-														<option <?php echo $selected ?> value="<?php echo $seq?>"><?php echo $occasion->getTitle()?></option>
+														<option <?php //echo $selected ?> value="<?php //echo $seq?>"><?php //echo $occasion->getTitle()?></option>
 														
-													<?php }?>
+													<?php //}?>
 												</select> <label class="jqx-validator-error-label" id="lpError"></label>
 								    		</div>
-                               			</div>
+                               			</div> -->
                                			<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Final Amount</label>
 			                                    <div class="col-lg-4 finalAmount"></div>

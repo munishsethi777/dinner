@@ -173,6 +173,10 @@ if($call == "saveBookingsFromAdmins"){
 		}
 		$bookingStatus = $_POST["status"];
 		$parentBookingSeq = $_POST["parentbookingseq"];
+		
+		$packageseq = $_POST["packageSeq"];
+		$packagePrice = $_POST["packagePrice"];
+		
 		$booking = new Booking();
 		$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
 		$bookingDate = $bookingDate->setTime(0, 0);
@@ -197,6 +201,9 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setParentBookingSeq($parentBookingSeq);
 		$bookingId = $_POST["bookingid"];
 		$booking->setBookingId($bookingId);
+		$booking->setPackageSeq($packageseq);
+		$booking->setPackagePrice($packagePrice);
+		
 		$bookingSeq = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingSeq);
 		if(empty($seq)){

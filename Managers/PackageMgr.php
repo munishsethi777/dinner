@@ -30,12 +30,17 @@ class PackageMgr{
 		return $packages;
 	}
 	public function getAllForGrid(){
-		//$query = "select * from packages";
 		$query = "select occasions.title occasion,packages.* from packages left join occasions on occasions.seq = packages.occasionseq";
 		$packages = self::$dataStore->executeQuery($query,true);
 		$mainArr["Rows"] = $packages;
 		$mainArr["TotalRows"] = $this->getAllCount();
 		return json_encode($mainArr);
+	}
+	
+	public function getAllWithOccasions(){
+		$query = "select occasions.title occasion,packages.* from packages left join occasions on occasions.seq = packages.occasionseq";
+		$packages = self::$dataStore->executeQuery($query,true);
+		return $packages;
 	}
 	
 	public function findAll(){
