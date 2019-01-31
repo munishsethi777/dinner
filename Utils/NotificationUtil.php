@@ -1,13 +1,16 @@
 <?php
-$docroot1 = $_SERVER["DOCUMENT_ROOT"] ."/booking_old/";
+$docroot1 = $_SERVER["DOCUMENT_ROOT"] ."/dinner/";
 require_once($docroot1."IConstants.inc");
+date_default_timezone_set("Asia/Kolkata");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Notification.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/ConfigurationMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationStatus.php");
+require_once($ConstantsArray['dbServerUrl'] ."Enums/NotificationType.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "log4php/Logger.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 require_once($ConstantsArray['dbServerUrl'] ."Utils/MailUtil.php");
-function runDinnerCron(){
+//function runDinnerCron(){
     date_default_timezone_set("Asia/Kolkata");
 	$logger = Logger::getLogger ( "logger" );
     $currentDate = new DateTime();
@@ -66,8 +69,22 @@ function runDinnerCron(){
 				$html .= "<p><b>Time Slot : </b>$timeSlotTitle</p>";
 				$sms = "Booked $menuHtml for $bookingDate - $timeSlotTitle ";
 				$subject = "Booking summary for $bookingDate -  $timeSlotTitle";
-				MailUtil::sendBookingClosurNotification($html, $sms, $subject,$emails,$mobiles,$timeSlot);
-                $logger->info("Notification Sent Successfully to - " . $emails);
+				$notification = New Notification();
+				$notification->setEmailErrorDetail(null);
+				$notification->setSmsErrorDetail(null);
+				$notification->setEmailId($emails);
+				$notification->setMobileNo($mobiles);
+				$notification->setSentOn(new DateTime());
+				$notification->setTimeSlotSeq($timeSlot->getSeq());
+				$notification->setBookingSeq(0);
+				$notification->setStatus(NotificationStatus::pending);
+				$notification->setNotificationType(NotificationType::bookingClosure);
+				$notification->setEmailHtml($html);
+				$notification->setEmailSubject($subject);
+				$notification->setSMSText($sms);
+				$notificationMgr = NotificationMgr::getInstance();
+				$id = $notificationMgr->saveNotification($notification);
+                $logger->info("Notification Saved Successfully seq - " . $id);
                 
 			}
 		}
@@ -75,6 +92,11 @@ function runDinnerCron(){
 		$logger->info("Time Slot Seqs Not Found for notifications");
 		return;
 	}
+//}
+
+function sendNotifications(){
+	MailUtil::sendBookingClosurNotification($html, $sms, $subject,$emails,$mobiles,$timeSlot);
+	$logger->info("Notification Sent Successfully to - " . $emails);
 }
 function _group_by($array, $key) {
 	$return = array();
