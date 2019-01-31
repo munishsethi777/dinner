@@ -113,7 +113,7 @@ if($call == "saveBooking"){
 		if(!empty($rescheduleBookingId)){
 			$bookingMgr->updateBookingStatus(BookingStatus::rescheduled, $rescheduleBookingId);
 		}
-		//MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn);
+		MailUtil::sendOrderEmailClient($booking,$menuPersonsObj,$menuPriceArr,$bookingAddOn);
 		$message = "Booking Saved Successfully";
 		session_start();
 		$_SESSION["bookingid"] = $bookingSeq;
@@ -197,7 +197,9 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setDateOfBirth($dateOfBirth);
 		$booking->setCouponSeq($couponSeq);
 		$booking->setDiscountPercent($couponPercent);
-		$booking->setStatus($bookingStatus);
+		if(!empty($bookingStatus)){
+			$booking->setStatus($bookingStatus);
+		}
 		$booking->setParentBookingSeq($parentBookingSeq);
 		$bookingId = $_POST["bookingid"];
 		$booking->setBookingId($bookingId);

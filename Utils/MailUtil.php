@@ -7,6 +7,7 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingAddOnMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/PackageMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."vendor/autoload.php");
 require_once($ConstantsArray['dbServerUrl'] ."Utils/html2PdfUtil.php");
 Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
@@ -54,6 +55,12 @@ class MailUtil{
 					$menuPersonArr[$menu->getSeq()]=$titleAndMembers;
 				}
 			}	
+		}
+		$packageSeq = $booking->getPackageSeq();
+		$package = null;
+		if(!empty($packageSeq)){
+			$packageMgr = PackageMgr::getInstance();
+			$package = $packageMgr->findBySeq($packageSeq);
 		}
 		$bookingDate = $booking->getBookingDate()->format('M d, Y');
 		$discountPercent = $booking->getDiscountPercent();
@@ -204,6 +211,20 @@ class MailUtil{
 						</div>
 					</div>';
 					}
+					if(!empty($package)){
+						$packagePrice = $package->getPrice();
+						$packageName = $package->getTitle();
+						$netAmount = $netAmount + $packagePrice;
+						$packagePrice = number_format($packagePrice,2,'.','');
+						$html .='<div style="display:flex;width:100%">
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+							<p style="color: #000; font-size: 16px; margin: 0px;">Package('.$packageName.')</p>
+						</div>
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
+							<p style="color: #000; font-size: 16px; text-align: right; margin: 0px;">'.$packagePrice.'/-</p>
+						</div>
+					</div>';
+					}
 					$netAmount = number_format($netAmount,2,'.','');
 					$html .='<div style="display:flex;width:100%">
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
@@ -295,7 +316,9 @@ class MailUtil{
 			</html>';
 			$subject = "YOUR FLY DINING BOOKING CONFIRMATION.";
 			$emails = array(0=>$booking->getEmailId());
-			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount);
+			
+			
+			$attachments = self::getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount,$package);
 			MailUtil::sendSmtpMail($subject, $html, $emails,StringConstants::IS_SMTP,$attachments);
 			$emails = StringConstants::EMAIL_IDS;
 			if(!empty($emails)){
@@ -315,8 +338,8 @@ class MailUtil{
 		$smsUtil->sendSMS($booking->getMobileNumber(), $msg);
 	}
 	
-	private static function getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount){
-		$invoiceAttachment = self::getInvoiceAttachments($booking, $menuPersonArr, $menuPriceArr,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount);
+	private static function getAttachments($booking,$menuPersonArr,$menuPriceArr,$timeSlot,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount,$package){
+		$invoiceAttachment = self::getInvoiceAttachments($booking, $menuPersonArr, $menuPriceArr,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount,$package);
 		//$confimrationAttachment = self::getBookingConfirmationAttahment($booking, $menuPersonArr,$timeSlot);
 		$attachemtns = array("Invoice"=>$invoiceAttachment);
 		return $attachemtns;
@@ -392,7 +415,6 @@ class MailUtil{
 				$msg = "Cake booking for $bookingDate for timeslot $timeSlotTitle. Total Members -$members .  Details: $cakeDetail";
 				$notification->setMobileNo($mobiles);
 				$notification->setSMSText($msg);
-				//$smsUtil->sendSMS($mobiles, $msg);
 			}
 			$notificationMgr = NotificationMgr::getInstance();
 			$id = $notificationMgr->saveNotification($notification);
@@ -401,7 +423,7 @@ class MailUtil{
 	
 	
 	
-	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount){
+	private static function getInvoiceAttachments($booking,$menuPersonArr,$menuPriceArr,$bookingAddOn,$inconvenienceCharges,$earlierPaidAmount,$package){
 		$bookingDate = $booking->getBookedOn()->format('M d, Y, h:i:s a');
 		$html = '<table style="width:100%;margin:auto;border:0px silver solid;padding:0px;font-family:arial;
 				line-height:20px" >
@@ -505,6 +527,17 @@ class MailUtil{
 					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;">'.$cakePrice.'/-</td>
 				</tr>';
 			}
+			if(!empty($package)){
+				$packagePrice = $package->getPrice();
+				$packageName = $package->getTitle();
+				$netAmount = $netAmount + $packagePrice;
+				$packagePrice = number_format($packagePrice,2,'.','');
+				$html .= '<tr style="font-size:13px">
+					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">Package('.$packageName.')</td>
+					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;">'.$packagePrice.'/-</td>
+				</tr>';
+			}
+			
 			$netAmount = number_format($netAmount,2,'.','');
 			$html .='<tr style="font-size:13px">
 				<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">NET PAYABLE AMOUNT</td>

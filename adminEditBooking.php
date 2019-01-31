@@ -260,7 +260,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 												</select> <label class="jqx-validator-error-label" id="lpError"></label>
 								    		</div>
 								    		 <div class="col-lg-2">
-								    		 	<input type="text" name="packagePrice" id="packageprice" placeholder="Package Price" value="<?php echo $booking->getPackagePrice()?>" class="form-control">	
+								    		 	<input type="text" name="packagePrice" id="packageprice" onchange="applyDiscount()" placeholder="Package Price" value="<?php echo $booking->getPackagePrice()?>" class="form-control">	
 								    		 </div>
                                			</div>
                                			<!-- <div class="form-group row">
@@ -295,8 +295,8 @@ $discountCoupons = $discountCouponMgr->getAll();
 		                             	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Status</label>
 			                                    <div class="col-lg-4">
-			                                    	<select class="form-control chosen-select" <?php echo $disabled?> required id="status" name="status">
-														<option value="0">Select Status</option>
+			                                    	<select class="form-control chosen-select" <?php echo $disabled?> id="status" name="status">
+														<option value="">Select Status</option>
 														<?php foreach ($allBookingStatus as $key=>$bookingStatus){
 															$selected = "";
 															if($booking->getStatus() == $bookingStatus){
@@ -308,8 +308,9 @@ $discountCoupons = $discountCouponMgr->getAll();
 													</select>
 									    		</div>
 									   </div>	
-                               			    
-		                             <?php }?>
+                               	     <?php }else{?>
+                               	     		<input type="hidden" id ="status" name="status"  value="<?php echo $booking->getStatus() ?>"/>
+                               	     <?php }?>
 	                                <?php if(!empty($relatedBooking)){ 
 	                                		$status = "";
 	                                		if($isRecheduled){
@@ -396,6 +397,7 @@ $discountCoupons = $discountCouponMgr->getAll();
             	var success = data.success;
             	if(success == 1){
                 	$("#packageprice").val(data.price);	
+                	applyDiscount();
             	}else{
                 	alert(data.message);
             	}		 
@@ -482,6 +484,7 @@ $discountCoupons = $discountCouponMgr->getAll();
             		var cakePrice = $("#cakePrice").val()
             		totalAmount += parseInt(cakePrice);
      	        }
+        		totalAmount = addPackageAmount(totalAmount);
             	$(".finalAmount").html("Rs. "+ totalAmount);
       		});
       		
@@ -608,8 +611,21 @@ $discountCoupons = $discountCouponMgr->getAll();
 	        if(isAddCake){
 	        	totalAmount += 500;    
 	        }
+	        totalAmount = addPackageAmount(totalAmount);
 	        $(".finalAmount").html("Rs. "+ totalAmount);
         }
+
+		function addPackageAmount(totalAmount){
+			var selectedPackageSeq = $("#packageSeq").val();
+	        if(selectedPackageSeq > 0){
+		        var packagePrice = $("#packageprice").val();
+		        if(packagePrice !=null && packagePrice != ""){
+			        packagePrice = parseInt(packagePrice);
+			        totalAmount += packagePrice;
+		        }
+	        }
+	        return totalAmount;
+		}
         
         function cancel(){
            	location.href = "dashboard.php";
