@@ -2,7 +2,8 @@
 class Notification{
 	public static $tableName = "notifications";
 	public static $className = "Notification";
-	private $seq,$senton,$timeslotseq,$emailid,$mobileno,$emailerrordetail,$smserrordetail;
+	private $seq,$senton,$timeslotseq,$emailid,$mobileno,$emailerrordetail,$smserrordetail,$bookingseq,$notificationtype,$status;
+	private $emailhtml,$emailsubject,$smstext;
 	public function setSeq($seq_){
 		$this->seq = $seq_;
 	}
@@ -51,5 +52,48 @@ class Notification{
 	public function getSmsErrorDetail(){
 		return $this->smserrordetail;
 	}
+	
+	public function setNotificationType($type_){
+		$this->notificationtype = $type_;	
+	}
+	public function getNotificationType(){
+		return $this->notificationtype;
+	}
+	
+	public function setBookingSeq($bookingSeq_){
+		$this->bookingseq = $bookingSeq_;
+	}
+	
+	public function getBookingSeq(){
+		return $this->bookingseq;
+	}
+	public function setStatus($status_){
+		$this->status = $status_;
+	}
+	public function getStatus(){
+		return $this->status;
+	}
+	
+	public function setEmailHtml($html_){
+		$this->emailhtml = $html_;
+	}
+	public function getEmailHtml(){
+		return $this->emailhtml;
+	}
+	
+	public function setEmailSubject($subject_){
+		$this->emailsubject = $subject_;
+	}
+	public function getEmailSubject(){
+		return $this->emailsubject;
+	}
+	
+	public function setSMSText($smsText){
+		$this->smstext = $smsText;
+	}
+	public function getSMSText(){
+		return $this->smstext;
+	}
+	
 		
 }
