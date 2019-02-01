@@ -30,9 +30,19 @@ class PackageMgr{
 		return $packages;
 	}
 	public function getAllForGrid(){
-		$query = "select occasions.title occasion,packages.* from packages left join occasions on occasions.seq = packages.occasionseq";
+		$query = "select occasions.title as occasion ,packages.* from packages left join occasions on occasions.seq = packages.occasionseq";
 		$packages = self::$dataStore->executeQuery($query,true);
-		$mainArr["Rows"] = $packages;
+		$pacArr = array();
+		foreach ($packages as $package){
+			$package["occasions.title"] = $package["occasion"];
+			$package["packages.title"] = $package["title"];
+			$package["packages.description"] = $package["description"];
+			$package["packages.createdon"] = $package["createdon"];
+			$package["packages.lastmodifiedon"] = $package["lastmodifiedon"];
+			$package["packages.isenabled"] = $package["isenabled"];
+			array_push($pacArr, $package);
+		}
+		$mainArr["Rows"] = $pacArr;
 		$mainArr["TotalRows"] = $this->getAllCount();
 		return json_encode($mainArr);
 	}
@@ -55,7 +65,7 @@ class PackageMgr{
 	}
 	
 	public function getAllCount(){
-		$query = "select count(*) from packages";
+		$query = "select count(*) from packages inner join occasions on occasions.seq = packages.occasionseq";
 		$count = self::$dataStore->executeCountQueryWithSql($query,true);
 		return $count;
 	}

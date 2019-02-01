@@ -84,13 +84,13 @@
 		
 		var columns = [
 		  { text: 'id', datafield: 'seq' , hidden:true},
-		  { text: 'Occasion', datafield: 'occasion', width:"10%"}, 			
-		  { text: 'Title', datafield: 'title', width:"15%"}, 			
-		  { text: 'Description', datafield: 'description',width:"30%"},
+		  { text: 'Occasion', datafield: 'occasions.title', width:"10%"}, 			
+		  { text: 'Title', datafield: 'packages.title', width:"15%"}, 			
+		  { text: 'Description', datafield: 'packages.description',width:"30%"},
 	      { text: 'Price', datafield: 'price',width:"8%"},
-	      { text: 'LastModified', datafield: 'lastmodifiedon', filtertype: 'date',cellsformat: 'd-M-yyyy h:m tt',width:"14%"},
-	      { text: 'Created On', datafield: 'createdon', filtertype: 'date',cellsformat: 'd-M-yyyy h:m tt',width:"14%"},
-	      { text: 'Enabled', datafield: 'isenabled',columntype: 'checkbox',width:"6%",cellsalign: 'center'},
+	      { text: 'LastModified', datafield: 'packages.lastmodifiedon', filtertype: 'date',cellsformat: 'd-M-yyyy h:m tt',width:"14%"},
+	      { text: 'Created On', datafield: 'packages.createdon', filtertype: 'date',cellsformat: 'd-M-yyyy h:m tt',width:"14%"},
+	      { text: 'Enabled', datafield: 'packages.isenabled',columntype: 'checkbox',width:"6%",cellsalign: 'center'},
 	    ]
 	   
 	    var source =
@@ -98,16 +98,16 @@
 	        datatype: "json",
 	        id: 'id',
 	        pagesize: 20,
-	        sortcolumn: 'seq',
+	        sortcolumn: 'packages.createdon',
 	        sortdirection: 'desc',
 	        datafields: [{ name: 'seq', type: 'integer' },
-	                     { name: 'occasion', type: 'string' },
-	                    { name: 'title', type: 'string' },
-	                    { name: 'description', type: 'string'},
+	                     { name: 'occasions.title', type: 'string' },
+	                    { name: 'packages.title', type: 'string' },
+	                    { name: 'packages.description', type: 'string'},
 	                    { name: 'price', type: 'string' },
-	                    { name: 'isenabled', type: 'boolean' },
-	                    { name: 'lastmodifiedon', type: 'date' },
-	                    { name: 'createdon', type: 'date' }
+	                    { name: 'packages.isenabled', type: 'boolean' },
+	                    { name: 'packages.lastmodifiedon', type: 'date' },
+	                    { name: 'packages.createdon', type: 'date' }
 	                    ],                          
 	        url: 'Actions/PackageAction.php?call=getAllPackages',
 	        root: 'Rows',
