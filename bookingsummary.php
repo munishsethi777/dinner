@@ -356,7 +356,7 @@ if(!empty($totalAmountInPaise)){
 	                       				<div class="col-xs-4 text-right">Rs <?php //echo $formatedTotalAmount?></div>
 	                       			</div> -->
 	                       			<form id="userInfoForm" name="userInfoForm" method="post" action="Actions/BookingAction.php" class="m-t-xs">
-	                       				<div class="form-group row">
+	                       				<div class="form-group row" style="display:none">
 		                                	<div class="col-lg-10" >
 		                                       	<label> <input class="i-checks" <?php echo $isfillCake?> type="checkbox"  name="isAddCake" id="isAddCake" >  Add Cake <small>(Rs. 500/-)</small></label>
 		                                       </div>

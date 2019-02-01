@@ -225,13 +225,13 @@ $discountCoupons = $discountCouponMgr->getAll();
 									    		<?php }?>
                                			</div>	
                                			
-                               			<div class="form-group row">
+                               			<div class="form-group row" style="display:none">
                                			    <label class="col-lg-2 col-form-label">Add On</label>
 		                                	<div class="col-lg-4" >
 		                                	   	<input class="i-checks" <?php echo $isfillCake?> type="checkbox"  name="isAddCake" id="isAddCake" >  Add Cake <small>(Rs. 500/-)</small>
 		                                       </div>
 		                                 </div>
-		                                 <div id="addOnDiv" style="display:block">
+		                                 <div id="addOnDiv" style="display:none">
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Notes</label>
 			                                    <div class="col-lg-4">
