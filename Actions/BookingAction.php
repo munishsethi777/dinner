@@ -197,15 +197,14 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setDateOfBirth($dateOfBirth);
 		$booking->setCouponSeq($couponSeq);
 		$booking->setDiscountPercent($couponPercent);
-		if(!empty($bookingStatus)){
-			$booking->setStatus($bookingStatus);
-		}
+		$booking->setStatus($bookingStatus);
 		$booking->setParentBookingSeq($parentBookingSeq);
 		$bookingId = $_POST["bookingid"];
 		$booking->setBookingId($bookingId);
-		$booking->setPackageSeq($packageseq);
-		$booking->setPackagePrice($packagePrice);
-		
+		if(!empty($packageseq)){
+			$booking->setPackageSeq($packageseq);
+			$booking->setPackagePrice($packagePrice);
+		}
 		$bookingSeq = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingSeq);
 		if(empty($seq)){
