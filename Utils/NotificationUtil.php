@@ -52,7 +52,7 @@ function runDinnerCron(){
 						}
 						$member = $member + $menuMembers;
 						$menuMembersArr[$menuTitle] = $member;
-						$totalMember += $member;
+						$totalMember += $menuMembers;
 					}
 				}
 				$html .= "<p><b>Members : </b>";
