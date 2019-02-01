@@ -90,8 +90,10 @@ if($call == "saveBooking"){
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);
 		$booking->setDateOfBirth($dateOfBirth);
-		$booking->setPackageSeq($packageseq);
-		$booking->setPackagePrice($packagePrice);
+		if(!empty($packageseq)){
+			$booking->setPackageSeq($packageseq);
+			$booking->setPackagePrice($packagePrice);
+		}
 		$booking->setParentBookingSeq($rescheduleBookingId);
 		$menuPersonsArr = json_decode($menuPersonsStr,true);
 		$totalMembers = array_sum($menuPersonsArr);
@@ -203,9 +205,10 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setParentBookingSeq($parentBookingSeq);
 		$bookingId = $_POST["bookingid"];
 		$booking->setBookingId($bookingId);
-		$booking->setPackageSeq($packageseq);
-		$booking->setPackagePrice($packagePrice);
-		
+		if(!empty($packageseq)){
+			$booking->setPackageSeq($packageseq);
+			$booking->setPackagePrice($packagePrice);
+		}
 		$bookingSeq = $bookingMgr->saveBooking($booking);
 		$booking->setSeq($bookingSeq);
 		if(empty($seq)){
