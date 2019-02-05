@@ -60,7 +60,7 @@ class MailUtil{
 		$package = null;
 		if(!empty($packageSeq)){
 			$packageMgr = PackageMgr::getInstance();
-			$package = $packageMgr->findBySeq($packageSeq);
+			$package = $packageMgr->findArrBySeq($packageSeq);
 		}
 		$bookingDate = $booking->getBookingDate()->format('M d, Y');
 		$discountPercent = $booking->getDiscountPercent();
@@ -212,8 +212,8 @@ class MailUtil{
 					</div>';
 					}
 					if(!empty($package)){
-						$packagePrice = $package->getPrice();
-						$packageName = $package->getTitle();
+						$packagePrice = $package["price"];
+						$packageName = $package["occasion"] ."-" .$package["title"];
 						$netAmount = $netAmount + $packagePrice;
 						$packagePrice = number_format($packagePrice,2,'.','');
 						$html .='<div style="display:flex;width:100%">
@@ -528,8 +528,8 @@ class MailUtil{
 				</tr>';
 			}
 			if(!empty($package)){
-				$packagePrice = $package->getPrice();
-				$packageName = $package->getTitle();
+				$packagePrice = $package["price"];
+				$packageName = $package["occasion"] ."-" .$package["title"];
 				$netAmount = $netAmount + $packagePrice;
 				$packagePrice = number_format($packagePrice,2,'.','');
 				$html .= '<tr style="font-size:13px">
