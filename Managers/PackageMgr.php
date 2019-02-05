@@ -25,6 +25,14 @@ class PackageMgr{
 		$package = self::$dataStore->findBySeq($seq);
 		return $package;
 	}
+	public function findArrBySeq($seq){
+		$query = "select packages.*,occasions.title as occasion from packages inner join occasions on packages.occasionseq = occasions.seq where packages.seq = $seq ";
+		$package = self::$dataStore->executeQuery($query);
+		if(!empty($package)){
+			return $package[0];
+		}
+		return null;
+	}
 	public function findByOccasionSeq($seq){
 		$packages = self::$dataStore->executeQuery("select * from packages where occasionseq = ".$seq);
 		return $packages;
