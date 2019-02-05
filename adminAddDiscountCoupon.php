@@ -113,7 +113,8 @@ if(isset($_POST["seq"])){
 	    $(".touchspin3").TouchSpin({
             verticalbuttons: true,
             buttondown_class: 'btn btn-white',
-            buttonup_class: 'btn btn-white'
+            buttonup_class: 'btn btn-white',
+            max: 500
         });
  });
  function submitCouponForm(){
