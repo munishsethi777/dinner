@@ -1,5 +1,5 @@
 <?php
-$docroot1 = $_SERVER["DOCUMENT_ROOT"] ."/dinner/";
+$docroot1 = $_SERVER["DOCUMENT_ROOT"] ."/booking_old/";
 require_once($docroot1."IConstants.inc");
 date_default_timezone_set("Asia/Kolkata");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/Notification.php");
@@ -52,7 +52,7 @@ function runDinnerCron(){
 						}
 						$member = $member + $menuMembers;
 						$menuMembersArr[$menuTitle] = $member;
-						$totalMember += $member;
+						$totalMember += $menuMembers;
 					}
 				}
 				$html .= "<p><b>Members : </b>";
