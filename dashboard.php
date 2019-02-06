@@ -113,6 +113,7 @@
               { text: 'Booking Date', datafield: 'bookingdate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"9%",cellsalign: 'right'},
               { text: 'Slot', datafield: 'timeslots.title',width:"12%",filtertype: 'checkedlist',cellsalign: 'right'},
               { text: 'Menu', datafield: 'menus.title', width:"12%" ,filtertype: 'checkedlist',sortable:false,filteritems:menus},
+              { text: 'Package', datafield: 'package',width:"18%",filterable:false,sortable:false},
               { text: 'Customer Name', datafield: 'fullname',width:"12%"},
               { text: 'Email', datafield: 'emailid',width:"18%"},
               { text: 'Mobile', datafield: 'mobilenumber',width:"10%"}
@@ -134,7 +135,8 @@
                             { name: 'emailid', type: 'string'},
                             { name: 'fullname', type: 'string'},
                             { name: 'mobilenumber', type: 'string'},
-                            { name: 'menus.title', type: 'string' }
+                            { name: 'menus.title', type: 'string' },
+                            { name: 'package', type: 'string' }
                             ],                          
                 url: 'Actions/BookingAction.php?call=getBookings',
                 root: 'Rows',
