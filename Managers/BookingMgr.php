@@ -59,7 +59,10 @@ where ((bookings.status != 'Rescheduled' and bookings.status != 'Cancelled') or 
 	
 	
 	public function getBookingJsonForGrid(){
-		$query = "select bookings.bookingid,bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,timeslots.title as timeslot from bookings inner join timeslots on bookings.timeslot = timeslots.seq";
+		$query = "select packages.title as package,occasions.title as occasion,bookings.bookingid,bookings.emailid as emailid,bookings.mobilenumber as mobilenumber,bookings.seq,bookings.bookedon as bookedon,bookings.bookingdate as bookingdate,bookings.transactionid as transactionid, bookings.fullname as fullname,timeslots.title as timeslot from bookings 
+inner join timeslots on bookings.timeslot = timeslots.seq
+left join packages on bookings.packageseq = packages.seq
+left join occasions on packages.occasionseq = occasions.seq";
 		$bookings =  self::$dataStore->executeQuery($query,true,false,true);
 		$bookingArr = array();
 		$bookingMainArr = array();
@@ -87,6 +90,11 @@ where ((bookings.status != 'Rescheduled' and bookings.status != 'Cancelled') or 
 			$arr["transactionid"] = $booking["transactionid"];
 			$arr["mobilenumber"] = $booking["mobilenumber"];
 			$arr["emailid"] = $booking["emailid"];
+			if(!empty($booking["package"])){
+				$arr["package"] = $booking["occasion"] ."-" . $booking["package"];
+			}else{
+				$arr["package"] = "";
+			}
  			$mainMenuArr = array();
  			$arr["menus.title"] = $menus;
 			$bookingArr[$bookingSeq] = $arr;
