@@ -31,6 +31,15 @@ require_once('IConstants.inc');
 		select{
 			font-size:12px !important;
 		}
+		.packageSelect{
+			width:85% !important;
+			float:left;
+		}
+		.packageInfo{
+			line-height:30px;
+			margin-left:5px;
+			float:left;
+		}
 		
 		@media all  
 			and (max-width: 768px) {
@@ -280,12 +289,13 @@ function loadData(selectedDate){
 			});
 			html += "/<select></div>";
 			//packages
-			html += '<div class="col-lg-2 col-sm-2 col-xs-6 p-xs"><select class="form-control packageSelect" id="package'+ val.seq +'">';
+			html += '<div class="col-lg-2 col-sm-2 col-xs-6 p-xs" id="packageDiv'+ val.seq +'"><select class="form-control packageSelect" id="package'+ val.seq +'">';
 			html += '<option value="">Choose Package</option>';
 			//$.each(val.packages, function(key,package_){
 				//html += '<option value="'+package_[0]+'">'+ package_[1] +' Rs.'+ package_[3] +'</option>';
 			//});
-			html += "/<select></div>";
+			html += "/<select><span class='packageInfoSpan'></span></div>";
+
 			
 			if(val.seatsAvailable == 0){
 				val.availableInPercent = 0;
@@ -319,11 +329,26 @@ function loadData(selectedDate){
 	 			     $('#package'+id)
 	 			         .append($("<option></option>")
 	 			                    .attr("value",value[0])
-	 			                    .text(value[2]+'- Rs.'+value[4])); 
+	 			                    .text(value[2]+'- Rs.'+value[4])
+	 			                    .attr("id",value[3])); 
 	 			});
+	 			packageInfoHtml = "";
+	 			if(data.packages.length > 0){
+		 			packageInfoHtml = '<i class="packageInfo fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top"';
+					packageInfoHtml += 'data-original-title="'+data.packages[0][3]+'"></i>';
+				}
+	 			$("#packageDiv"+id +" .packageInfoSpan").html(packageInfoHtml);
 	 		});
 		    
 		});
+
+	 	$(".packageSelect").change(function() {
+	 		id = this.id.substr(7);
+			desc = $(this).children(":selected").attr("id");
+			packageInfoHtml = '<i class="packageInfo fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top"';
+			packageInfoHtml += 'data-original-title="'+desc+'"></i>';
+			$("#packageDiv"+id +" .packageInfoSpan").html(packageInfoHtml);
+		 });
 	});	 	
 }
 
