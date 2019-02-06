@@ -214,11 +214,13 @@ class MailUtil{
 					if(!empty($package)){
 						$packagePrice = $package["price"];
 						$packageName = $package["occasion"] ."-" .$package["title"];
+						$packDesc = $package["description"];
 						$netAmount = $netAmount + $packagePrice;
 						$packagePrice = number_format($packagePrice,2,'.','');
 						$html .='<div style="display:flex;width:100%">
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
 							<p style="color: #000; font-size: 16px; margin: 0px;">Package('.$packageName.')</p>
+							<p style="color: #000; font-size: 13px; margin: 0px;">'.$packDesc.'</p>
 						</div>
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
 							<p style="color: #000; font-size: 16px; text-align: right; margin: 0px;">'.$packagePrice.'/-</p>
@@ -530,12 +532,15 @@ class MailUtil{
 			if(!empty($package)){
 				$packagePrice = $package["price"];
 				$packageName = $package["occasion"] ."-" .$package["title"];
+				$packDesc = $package["description"];
 				$netAmount = $netAmount + $packagePrice;
 				$packagePrice = number_format($packagePrice,2,'.','');
 				$html .= '<tr style="font-size:13px">
-					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">Package('.$packageName.')</td>
+					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">Package('.$packageName.')<br/><span style="font-size:10px !important">'.$packDesc.'</span>
+					</td>
 					<td style="padding:10px;border:1px silver solid;text-align:right;font-weight:bold;">'.$packagePrice.'/-</td>
 				</tr>';
+				
 			}
 			
 			$netAmount = number_format($netAmount,2,'.','');
