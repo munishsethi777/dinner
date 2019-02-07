@@ -65,7 +65,10 @@ if($call == "getPackagesByOccasionSeq"){
 	$occassionSeq = $_REQUEST["selectedOccasion"];
 	$response = new ArrayObject();
 	try{
-		$packages = $packageMgr->findByOccasionSeq($occassionSeq);
+		$packages = null;
+		if(!empty($occassionSeq)){
+			$packages = $packageMgr->findByOccasionSeq($occassionSeq);
+		}
 		$response["packages"] = $packages;
 	}catch(Exception $e){
 		$success = 0;

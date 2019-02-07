@@ -333,7 +333,7 @@ function loadData(selectedDate){
 	 			                    .attr("id",value[3])); 
 	 			});
 	 			packageInfoHtml = "";
-	 			if(data.packages.length > 0){
+	 			if(data.packages != null && data.packages.length > 0){
 		 			packageInfoHtml = '<i class="packageInfo fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top"';
 					packageInfoHtml += 'data-original-title="'+data.packages[0][3]+'"></i>';
 				}
