@@ -64,6 +64,7 @@ class MailUtil{
 		}
 		$bookingDate = $booking->getBookingDate()->format('M d, Y');
 		$discountPercent = $booking->getDiscountPercent();
+		$discountAmount = $booking->getDiscountAmount();
 		$html ='<html><head><link rel="stylesheet" type="text/css"href="1https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"></head>
 		<body><divstyle="background-color: grey; width: 100%; color: #676a6c; font-family: open sans, Helvetica Neue, Helvetica, Arial, sans-serif">
 		<div style="background-color: white; margin: auto; max-width: 600px; padding: 0px 15px 0px 15px">
@@ -157,8 +158,12 @@ class MailUtil{
 				   $netAmount = $totalAmount;
 				   $totalAmount = number_format($totalAmount,2,'.','');
 				   $html .='</table>';
-				   	if(!empty($discountPercent)){	
-						$discount = ($discountPercent / 100) * $totalAmount;
+				   	if(!empty($discountPercent) || !empty($discountAmount)){	
+				   		if(!empty($discountPercent)){
+							$discount = ($discountPercent / 100) * $totalAmount;
+				   		}else{
+				   			$discount = $discountAmount;
+				   		}
 						$netAmount = $netAmount - $discount;
 						$discount = number_format($discount,2,'.','');
 						$html .='<div style="display:flex;width:100%">
@@ -493,8 +498,13 @@ class MailUtil{
 			$netAmount = $totalAmount;
 			$totalAmount = number_format($totalAmount,2,'.','');
 			$discountPercent = $booking->getDiscountPercent();
-			if(!empty($discountPercent)){
-				$discount = ($discountPercent / 100) * $totalAmount;
+			$discountAmount = $booking->getDiscountAmount();
+			if(!empty($discountPercent) || !empty($discountAmount)){	
+		   		if(!empty($discountPercent)){
+					$discount = ($discountPercent / 100) * $totalAmount;
+		   		}else{
+		   			$discount = $discountAmount;
+		   		}
 				$netAmount = $netAmount - $discount;
 				$discount = number_format($discount,2,'.','');
 				$html .= '<tr style="font-size:13px">
