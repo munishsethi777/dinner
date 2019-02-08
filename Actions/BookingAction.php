@@ -204,7 +204,9 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setCountry($country);
 		$booking->setDateOfBirth($dateOfBirth);
 		$booking->setCouponSeq($couponSeq);
-		$booking->setDiscountPercent($couponPercent);
+		if(!empty($couponPercent)){
+			$booking->setDiscountPercent($couponPercent);
+		}
 		if(!empty($bookingStatus)){
 			$booking->setStatus($bookingStatus);
 		}

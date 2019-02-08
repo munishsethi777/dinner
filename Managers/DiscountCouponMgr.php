@@ -81,8 +81,14 @@ class DiscountCouponMgr{
 		$discount = $coupon->getMaxAmount();
 		if(!empty($percent)){
 			$discount = ($percent / 100) * $amount;
+		}else{
+			if($discount > $amount){
+				$amount = 0;
+			}
 		}
-		$amount = $amount - $discount; 
+		if($amount > 0){
+			$amount = $amount - $discount;
+		}
 		$mainArr["percent"] = $percent;
 		$mainArr["amount"] = $amount;
 		$mainArr["maxamount"] = $coupon->getMaxAmount();

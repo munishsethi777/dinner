@@ -231,7 +231,7 @@ if(!empty($discount)){
 }
 
 
-$totalAmountInPaise = 100;
+//$totalAmountInPaise = 100;
 
 
 $razorpayOrderId = "";
