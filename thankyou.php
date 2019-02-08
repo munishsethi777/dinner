@@ -1,6 +1,7 @@
 <?php 
 require_once('IConstants.inc');
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/PackageMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingDetailMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/TimeSlotMgr.php");
 $bookingId = 0;
@@ -12,6 +13,7 @@ $booking = new Booking();
 $bookingDetails = array();
 $timeSlot = new TimeSlot();
 $bookingDate = "";
+$packageDetail = "";
 if(!empty($bookingId)){
 	$bookingMgr = BookingMgr::getInstance();
 	$bookingDetailMgr = BookingDetailMgr::getInstance();
@@ -22,6 +24,14 @@ if(!empty($bookingId)){
 	$bookingDetails = $bookingDetailMgr->getBookingDetailAndMenu($bookingId);
 	$timeSlotMgr = TimeSlotMgr::getInstance();
 	$timeSlot = $timeSlotMgr->findBySeq($booking->getTimeSlot());
+	$packageSeq = $booking->getPackageSeq();
+	if(!empty($packageSeq)){
+		$packageMgr = PackageMgr::getInstance();
+		$packageArr = $packageMgr->findArrBySeq($packageSeq);
+		$packagePrice = $packageArr["price"];
+		$packageDetail = $packageArr["occasion"] ." - " .$packageArr["title"] . "<br>" . $packageArr["description"];
+		
+	}
 }
 ?>
 <html>
@@ -135,6 +145,14 @@ if(!empty($bookingId)){
 											<?php }?>
 											</div>
 									</div>
+									<?php if(!empty($packageDetail)){?>
+									<div class="row">
+										<div class="col-lg-6 col-xs-6 text-right">Package Details :</div>
+											<div class="col-lg-6 col-xs-6 text-left">
+												<?php echo $packageDetail?>
+											</div>
+									</div>
+									<?php }?>
 								<?php }?>
 							</div>
 						</div>
