@@ -1,0 +1,3 @@
+ALTER TABLE `discountcoupons` ADD `maxseats` INT NULL AFTER `discountamount`, ADD`maxamount` DOUBLE NULL;
+
+ALTER TABLE `discountcoupons` CHANGE `percent` `percent` INT(11) NULL;
