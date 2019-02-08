@@ -48,6 +48,7 @@ if($call == "saveBooking"){
 		$dateOfBirth = $_POST["dateofbirth"];
 		$couponSeq = $_POST["couponSeq"]; 
 		$discountPercent = $_POST["discountPercent"];
+		$discountAmount = $_POST["discountAmount"];
 		$dateOfBirth = DateUtil::StringToDateByGivenFormat("d-m-Y", $dateOfBirth);
 		$dateOfBirth = $dateOfBirth->setTime(0, 0);
 		$gst = "";
@@ -86,6 +87,7 @@ if($call == "saveBooking"){
 		$booking->setCompanyName($companyName);
 		$booking->setCouponSeq($couponSeq);
 		$booking->setDiscountPercent($discountPercent);
+		$booking->setDiscountAmount($discountAmount);
 		$booking->setGSTNumber($gst);
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);

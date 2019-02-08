@@ -7,10 +7,17 @@ require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
 $discountCoupon = new DiscountCoupon();
 $isEnableChecked = "";
 $validTillDateStr = "";
+$discountType = "percent";
+$percentChecked = "checked";
+$amountChecked = "";
 if(isset($_POST["seq"])){
 	$seq = $_POST["seq"];
 	$discountCouponMgr = DiscountCouponMgr::getInstance();
 	$discountCoupon = $discountCouponMgr->findBySeq($seq);
+	if(!empty($discountCoupon->getMaxAmount())){
+		$discountType = "amount";
+		$amountChecked = "checked";
+	}
 	$validTill = $discountCoupon->getValidTillDate();
 	$validTill = DateUtil::StringToDateByGivenFormat("Y-m-d", $validTill);
 	$validTillDateStr = $validTill->format("d-m-Y");
@@ -59,12 +66,39 @@ if(isset($_POST["seq"])){
 	                                    	<input type="text" maxLength="250" value="<?php echo $discountCoupon->getDescription()?>"  id="description" name="description" required placeholder="Description" class="form-control">
 	                                    </div>
 	                               </div>
+	                             
 	                               <div class="form-group row">
-	                       				<label class="col-lg-2 col-form-label">Percent</label>
-	                                    <div class="col-lg-4">
-	                                    	<input type="text" value="<?php echo $discountCoupon->getPercent()?>"  id="percent" name="percent" required placeholder="Percent" class="form-control">
+										<label class="col-sm-2 control-label">Discount Type</label>
+										<div class="col-sm-10">
+											<div id="discountTypeDiv" class="row i-checks">
+												<div class="col-sm-2 ">
+													 <input type="radio"
+														<?php echo $percentChecked?> value="percent" name="discountTypeOption"
+														id="actOption"> Pecent
+												</div>
+												<div class="col-sm-2">
+													<input type="radio"
+														value="amount" <?php echo $amountChecked?> name="discountTypeOption"
+														id="actOption"> Amount
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-sm-2 control-label"></label>
+										<div  id="percentDiv">
+											<div  class="col-sm-2">
+												<input type="text" value="<?php echo $discountCoupon->getPercent()?>"  id="percent" name="percent"  placeholder="Percent" class="form-control">
+											</div>
+											<div class="col-sm-2">
+		                                    	<input class="form-control touchspin3" placeholder="Max Seats" value="<?php echo $discountCoupon->getMaxSeats()?>" id="maxseats" type="text" name="maxseats">
+		                                    </div>
 	                                    </div>
-	                               </div>
+										<div id="amountDiv" style="display: none;"
+											class="col-sm-2">
+											<input class="form-control" placeholder="Max Amount" value="<?php echo $discountCoupon->getMaxAmount()?>" id="maxamount" type="text" name="maxamount">
+										</div>
+									</div>
 	                               <div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Valid Till</label>
 	                                    <div class="col-lg-4">
@@ -74,9 +108,10 @@ if(isset($_POST["seq"])){
 	                               <div class="form-group row">
 	                       				<label class="col-lg-2 col-form-label">Usage Times</label>
 	                                    <div class="col-lg-4">
-	                                       	<input class="form-control touchspin3" value="<?php echo $discountCoupon->getUsageTimes()?>" id="usagetimes" required type="text" name="usagetimes">
+	                                       	<input class="form-control touchspin3" placeholder="Usage Times" value="<?php echo $discountCoupon->getUsageTimes()?>" id="usagetimes" required type="text" name="usagetimes">
 	                                    </div>
 	                               </div>
+	                               
 	                               <div class="form-group row i-checks">
 	                       				<label class="col-lg-2 col-form-label">Enabled</label>
 	                                    <div class="col-lg-4">
@@ -116,7 +151,21 @@ if(isset($_POST["seq"])){
             buttonup_class: 'btn btn-white',
             max: 500
         });
+	    $('#discountTypeDiv').on('ifChecked', function(event){
+	  		  var value = $("input[type='radio'][name='discountTypeOption']:checked").val();
+	  		  showHideDicountTypeOption(value);
+  		});
+	    showHideDicountTypeOption("<?php echo $discountType ?>");
  });
+ function showHideDicountTypeOption(value){
+     if(value == "percent"){
+    	 $("#amountDiv").hide();
+         $("#percentDiv").show();
+     }else{
+    	  $("#percentDiv").hide();
+          $("#amountDiv").show();
+     }
+ }
  function submitCouponForm(){
  	if($("#couponForm")[0].checkValidity()) {
      	 $('#couponForm').ajaxSubmit(function( data ){

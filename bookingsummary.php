@@ -38,6 +38,8 @@ $couponError = "";
 $couponSuccess = "";
 $discount  = 0;
 $discountPercent = 0;
+$discountMaxAmount = 0;
+$discoutOnMaxSeats = 0;
 $couponSeq = 0;
 $couponCode = "";
 $cakeAmount = 0;
@@ -175,10 +177,26 @@ if(isset($_POST["call"]) && (isset($_POST["call"]) == "applyCoupon" || isset($_P
 		}else{
 			$discountPercent = $couponInfo["percent"];
 			$discountedAmount = $couponInfo["amount"];
-			$couponSeq = $couponInfo["couponSeq"];
-			$discount = $amount - $discountedAmount;
-			$totalAmount = $discountedAmount;
-			$couponSuccess = "Coupon Applied Successfully!";
+			$discountMaxAmount = $couponInfo["maxamount"];
+			$discoutOnMaxSeats = $couponInfo["maxseats"];
+			$isInvalid = false;
+			if(!empty($discountPercent) && !empty($discoutOnMaxSeats)){
+				if($totalPerson > $discoutOnMaxSeats){
+					$couponError = "Invalid coupon code!";
+					$isInvalid = true;
+				}
+			}
+			if(!$isInvalid){
+				if(!empty($discountPercent)){
+					$discount = $amount - $discountedAmount;
+				}else{
+					$discount = $discountMaxAmount;
+				}
+				$couponSeq = $couponInfo["couponSeq"];
+				//$discount = $amount - $discountedAmount;
+				$totalAmount = $discountedAmount;
+				$couponSuccess = "Coupon Applied Successfully!";
+			}
 		}
 	}
 	if(isset($_POST["isAddCake"])){
@@ -330,8 +348,12 @@ if(!empty($totalAmountInPaise)){
 		                       				<div class="col-xs-8">
 		                       					<small class="text-muted">
 		                       						Discount
-		                       						<?php if(!empty($couponCode)){ ?>
-		                       							 (<?php echo $couponCode . " " . $discountPercent . "%"?>)
+		                       						<?php if(!empty($couponCode)){ 
+		                       							if(!empty($discountPercent)){?>
+		                       							 	(<?php echo $couponCode . " " . $discountPercent . "%"?>)
+		                       							 <?php }else{?>
+		                       							  	(<?php echo $couponCode . " Rs." . $discountMaxAmount?>)
+		                       							  <?php }?>
 		                       						<?php }?>
 		                       						
 		                       					</small>
@@ -412,6 +434,7 @@ if(!empty($totalAmountInPaise)){
 	                       				<input type="hidden" id ="menupersons" name="menuMembers" value='<?php echo $menus?>' />
 	                       				<input type="hidden" id ="menuPrice" name="menuPrice" value='<?php echo $menuPriceJson?>' />
 	                       				<input type="hidden" id ="discountPercent" name="discountPercent" value='<?php echo $discountPercent?>' />
+	                       				<input type="hidden" id ="discountAmount" name="discountAmount" value='<?php echo $discountMaxAmount?>' />
 	                       				<input type="hidden" id ="couponSeq" name="couponSeq" value='<?php echo $couponSeq?>' />
 	                       				<input type="hidden" id ="selectedPackage" name="selectedPackage" value='<?php echo $selectedPackageSeq?>' />
 	                       				<input type="hidden" id ="packagePrice" name="packagePrice" value='<?php echo $packageCharge?>' />
