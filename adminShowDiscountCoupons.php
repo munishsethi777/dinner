@@ -84,11 +84,13 @@
 		
 		var columns = [
 		  { text: 'id', datafield: 'seq' , hidden:true},
-		  { text: 'Code', datafield: 'code', width:"15%"}, 			
-		  { text: 'Description', datafield: 'description',width:"30%"},
-	      { text: 'Percent', datafield: 'percent',width:"10%"},
+		  { text: 'Code', datafield: 'code', width:"10%"}, 			
+		  { text: 'Description', datafield: 'description',width:"20%"},
+	      { text: 'Percent', datafield: 'percent',width:"9%"},
+	      { text: 'Seats', datafield: 'maxseats',width:"10%"},
+	      { text: 'Amount', datafield: 'maxamount',width:"10%"},
 	      { text: 'Valid Till Date', datafield: 'validtilldate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"10%"},
-	      { text: 'Usage Times', datafield: 'usagetimes',width:"12%",cellsalign: 'center'},
+	      { text: 'Usage Times', datafield: 'usagetimes',width:"10%",cellsalign: 'center'},
 	      { text: 'Used (Times)', datafield: 'usedtimes',width:"10%",filterable:false,cellsalign: 'center'},
 	      { text: 'Enabled', datafield: 'isenabled',columntype: 'checkbox',width:"8%",cellsalign: 'center'},
 	    ]
@@ -105,6 +107,8 @@
 	                    { name: 'description', type: 'string'},
 	                    { name: 'usagetimes', type: 'string'},
 	                    { name: 'percent', type: 'string' },
+	                    { name: 'maxseats', type: 'string' },
+	                    { name: 'maxamount', type: 'string' },
 	                    { name: 'isenabled', type: 'boolean' },
 	                    { name: 'usedtimes', type: 'integer' },
 	                    { name: 'validtilldate', type: 'date' }
