@@ -164,7 +164,11 @@ class MailUtil{
 				   		}else{
 				   			$discount = $discountAmount;
 				   		}
-						$netAmount = $netAmount - $discount;
+				   		if($discount > $netAmount){
+				   			$netAmount = 0;
+				   		}else{
+				   			$netAmount = $netAmount - $discount;
+				   		}
 						$discount = number_format($discount,2,'.','');
 						$html .='<div style="display:flex;width:100%">
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
@@ -504,8 +508,12 @@ class MailUtil{
 					$discount = ($discountPercent / 100) * $totalAmount;
 		   		}else{
 		   			$discount = $discountAmount;
-		   		}
-				$netAmount = $netAmount - $discount;
+				}
+				if($discount > $netAmount){
+					$netAmount = 0;	
+				}else{
+					$netAmount = $netAmount - $discount;
+				}
 				$discount = number_format($discount,2,'.','');
 				$html .= '<tr style="font-size:13px">
 					<td colspan=8 style="padding:10px;border:1px silver solid;font-weight:bold;text-align:right">GROSS AMOUNT</td>
