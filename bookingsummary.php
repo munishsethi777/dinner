@@ -759,8 +759,8 @@ document.getElementById('rzp-button').onclick = function(e){
 			    return;
 			}
 		   //$("#amount").val("<?php //echo $totalAmountInPaise?>");
-		   //saveBooking();
-		   //return;
+		   saveBooking();
+		   return;
 			var fullName = $("#fullName").val();
 			var email = $("#email").val();
 			var mobile = $("#mobile").val();
