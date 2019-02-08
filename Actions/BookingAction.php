@@ -86,8 +86,12 @@ if($call == "saveBooking"){
 		$booking->setCompanyMobile($companyMobile);
 		$booking->setCompanyName($companyName);
 		$booking->setCouponSeq($couponSeq);
-		$booking->setDiscountPercent($discountPercent);
-		$booking->setDiscountAmount($discountAmount);
+		if(!empty($discountPercent)){
+			$booking->setDiscountPercent($discountPercent);
+		}
+		if(!empty($discountAmount)){
+			$booking->setDiscountAmount($discountAmount);
+		}
 		$booking->setGSTNumber($gst);
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);
