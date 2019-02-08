@@ -22,6 +22,19 @@ if($call == "saveCoupon"){
 		if(isset($_REQUEST["isenabled"]) && !empty($_REQUEST["isenabled"])){
 			$isEnabled = 1;
 		}
+		$discountTypeOption = $_POST["discountTypeOption"];
+		$percent = null;
+		$maxAmount = null;
+		$maxSeats = null;
+		if($discountTypeOption == "percent"){
+			$percent = $_POST["percent"];
+			$maxSeats = $_POST["maxseats"];
+		}else{
+			$maxAmount = $_POST["maxamount"];
+		}
+		$discountCoupon->setPercent($percent);
+		$discountCoupon->setMaxAmount($maxAmount);
+		$discountCoupon->setMaxSeats($maxSeats);
 		$discountCoupon->setIsEnabled($isEnabled);
 		$validTillDate = $_REQUEST["validtilldate"];
 		$validTillDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $validTillDate);

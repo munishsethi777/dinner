@@ -1,6 +1,7 @@
 <?php
 class DiscountCoupon{
 	private $seq, $description,$code,$isenabled,$createdon,$validtilldate,$usagetimes,$percent;
+	private $maxamount,$maxseats;
 	public static $className = "DiscountCoupon";
 	public static $tableName = "discountcoupons";
 	public function setSeq($seq_){
@@ -57,6 +58,20 @@ class DiscountCoupon{
 	}
 	public function getPercent(){
 		return $this->percent;
+	}
+	
+	public function setMaxAmount($maxamount_){
+		$this->maxamount = $maxamount_;
+	}
+	public function getMaxAmount(){
+		return $this->maxamount;
+	}
+
+	public function setMaxSeats($seats_){
+		$this->maxseats = $seats_;
+	}
+	public function getMaxSeats(){
+		return $this->maxseats;
 	}
 	
 	function createFromRequest($request){
