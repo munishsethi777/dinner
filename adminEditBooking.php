@@ -499,7 +499,7 @@ $discountCoupons = $discountCouponMgr->getAll();
             		if(discountAmount >totalAmount){
             			totalAmount = 0;
             		} else{
-            			totalAmount = totalAmount - discount;
+            			totalAmount = totalAmount - discountAmount;
             		}
             		$("#discountCouponType").val("amount");	
         		}
