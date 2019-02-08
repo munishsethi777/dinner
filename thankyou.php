@@ -62,6 +62,29 @@ if(!empty($bookingId)){
 </script>
 
 <!-- end of conversion tracking code -->
+
+<!--  Seller ratings on google code -->
+<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+
+<script>
+  window.renderOptIn = function() {
+    window.gapi.load('surveyoptin', function() {
+      window.gapi.surveyoptin.render(
+        {
+          // REQUIRED FIELDS
+          "merchant_id": 130266907,
+          "order_id": "<?php echo $booking->getBookingId()?>",
+          "email": "<?php echo $booking->getEmailId()?>",
+          "delivery_country": "IN",
+          "estimated_delivery_date": "<?php echo date("Y-m-d")?>",
+
+          // OPTIONAL FIELDS
+          //"products": [{"gtin":"GTIN1"}, {"gtin":"GTIN2"}]
+        });
+    });
+  }
+</script>
+
 </head>
 <body>
  <div id="wrapper">
