@@ -23,9 +23,9 @@ if($call == "saveCoupon"){
 			$isEnabled = 1;
 		}
 		$discountTypeOption = $_POST["discountTypeOption"];
-		$percent = null;
-		$maxAmount = null;
-		$maxSeats = null;
+		$percent = 0;
+		$maxAmount = 0;
+		$maxSeats = 0;
 		if($discountTypeOption == "percent"){
 			$percent = $_POST["percent"];
 			$maxSeats = $_POST["maxseats"];
