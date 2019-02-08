@@ -106,6 +106,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 	                        		<input type="hidden" id ="seq" name="seq"  value="<?php echo $booking->getSeq() ?>"/>
 	                        		<input type="hidden" id ="cakePrice" name="cakePrice"  value="<?php echo $cakePrice?>"/>
 	                        		<input type="hidden" id ="bookingid" name="bookingid"  value="<?php echo $booking->getBookingId() ?>"/>
+	                        		<input type="hidden" id ="discountCouponType" name="discountcoupontype"/>
 	                        		<input type="hidden" id ="parentbookingseq" name="parentbookingseq"  value="<?php echo $parentBookingSeq ?>"/>
 	                        		<input type="hidden" id ="availableSeats" name="availableSeats"/>
 	                       			<div class="form-group row">
@@ -212,14 +213,26 @@ $discountCoupons = $discountCouponMgr->getAll();
 															if($seq == $booking->getCouponSeq()){
 																$selected = "selected";
 															}
+														    $text = $discountCoupon->getPercent() . "%";
+														    $id = $seq . "_percent";
+														    if(!empty($discountCoupon->getMaxAmount())){
+														    	$text = "Rs." . $discountCoupon->getMaxAmount();
+														    	$id = $seq . "_amount";
+														    	$percent = $discountCoupon->getMaxAmount();
+														    }
 															?>
-															<option <?php echo $selected ?> value="<?php echo $seq . "_" .$percent?>"><?php echo $discountCoupon->getCode()?> (<?php echo $discountCoupon->getPercent()?>%)</option>
+															<option <?php echo $selected ?> id="<?php echo $id?>" value="<?php echo $seq . "_" .$percent?>"><?php echo $discountCoupon->getCode()?> (<?php echo $text?>)</option>
 														<?php }?>
 													</select>
 									    		</div>
-									    		<?php if(!empty($booking->getSeq())){?>
-										    		<div class="col-lg-1">
-										    			<input type="text" id="discountPercent" disabled value="<?php echo $booking->getDiscountPercent()?>%" class="form-control">
+									    		<?php if(!empty($booking->getSeq())){
+									    			$discountText = $booking->getDiscountPercent() . "%";
+									    			if(!empty($booking->getDiscountAmount())){
+									    				$discountText = "Rs." . $booking->getDiscountAmount();
+									    			}
+									    		?>
+										    		<div class="col-sm-2">
+										    			<input type="text" id="discountPercent" disabled value="<?php echo $discountText?>" class="form-control">
 										    		</div>
 										    		
 									    		<?php }?>
@@ -359,6 +372,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 	 	isSelectAll = false;
 	 	var totalAmount = 0;
 		var discountPercent = "<?php echo $booking->getDiscountPercent()?>";
+		var discountAmount = "<?php echo $booking->getDiscountAmount()?>";
         $(document).ready(function(){
         	$('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
@@ -478,7 +492,17 @@ $discountCoupons = $discountCouponMgr->getAll();
         		if(discountPercent != 0){
         			var discount = (discountPercent / 100) * totalAmount
 					totalAmount = totalAmount - discount;
+					$("#discountCouponType").val("percent");
             	}
+        		if(discountAmount != 0){
+            		discountAmount = parseInt(discountAmount)
+            		if(discountAmount >totalAmount){
+            			totalAmount = 0;
+            		} else{
+            			totalAmount = totalAmount - discount;
+            		}
+            		$("#discountCouponType").val("amount");	
+        		}
         		var isAddCake = $('#isAddCake').is(":checked")
      	        if(isAddCake){
             		var cakePrice = $("#cakePrice").val()
@@ -592,6 +616,7 @@ $discountCoupons = $discountCouponMgr->getAll();
         function applyDiscount(){
             var totalAmount = 0;
             var coupon = $("#couponSeq").val();
+            var id = $("#couponSeq").find('option:selected').attr('id');
            	$('select[name="selectedSeats[]"]').each(function() {
 				var selectedOptions = $(this).val();
 				var id = this.id
@@ -601,11 +626,26 @@ $discountCoupons = $discountCouponMgr->getAll();
 				totalAmount += amount;  						
 			}); 
 	        if(coupon != "0" && coupon != 0){  
+		        var seqAnddiscountType = id.split("_");
+		        var discountType = seqAnddiscountType[1];
 		       	var seqAndPercent = coupon.split("_");
 			    var percent = parseInt(seqAndPercent[1]);
-			    var discount = (percent / 100) * totalAmount;
-			    totalAmount = totalAmount - discount;
-			    $("#discountPercent").val(percent + "%");
+			    var discount = 0;
+			    if(discountType == "percent"){
+			    	discount = (percent / 100) * totalAmount;  
+			    	$("#discountPercent").val(percent + "%");  
+			    	$("#discountCouponType").val("percent");
+			    }else{
+			    	discount = percent;
+			    	$("#discountPercent").val("Rs." + percent);
+			    	$("#discountCouponType").val("amount");
+			    }
+			    if(discount > totalAmount){
+			    	totalAmount = 0;
+			    }else{
+			    	totalAmount = totalAmount - discount;  
+			    }
+			    
 	        }
 	        var isAddCake = $('#isAddCake').is(":checked")
 	        if(isAddCake){

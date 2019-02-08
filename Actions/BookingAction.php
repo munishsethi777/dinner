@@ -158,10 +158,16 @@ if($call == "saveBookingsFromAdmins"){
 		$couponSeqAndPercent = $_POST["couponSeq"];
 		$couponSeq = 0;
 		$couponPercent = 0;
+		$couponAmount = 0;
 		if(!empty($couponSeqAndPercent)){
 			$couponSeqAndPercent = explode("_", $couponSeqAndPercent);
 			$couponSeq = $couponSeqAndPercent[0];
-			$couponPercent = $couponSeqAndPercent[1];
+			$couponType = $_POST["discountcoupontype"];
+			if($couponType == "percent"){
+				$couponPercent = $couponSeqAndPercent[1];
+			}else{
+				$couponAmount = $couponSeqAndPercent[1];
+			}
 		}
 		$sum = array_sum($menuPerson);
 		if(array_sum($menuPerson) == 0){
@@ -206,6 +212,9 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setCouponSeq($couponSeq);
 		if(!empty($couponPercent)){
 			$booking->setDiscountPercent($couponPercent);
+		}
+		if(!empty($couponAmount)){
+			$booking->setDiscountAmount($couponAmount);
 		}
 		if(!empty($bookingStatus)){
 			$booking->setStatus($bookingStatus);
