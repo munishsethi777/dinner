@@ -4,12 +4,19 @@ require_once('IConstants.inc');
 require_once ($ConstantsArray ['dbServerUrl'] . "Managers/DiscountCouponMgr.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "BusinessObjects/DiscountCoupon.php");
 require_once ($ConstantsArray ['dbServerUrl'] . "Utils/DateUtil.php");
+require_once ($ConstantsArray ['dbServerUrl'] . "Managers/MenuMgr.php");
+
+
+$menuMgr = MenuMgr::getInstance();
+$menus = $menuMgr->getAllForTimeSlot();
+
 $discountCoupon = new DiscountCoupon();
-$isEnableChecked = "";
+$isEnableChecked = "checked";
 $validTillDateStr = "";
 $discountType = "percent";
 $percentChecked = "checked";
 $amountChecked = "";
+$selectedMenuSeq = "";
 if(isset($_POST["seq"])){
 	$seq = $_POST["seq"];
 	$discountCouponMgr = DiscountCouponMgr::getInstance();
@@ -24,6 +31,7 @@ if(isset($_POST["seq"])){
 	if(!empty($discountCoupon->getIsEnabled())){
 		$isEnableChecked = "checked";
 	}
+	$selectedMenuSeq = $discountCoupon->getMenuSeq();
 }
 ?>
 <!DOCTYPE html>
@@ -112,6 +120,25 @@ if(isset($_POST["seq"])){
 	                                    </div>
 	                               </div>
 	                               
+	                                <div class="form-group row">
+	                       				<label class="col-lg-2 col-form-label">Menu</label>
+	                                    <div class="col-lg-4">
+		                                    <select class="form-control" id="menuseq" name="menuseq">
+												<option>Choose menu</option>
+												<?php foreach ($menus as $menu){
+													$menuSeq = $menu->getSeq();
+													$selected = "";
+													if($menuSeq == $selectedMenuSeq){
+														$selected = "selected";
+													}	
+													?>
+													<option <?php echo $selected ?> value="<?php echo $menuSeq?>"><?php echo $menu->getTitle()?></option>
+													
+												<?php }?>
+											</select>
+	                                    </div>
+	                               </div>
+	                               
 	                               <div class="form-group row i-checks">
 	                       				<label class="col-lg-2 col-form-label">Enabled</label>
 	                                    <div class="col-lg-4">
@@ -119,9 +146,13 @@ if(isset($_POST["seq"])){
 	                                    </div>
 	                                </div>
 	                               <div class="form-group row">
-                               		<div class="col-lg-6">
-	                               		<button class="btn btn-primary" type="button" onclick="javascript:submitCouponForm()" id="rzp-button" style="float:right">
+	                               	<div class="col-lg-2 control-label"></div>
+                               		<div class="col-lg-6 col-offset-lg-3">
+	                               		<button class="btn btn-primary" type="button" onclick="javascript:submitCouponForm()" id="rzp-button">
 	                               			Save Coupon
+		                               	</button>
+		                               	<button class="btn btn-default" type="button" onclick="javascript:cancelCouponForm()">
+	                               			Cancel
 		                               	</button>
 	                              	</div>
 	                           </div>
@@ -180,4 +211,8 @@ if(isset($_POST["seq"])){
  		$("#couponForm")[0].reportValidity();
  	}
  } 
+
+ function cancelCouponForm(){
+	 location.href = "adminShowDiscountCoupons.php";
+ }
  </script>

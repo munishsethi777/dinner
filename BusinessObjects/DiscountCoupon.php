@@ -1,7 +1,7 @@
 <?php
 class DiscountCoupon{
 	private $seq, $description,$code,$isenabled,$createdon,$validtilldate,$usagetimes,$percent;
-	private $maxamount,$maxseats;
+	private $maxamount,$maxseats,$menuseq;
 	public static $className = "DiscountCoupon";
 	public static $tableName = "discountcoupons";
 	public function setSeq($seq_){
@@ -73,7 +73,12 @@ class DiscountCoupon{
 	public function getMaxSeats(){
 		return $this->maxseats;
 	}
-	
+	public function setMenuSeq($menuSeq_){
+		$this->menuseq = $menuSeq_;
+	}
+	public function getMenuSeq(){
+		return $this->menuseq;
+	}
 	function createFromRequest($request){
 		if (is_array($request)){
 			$this->from_array($request);

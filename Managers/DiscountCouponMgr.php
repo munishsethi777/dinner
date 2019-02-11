@@ -53,8 +53,19 @@ class DiscountCouponMgr{
 		}
 		return null;
 	}
-	public function applyCoupon($code,$amount){
+	public function applyCoupon($code,$amount,$menusArr){
 		$coupon = $this->findByCode($code);
+		$couponMenuSeq = $coupon->getMenuSeq();
+		if(!empty($couponMenuSeq)){
+			if(count($menusArr) > 1){
+				return null;		
+			}elseif($menusArr[0]->getSeq() != $couponMenuSeq){
+				return null;
+			}
+		}
+		
+		
+		
 		if(empty($coupon)){
 			return null;
 		}

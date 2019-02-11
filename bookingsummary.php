@@ -171,7 +171,7 @@ if(isset($_POST["call"]) && (isset($_POST["call"]) == "applyCoupon" || isset($_P
 	$companyState = $_POST["companyState"];
 	$discountCoupnMgr = DiscountCouponMgr::getInstance();
 	if(!empty($couponCode)){
-		$couponInfo = $discountCoupnMgr->applyCoupon($couponCode,$amount);
+		$couponInfo = $discountCoupnMgr->applyCoupon($couponCode,$amount,$menusArr);
 		if(empty($couponInfo)){
 			$couponError = "Invalid coupon code!";
 		}else{
@@ -759,8 +759,8 @@ document.getElementById('rzp-button').onclick = function(e){
 			    return;
 			}
 		   //$("#amount").val("<?php //echo $totalAmountInPaise?>");
-		   //saveBooking();
-		   //return;
+		   saveBooking();
+		   return;
 			var fullName = $("#fullName").val();
 			var email = $("#email").val();
 			var mobile = $("#mobile").val();
