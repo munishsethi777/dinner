@@ -1,0 +1,1 @@
+ALTER TABLE `discountcoupons` ADD `menuseq` BIGINT NULL AFTER `maxamount`;
