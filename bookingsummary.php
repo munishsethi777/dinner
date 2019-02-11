@@ -103,9 +103,9 @@ $selectedPackageSeq = $_POST["selectedPackage"];
 //$selectedOccassionSeq = $_POST["selectedOccassion"];
 if(!empty($selectedPackageSeq)){
 	$packageMgr = PackageMgr::getInstance();
-	$package = $packageMgr->findBySeq($selectedPackageSeq);
-	$packageCharge = $package->getPrice();
-	$packageName = $package->getTitle();
+	$package = $packageMgr->findArrBySeq($selectedPackageSeq);
+	$packageCharge = $package["price"];
+	$packageName = $package["occasion"] . "-" .$package["title"];
 }
 //$occassionMgr = OccasionMgr::getInstance();
 //$occassion = $occassionMgr->findBySeq($selectedOccassionSeq);
