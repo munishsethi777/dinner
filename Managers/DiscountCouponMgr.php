@@ -55,6 +55,9 @@ class DiscountCouponMgr{
 	}
 	public function applyCoupon($code,$amount,$menusArr){
 		$coupon = $this->findByCode($code);
+		if(empty($coupon)){
+			return null;
+		}
 		$couponMenuSeq = $coupon->getMenuSeq();
 		if(!empty($couponMenuSeq)){
 			if(count($menusArr) > 1){
@@ -62,12 +65,6 @@ class DiscountCouponMgr{
 			}elseif($menusArr[0]->getSeq() != $couponMenuSeq){
 				return null;
 			}
-		}
-		
-		
-		
-		if(empty($coupon)){
-			return null;
 		}
 		$isEnabled = $coupon->getIsEnabled();
 		if(empty($isEnabled)){
