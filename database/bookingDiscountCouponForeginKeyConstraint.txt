@@ -1,0 +1,1 @@
+ALTER TABLE `bookings` ADD  CONSTRAINT `DiscountCoupon` FOREIGN KEY (`couponseq`) REFERENCES `discountcoupons`(`seq`) ON DELETE RESTRICT ON UPDATE NO ACTION;

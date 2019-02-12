@@ -1,0 +1,1 @@
+Update bookings set couponseq = NULL where couponseq = 0
