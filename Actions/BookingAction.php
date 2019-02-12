@@ -46,7 +46,10 @@ if($call == "saveBooking"){
 		$companyName = "";
 		$country = $_POST["country"];
 		$dateOfBirth = $_POST["dateofbirth"];
-		$couponSeq = $_POST["couponSeq"]; 
+		$couponSeq = null;
+		if(!empty($_POST["couponSeq"])){
+			$couponSeq = $_POST["couponSeq"];
+		}
 		$discountPercent = $_POST["discountPercent"];
 		$discountAmount = $_POST["discountAmount"];
 		$dateOfBirth = DateUtil::StringToDateByGivenFormat("d-m-Y", $dateOfBirth);
