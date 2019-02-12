@@ -65,6 +65,7 @@ class MailUtil{
 		$bookingDate = $booking->getBookingDate()->format('M d, Y');
 		$discountPercent = $booking->getDiscountPercent();
 		$discountAmount = $booking->getDiscountAmount();
+		$notes = $booking->getNotes();
 		$html ='<html><head><link rel="stylesheet" type="text/css"href="1https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"></head>
 		<body><divstyle="background-color: grey; width: 100%; color: #676a6c; font-family: open sans, Helvetica Neue, Helvetica, Arial, sans-serif">
 		<div style="background-color: white; margin: auto; max-width: 600px; padding: 0px 15px 0px 15px">
@@ -245,8 +246,15 @@ class MailUtil{
 						<div style="width:50%;padding:10px 0px 0px 0px;text-align:right;">
 							<p style="font-weight: bold; color: #000; font-size: 21px; text-align: right; margin: 0px;">Rs.'.$netAmount.'/-</p>
 						</div>
-					</div>
-				</div>
+					</div>';
+					if(!empty($notes)){
+						$html .='<div style="border-top:1px silver solid;display:flex;width:100%">
+						<div style="width:50%;padding:10px 0px 0px 0px;text-align:left">
+							<p style="color: #000; font-size: 12px; margin: 0px;">Booking Notes : '.$notes.'</p>
+						</div>
+					</div>';
+					}
+				$html .='</div>
 			</div><div style="margin: 10px 0 0;">
 				<p><h4 style="display:block">Important Instructions</h4></p>
 				<ul style="font-size: 12px;">
@@ -702,7 +710,7 @@ class MailUtil{
 		foreach ($toEmails as $toEmail){
 			$mail->AddAddress($toEmail);
 		}
-       // $mail->AddBCC(StringConstants::BCC_EMAIL);
+        $mail->AddBCC(StringConstants::BCC_EMAIL);
         
 		foreach($attachments as $name=>$attachment){
 			$name .= ".pdf";

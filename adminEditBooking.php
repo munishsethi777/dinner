@@ -129,6 +129,12 @@ $discountCoupons = $discountCouponMgr->getAll();
 			                                    placeholder="Mobile" class="form-control">
 		                                    </div>
 		                                </div>
+		                                <div class="form-group row">
+			                       			<label class="col-lg-2 col-form-label">Notes</label>
+			                                   <div class="col-lg-4">
+			                                   		<textarea maxLength="250" <?php echo $disabled?>  id="notes" name="notes" placeholder="Pls enter notes for booking" class="form-control" ><?php echo $booking->getNotes()?></textarea>
+			                                   </div>
+		                                </div>
 		                                 <div class="form-group row">    
 		                                 	<label class="col-lg-2 col-form-label">Email</label>
 		                                    <div class="col-lg-4">
@@ -139,7 +145,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 	                                	<div class="form-group row">
 		                       				<label class="col-lg-2 col-form-label">DOB</label>
 		                                    <div class="col-lg-4">
-		                                    	<input type="text" id="dateofbirth" name="dateofbirth" value="<?php echo $bithDate?>" required placeholder="Date of Birth" class="form-control">
+		                                    	<input type="text" id="dateofbirth" <?php echo $disabled?> name="dateofbirth" value="<?php echo $bithDate?>" required placeholder="Date of Birth" class="form-control">
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
@@ -248,7 +254,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 		                                	<div class="form-group row">
 			                       				<label class="col-lg-2 col-form-label">Notes</label>
 			                                    <div class="col-lg-4">
-			                                    	<textarea maxLength="500" name="notes" placeholder="Add Notes" class="form-control" ><?php echo $notes?></textarea>
+			                                    	<textarea maxLength="500" name="addonnotes" placeholder="Add Notes" class="form-control" ><?php echo $notes?></textarea>
 			                                    </div>
 		                                	</div>
 		                                </div>
@@ -273,7 +279,7 @@ $discountCoupons = $discountCouponMgr->getAll();
 												</select> <label class="jqx-validator-error-label" id="lpError"></label>
 								    		</div>
 								    		 <div class="col-lg-2">
-								    		 	<input type="text" name="packagePrice" id="packageprice" onchange="applyDiscount()" placeholder="Package Price" value="<?php echo $booking->getPackagePrice()?>" class="form-control">	
+								    		 	<input type="text" name="packagePrice" <?php echo $disabled?> id="packageprice" onchange="applyDiscount()" placeholder="Package Price" value="<?php echo $booking->getPackagePrice()?>" class="form-control">	
 								    		 </div>
                                			</div>
                                			<!-- <div class="form-group row">

@@ -71,7 +71,10 @@ if($call == "saveBooking"){
 		$menuPersonsObj = json_decode($menuPersonsStr);
 		$menuPriceArr = json_decode($menuPriceStr);
 		$booking = new Booking();
-        
+		if(isset($_POST["notes"]) && !empty($_POST["notes"])){
+			$notes = $_POST["notes"];
+			$booking->setNotes($notes);
+		}
 		$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
 		$bookingDate = $bookingDate->setTime(0, 0);
 		
@@ -180,7 +183,7 @@ if($call == "saveBookingsFromAdmins"){
 		}
 		$totalAmount = $totalAmount * 100;
 		$isAddCake = false;
-		$notes = $_POST["notes"];
+		
 		$cakePrice = $_POST["cakePrice"];
 		if(isset($_POST["isAddCake"])){
 			$isAddCake = true;
@@ -192,6 +195,10 @@ if($call == "saveBookingsFromAdmins"){
 		$packagePrice = $_POST["packagePrice"];
 		
 		$booking = new Booking();
+		if(isset($_POST["notes"]) && !empty($_POST["notes"])){
+			$notes = $_POST["notes"];
+			$booking->setNotes($notes);
+		}
 		$bookingDate = DateUtil::StringToDateByGivenFormat("d-m-Y", $selectedDate);
 		$bookingDate = $bookingDate->setTime(0, 0);
 		$booking->setBookedOn(new DateTime());
@@ -236,6 +243,7 @@ if($call == "saveBookingsFromAdmins"){
 		$bookingAddOnMgr = BookingAddOnMgr::getInstance();
 		$bookingAddOnMgr->deleteByBookingSeq($bookingSeq);
 		if($isAddCake){
+			$notes = $_POST["notes"];
 			$bookingAddOn = new BookingAddOn();
 			$bookingAddOn->setAddOnType(BookingAddOnType::cake);
 			$bookingAddOn->setBookingSeq($bookingSeq);

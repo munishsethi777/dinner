@@ -5,7 +5,7 @@ class Booking{
 	
 	private $seq,$bookedon,$fullname,$mobilenumber,$emailid,$gstnumber,$timeslot,$bookingdate,$transactionid,$amount,$companymobile,$companyname;
 	private $dateofbirth,$gststate,$country,$couponseq,$discountpercent,$status,$parentbookingseq,$bookingid;
-	private $packageseq,$occasionseq,$packageprice,$discountamount;
+	private $packageseq,$occasionseq,$packageprice,$discountamount,$notes;
 	
 	public function setSeq($seq_){
 		$this->seq = $seq_;
@@ -177,4 +177,10 @@ class Booking{
 		return $this->discountamount;
 	}
 	
+	public function setNotes($notes_){
+		$this->notes = $notes_;
+	}
+	public function getNotes(){
+		return $this->notes;
+	}
 }
