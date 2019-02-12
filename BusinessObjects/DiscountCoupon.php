@@ -91,8 +91,10 @@ class DiscountCoupon{
 		foreach(get_object_vars($this) as $attrName => $attrValue){
 			$flag = property_exists(self::$className, $attrName);
 			$isExists = array_key_exists($attrName, $array);
-			if($flag && $isExists){
-				$this->{$attrName} = $array[$attrName];
+			if(!empty($array[$attrName])){
+				if($flag && $isExists){
+					$this->{$attrName} = $array[$attrName];
+				}
 			}
 		}
 	}

@@ -284,15 +284,7 @@ class MailUtil{
 					<li>You may reschedule your booking, 20% of the booking amount will be charged as inconvenience fees. <a href="http://www.flydining.com/booking/reschedule.php">Click here</a> to reschedule.</li>
 				</ul>
 			</div>
-			<p align="center" style="color: #ff0000;">
-				<span style="font-size: 21px;">Sessions pictures will be updated on
-					the end of the day,</span><br> <a
-					href="https://drive.google.com/drive/folders/1ubA0jbQXUNTBHRnLkh8SKByEmxoXTsc3?usp=sharing">Click
-					here</a> <span style="color: #000;">to view images. </span><a
-					href="https://www.flydining.com/terms-conditions/">Terms &amp;
-					Conditions</a>
-			</p>
-
+			<p align="center" style="font-size: 21px;">For session pictures please contact or whatsapp 	+918130540906</p>
 			<div>
 				<div align="center">
 					<a

@@ -82,7 +82,7 @@ if(isset($_POST["seq"])){
 												<div class="col-sm-2 ">
 													 <input type="radio"
 														<?php echo $percentChecked?> value="percent" name="discountTypeOption"
-														id="actOption"> Pecent
+														id="actOption"> Percent
 												</div>
 												<div class="col-sm-2">
 													<input type="radio"
@@ -124,7 +124,7 @@ if(isset($_POST["seq"])){
 	                       				<label class="col-lg-2 col-form-label">Menu</label>
 	                                    <div class="col-lg-4">
 		                                    <select class="form-control" id="menuseq" name="menuseq">
-												<option>Choose menu</option>
+												<option value="0">Choose menu</option>
 												<?php foreach ($menus as $menu){
 													$menuSeq = $menu->getSeq();
 													$selected = "";
