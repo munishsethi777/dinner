@@ -1,6 +1,7 @@
 <?php
 require_once($ConstantsArray['dbServerUrl'] ."DataStores/BeanDataStore.php");
 require_once($ConstantsArray['dbServerUrl'] ."BusinessObjects/DiscountCoupon.php");
+require_once($ConstantsArray['dbServerUrl'] ."Managers/BookingMgr.php");
 class DiscountCouponMgr{
 	private static $DiscountCouponMgr;
 	private static $dataStore;
@@ -24,7 +25,14 @@ class DiscountCouponMgr{
 	public function getAllForGrid(){
 		$query = "select dc.*,count(bookings.seq) as usedtimes from discountcoupons dc left JOIN bookings on dc.seq = bookings.couponseq group by dc.seq";
 		$coupons = self::$dataStore->executeQuery($query,true);
-		$mainArr["Rows"] = $coupons;
+		$mainArr = array();
+		$bookingMgr = BookingMgr::getInstance();
+		foreach ($coupons as $coupon){
+			$couponSeq = $coupon["seq"];
+			$coupon["bookedSeats"] = $bookingMgr->getBookedSeatsByCoupon($couponSeq);
+			array_push($mainArr, $coupon);
+		}
+		$mainArr["Rows"] = $mainArr;
 		$mainArr["TotalRows"] = $this->getAllCount();
 		return json_encode($mainArr);
 	}

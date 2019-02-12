@@ -279,4 +279,11 @@ left join occasions on packages.occasionseq = occasions.seq";
 		$bookings = self::$dataStore->executeQuery($query);
 		return $bookings;
 	}
+	
+	public function getBookedSeatsByCoupon($couponSeq){
+		$query = "select sum(members) from bookingdetails inner join bookings on bookingdetails.bookingseq = bookings.seq
+where bookings.couponseq = $couponSeq";
+		$totalSeats = self::$dataStore->executeCountQueryWithSql($query);
+		return $totalSeats;
+	}
 }
