@@ -87,7 +87,7 @@
 		  { text: 'Code', datafield: 'code', width:"10%"}, 			
 		  { text: 'Description', datafield: 'description',width:"15%"},
 	      { text: 'Percent', datafield: 'percent',width:"9%"},
-	      { text: 'Seats', datafield: 'maxseats',width:"8%"},
+	      { text: 'Max Seats', datafield: 'maxseats',width:"8%"},
 	      { text: 'Amount', datafield: 'maxamount',width:"8%"},
 	      { text: 'Valid Till Date', datafield: 'validtilldate', filtertype: 'date',cellsformat: 'd-M-yyyy',width:"10%"},
 	      { text: 'Usage Times', datafield: 'usagetimes',width:"10%",cellsalign: 'center'},
