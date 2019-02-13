@@ -50,7 +50,7 @@ if($file == "dashboard.php" || $file == "adminEditBooking.php"){
 					
                 </li>
                 <li class="<?php echo $isBookings;?>">
-                    <a href="dashboard.php"><i class="fa fa-cube"></i> 
+                    <a href="dashboard.php"><i class="fa fa-list-alt"></i> 
                     	<span class="nav-label ">Bookings</span>  
                     </a>
                 </li>
@@ -65,27 +65,27 @@ if($file == "dashboard.php" || $file == "adminEditBooking.php"){
                     </a>
                 </li>
                 <li class="<?php echo $isDiscountCoupons;?>">
-                    <a href="adminShowDiscountCoupons.php"><i class="fa fa-clock-o"></i> 
+                    <a href="adminShowDiscountCoupons.php"><i class="fa fa-gift"></i> 
                     	<span class="nav-label">Discount Coupons</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isChangePassword;?>">
-                    <a href="adminChangePassword.php"><i class="fa fa-clock-o"></i> 
+                    <a href="adminChangePassword.php"><i class="fa fa-key"></i> 
                     	<span class="nav-label">Change Password</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isPackages;?>">
-                    <a href="adminShowPackages.php"><i class="fa fa-clock-o"></i> 
+                    <a href="adminShowPackages.php"><i class="fa fa-angellist"></i> 
                     	<span class="nav-label">Packages</span>  
                     </a>
                 </li>
                  <li class="<?php echo $isOccassions;?>">
-                    <a href="adminShowOccasions.php"><i class="fa fa-clock-o"></i> 
+                    <a href="adminShowOccasions.php"><i class="fa fa-calendar"></i> 
                     	<span class="nav-label">Occasions</span>  
                     </a>
                 </li>
                 <li class="<?php echo $isSettings;?>">
-                    <a href="adminSettings.php"><i class="fa fa-clock-o"></i> 
+                    <a href="adminSettings.php"><i class="fa fa-cog"></i> 
                     	<span class="nav-label">Settings</span>  
                     </a>
                 </li>
