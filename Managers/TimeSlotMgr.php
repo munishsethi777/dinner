@@ -216,7 +216,10 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 			$arr["seats"] = $timeSlot->getSeats();
 			$arr["availabletill"] = $timeSlot->getBookingAvailableTill();
 			$menus = $menuMgr->getMenusTitleByTimeSlot($timeSlot->getSeq());
-			$arr["menus"] = implode(",",$menus);
+			$arr["menus"] = "";
+			if(!empty($menus)){
+				$arr["menus"] = implode(",",$menus);
+			}
 			array_push($menuArr, $arr);
 		}
 		$mainArr["Rows"] = $menuArr;
