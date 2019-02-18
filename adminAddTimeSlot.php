@@ -169,20 +169,25 @@ if(isset($_POST["seq"])){
     	});
     });
     function submitMenuForm(){
-         if($("#timeSlotForm")[0].checkValidity()) {
-        	 if($('#menuDD').val() == ""){
-              	alert("Select menu option");
-             }
-	    	 $('#timeSlotForm').ajaxSubmit(function( data ){
-	    		 var obj = $.parseJSON(data);
-	    		 if(obj.success == 1){
-	        		 location.href = "adminShowTimeSlots.php";
-	    		 }else{
-	        		 alert("Error" + obj.message);
-	    		 }	 
-	    	 });
-         }else{
-        	 $("#timeSlotForm")[0].reportValidity();
-         }
+        var selectedMenus = $("#menuDD").val();
+        if(selectedMenus != null && selectedMenus != ""){
+	         if($("#timeSlotForm")[0].checkValidity()) {
+	        	 if($('#menuDD').val() == ""){
+	              	alert("Select menu option");
+	             }
+		    	 $('#timeSlotForm').ajaxSubmit(function( data ){
+		    		 var obj = $.parseJSON(data);
+		    		 if(obj.success == 1){
+		        		 location.href = "adminShowTimeSlots.php";
+		    		 }else{
+		        		 alert("Error" + obj.message);
+		    		 }	 
+		    	 });
+	         }else{
+	        	 $("#timeSlotForm")[0].reportValidity();
+	         }
+        }else{
+            alert("Please Select at least one Menu");
+        }
     } 
  </script>	
