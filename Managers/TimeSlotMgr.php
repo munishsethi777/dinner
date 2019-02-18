@@ -8,15 +8,18 @@ require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/MenuPricingMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/PackageMgr.php");
 require_once($ConstantsArray['dbServerUrl'] ."Managers/OccasionMgr.php");
+Logger::configure ( $ConstantsArray ['dbServerUrl'] . "log4php/log4php.xml" );
 
 class TimeSlotMgr{
 	private static $timeSlotMgr;
 	private static $dataStore;
 	private static $menuTimeSlotDataStore;
 	private static $sessionUtil;
+	private static $logger;
 	
 	public static function getInstance(){
 		if (!self::$timeSlotMgr){
+			self::$logger = Logger::getLogger ( "logger" );
 			self::$timeSlotMgr = new TimeSlotMgr();
 			self::$dataStore = new BeanDataStore(TimeSlot::$className, TimeSlot::$tableName);
 			self::$menuTimeSlotDataStore = new BeanDataStore(MenuTimeSlot::$className, MenuTimeSlot::$tableName);
@@ -203,7 +206,7 @@ inner JOIN menutimeslots on timeslots.seq = menutimeslots.timeslotsseq inner joi
 	private function deleteMenuSlotsInList($timeSlotSeqs){
 		$query = "delete from menutimeslots where timeslotsseq in ($timeSlotSeqs)";
 		self::$menuTimeSlotDataStore->executeQuery($query);
-		
+		self::$logger->info("Deleted MenuTimeSlots for timeslotseqs - " . $timeSlotSeqs);
 	}
 	public function getAllTimeSlotsForGrid(){
 		$timeSlots = self::$dataStore->findAll(true);
