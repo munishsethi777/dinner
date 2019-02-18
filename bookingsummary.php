@@ -391,6 +391,14 @@ if(!empty($totalAmountInPaise)){
 			                                    </div>
 		                                	</div>
 		                                </div>
+		                                
+		                                <div class="form-group row">
+			                       			<label class="col-lg-2 col-form-label">Notes</label>
+			                                   <div class="col-lg-10">
+			                                   		<textarea maxLength="250" id="notes" name="notes" placeholder="Pls enter notes for booking" class="form-control" ><?php echo $notes?></textarea>
+			                                   </div>
+		                                </div>
+		                                
 	                       			<?php if(!$isReschedule){ ?>
 		                       			<div class="row bg-muted p-h-sm">	
 		                       				<div class="col-xs-4">
@@ -472,12 +480,6 @@ if(!empty($totalAmountInPaise)){
 		                                    </div>
 	                                	</div>
 	                                	<div class="form-group row">
-			                       			<label class="col-lg-2 col-form-label">Notes</label>
-			                                   <div class="col-lg-10">
-			                                   		<textarea maxLength="250" id="notes" name="notes" placeholder="Pls enter notes for booking" class="form-control" ><?php echo $notes?></textarea>
-			                                   </div>
-		                                </div>
-		                               	<div class="form-group row">
 		                                	<div class="col-lg-10" >
 		                                       	<label> <input class="i-checks" <?php echo $isfillGst?> type="checkbox"  name="companyInfo" id="companyInfo" >  Fill GST Information</label>
 		                                       </div>
