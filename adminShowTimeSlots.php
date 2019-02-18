@@ -94,10 +94,10 @@
         	var columns = [
         	 			  { text: 'Title', datafield: 'title', width:"20%"}, 			
         	 			  { text: 'id', datafield: 'seq' , hidden:true},
-        	              { text: 'Description', datafield: 'description',width:"20%"},
-        	              { text: 'Available Till', datafield: 'availabletill',width:"8%"},
-        	              { text: 'Seats', datafield: 'seats',width:"20%"},
-        	              { text: 'Menu', datafield: 'menus',width:"20%"}
+        	              { text: 'Description', datafield: 'description',width:"25%"},
+        	              { text: 'Available Till', datafield: 'availabletill' ,filterable:false,sortable:false,width:"15%"},
+        	              { text: 'Seats', datafield: 'seats',width:"10%"},
+        	              { text: 'Menu', datafield: 'menus',filterable:false,sortable:false ,width:"26%"}
         	             ]
         	            
         	             var source =
