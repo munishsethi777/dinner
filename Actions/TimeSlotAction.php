@@ -86,7 +86,7 @@ if($call == "deleteTimeSlots"){
 		$message = "TimeSlot(s) Deleted successfully";
 	}catch(Exception $e){
 		$success = 0;
-		$message = ErrorUtil::checkReferenceError(LearningPlan::$className,$e);
+		$message = $e->getMessage();
 	}
 	$response = new ArrayObject();
 	$response["message"] = $message;

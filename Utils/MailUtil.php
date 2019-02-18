@@ -311,6 +311,9 @@ class MailUtil{
 							src="https://ci3.googleusercontent.com/proxy/hC6s2VDAbzueVXNl2_3gaIwpjdNwR9JBIU0vdpBrHiln9bzJP7yxv8ACczjzHZcnEiKzH037w_sBCM-YYok8vdYByCLBr4YYq1fNSpCBdBYnjzzFYA=s0-d-e1-ft#https://in.bmscdn.com/mailers/images/160720bmsreview/instagram.png"
 							style="padding-left: 5px;"></a>
 					</p>
+					<p style="margin: 20px 0 0;color:red">
+						Get reinvited! Write us a review on Google and the best reviewer wins a FlyDining experience for free!
+					</p>
 				</div>
 			</div>
 
