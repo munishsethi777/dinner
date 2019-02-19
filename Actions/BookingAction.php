@@ -162,7 +162,7 @@ if($call == "saveBookingsFromAdmins"){
 		$dateOfBirth = $dateOfBirth->setTime(0, 0);
 		$menuPerson = $_POST["selectedSeats"];
 		$couponSeqAndPercent = $_POST["couponSeq"];
-		$couponSeq = 0;
+		$couponSeq = null;
 		$couponPercent = 0;
 		$couponAmount = 0;
 		if(!empty($couponSeqAndPercent)){
@@ -219,7 +219,10 @@ if($call == "saveBookingsFromAdmins"){
 		$booking->setGstState($gstState);
 		$booking->setCountry($country);
 		$booking->setDateOfBirth($dateOfBirth);
-		$booking->setCouponSeq($couponSeq);
+		if(!empty($couponSeq)){
+			$booking->setCouponSeq($couponSeq);
+		}
+		
 		if(!empty($couponPercent)){
 			$booking->setDiscountPercent($couponPercent);
 		}
